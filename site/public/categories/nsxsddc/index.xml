@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Nsxsddc on Virtualthoughts</title>
+    <link>http://localhost:1313/categories/nsxsddc/</link>
+    <description>Recent content in Nsxsddc on Virtualthoughts</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-gb</language>
+    <lastBuildDate>Wed, 10 Jul 2019 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/categories/nsxsddc/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Container Packet Inspection with NSX-T</title>
+      <link>http://localhost:1313/2019/07/10/container-packet-inspection-with-nsx-t/</link>
+      <pubDate>Wed, 10 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2019/07/10/container-packet-inspection-with-nsx-t/</guid>
+      
+      <description>&lt;p&gt;For troubleshooting (or just being a bit nosey) we have a number of tools that allow us to inspect the traffic between two endpoints. When it comes to containers however, our approach has to be adjusted slightly. When using NSX-T as a CNI, we have some of these tools available to us out of the box.&lt;/p&gt;
+&lt;h1 id=&#34;app-overview&#34;&gt;App Overview&lt;/h1&gt;
+&lt;p&gt;&lt;img src=&#34;images/app-2.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;p&gt;For this example, I&amp;rsquo;ve deployed a standard Wordpress deployment consisting of a frontend (web) pod and a backend (DB) pod. The objective is to identify and capture the traffic between these pods.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Removing Unused PKS LoadBalancer IP allocations in NSX-T</title>
+      <link>http://localhost:1313/2019/06/21/removing-unused-pks-loadbalancer-ip-allocations-in-nsx-t/</link>
+      <pubDate>Fri, 21 Jun 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2019/06/21/removing-unused-pks-loadbalancer-ip-allocations-in-nsx-t/</guid>
+      
+      <description>&lt;p&gt;I&amp;rsquo;m constantly building, removing, destroying, breaking and constantly tinkering in my lab, which unfortunately can leave behind a bit of technical mess. Most recently I&amp;rsquo;ve been doing some messing around in PKS and consequently had a load of load balancer VIPs no longer in use due to clusters being destroyed and / or recreated.&lt;/p&gt;
+&lt;p&gt;Unfortunately, there&amp;rsquo;s no way to remove these in the UI (for now, at least). But you can remove them using the API.:&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Bootstrapping Prometheus, Grafana and Alertmanager to PKS deployed K8s Clusters</title>
+      <link>http://localhost:1313/2019/05/14/bootstrapping-prometheus-grafana-and-alertmanager-to-pks-deployed-k8s-clusters/</link>
+      <pubDate>Tue, 14 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2019/05/14/bootstrapping-prometheus-grafana-and-alertmanager-to-pks-deployed-k8s-clusters/</guid>
+      
+      <description>&lt;p&gt;PKS is a comprehensive platform for the provisioning and management of Kubernetes clusters, which can be further enhanced by leveraging its extensibility options. In this post, we will modify a plan to deploy a yaml manifest file which provisions Prometheus, Grafana, and Alertmanager backed by NSX-T load balancers.&lt;/p&gt;
+&lt;h1 id=&#34;why-prometheus-grafana-and-alertmanager&#34;&gt;Why Prometheus, Grafana and Alertmanager?&lt;/h1&gt;
+&lt;p&gt;The &lt;a href=&#34;https://en.wikipedia.org/wiki/Cloud_Native_Computing_Foundation&#34; title=&#34;Cloud Native Computing Foundation&#34;&gt;Cloud Native Computing Foundation&lt;/a&gt; accepted Prometheus as its second incubated project, the first being Kubernetes. Originally developed by SoundCloud. It has quickly become a popular platform for the monitoring of Kubernetes platforms. Built upon a powerful analytics engine, extensive and highly flexible data modeling can be accomplished with relative ease.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>PKS, Harbor and the importance of container registries</title>
+      <link>http://localhost:1313/2019/02/27/pks-harbor-and-the-importance-of-container-registries/</link>
+      <pubDate>Wed, 27 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2019/02/27/pks-harbor-and-the-importance-of-container-registries/</guid>
+      
+      <description>&lt;h1 id=&#34;whatare-container-registries-and-why-do-we-need-them&#34;&gt;What are container registries and why do we need them?&lt;/h1&gt;
+&lt;p&gt;A lot of the time, particularly when individuals and organisations are evaluating, testing and experimenting with containers they will use &lt;em&gt;public&lt;/em&gt; container registries such as Docker Hub.  These public registries provide an easy-to-use, simple way to access images. As developers, application owners, system admins etc gain familiarity and experience additional operational considerations need to be explored, such as:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Organisation&lt;/strong&gt; - How can we organise container images in a meaningful way? Such as by environment state (Prod/Dev/Test) and application type?&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;RBAC&lt;/strong&gt; - How can we implement role-based access control to a container registry?&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Vulnerability Scanning&lt;/strong&gt; - How can we scan container images for known vulnerabilities?&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Efficiency&lt;/strong&gt; - How can we centrally manage all our container images and deploy an application from them?&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Security&lt;/strong&gt; - Some images need to kept under lock and key, rather than using an external service like Docker Hub.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;introducing-vmware-harbor-registry&#34;&gt;Introducing VMware Harbor Registry&lt;/h1&gt;
+&lt;p&gt;VMware Harbor Registry has been designed to address these considerations as enterprise-class container registry solution with integration into PKS. In this post, We&amp;rsquo;ll have a quick primer on getting up and running with Harbor in PKS and explore some of its features. To begin, we need to download PKS Harbor from the Pivotal site and import it into ops manager.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>My VCAP6-NV Experience</title>
+      <link>http://localhost:1313/2018/09/18/my-vcap6-nv-experience/</link>
+      <pubDate>Tue, 18 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2018/09/18/my-vcap6-nv-experience/</guid>
+      
+      <description>&lt;h1 id=&#34;preamble-pun-intended&#34;&gt;Preamble (pun intended)&lt;/h1&gt;
+&lt;p&gt;I&amp;rsquo;ve been eyeing up the VCAP6-NV exam for quite some time now, but due to work and personal projects I&amp;rsquo;ve not been able to focus on this exam. Having some time between jobs I decided to start revising and push myself into taking the exam. At time of writing, there is still no NV-Design exam, therefore, anyone who sits and passes the VCAP6-NV Deploy exam is automatically given the VCIX6-NV certification.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>NSX-T, Kubernetes and Microsegmentation</title>
+      <link>http://localhost:1313/2018/08/01/nsx-t-kubernetes-and-microsegmentation/</link>
+      <pubDate>Wed, 01 Aug 2018 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2018/08/01/nsx-t-kubernetes-and-microsegmentation/</guid>
+      
+      <description>&lt;p&gt;For the uninitiated, VMware NSX comes in two &amp;ldquo;flavours&amp;rdquo;, NSX-V which is heavily integrated with vSphere, and NSX-T which is more IaaS agnostic. NSX-T also has more emphasis on facilitating container-based applications, providing a  number of features into our container ecosystem. In this blog post, we discuss the microsegmentation capabilities provided by NSX-T in combination with container technology.&lt;/p&gt;
+&lt;h1 id=&#34;what-is-microsegmentation&#34;&gt;What is Microsegmentation?&lt;/h1&gt;
+&lt;p&gt;Prior to Software-defined networking, firewall functions were largely centralised, typically manifested as edge devices which were and still are, good for controlling traffic to and from the datacenter, otherwise known as north-south traffic:&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Hybrid Cloud monitoring with VMware vRealize Operations</title>
+      <link>http://localhost:1313/2018/06/12/hybrid-cloud-monitoring-with-vmware-vrealize-operations/</link>
+      <pubDate>Tue, 12 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2018/06/12/hybrid-cloud-monitoring-with-vmware-vrealize-operations/</guid>
+      
+      <description>&lt;p&gt;Applications and the underlying infrastructure, be it public, private or hybrid cloud are becoming increasingly sophisticated. Because of this, the way in which we monitor and observe these environments requires more sophisticated tools. In this blog post, we look at vRealize Operations and how it can be a facilitator of true hybrid cloud monitoring.&lt;/p&gt;
+&lt;h1 id=&#34;what-is-vrealize-operations&#34;&gt;&lt;strong&gt;What is vRealize Operations?&lt;/strong&gt;&lt;/h1&gt;
+&lt;p&gt;vRealize Operations forms part of the overall vRealize suite from VMware – a collection of products targeted to accommodate cloud management and automation. In particular, vRealize Operations, as the name implies, primarily caters to operations management with full visibility across physical, virtual and cloud-based environments. The anatomy of vRealize Operations is depicted below&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Understanding Data Center traffic flow using NSX-V capabilities</title>
+      <link>http://localhost:1313/2018/03/02/understanding-data-center-traffic-flow-using-nsx-v-capabilities/</link>
+      <pubDate>Fri, 02 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2018/03/02/understanding-data-center-traffic-flow-using-nsx-v-capabilities/</guid>
+      
+      <description>&lt;p&gt;The defining characteristic of the Software Defined Data Center (SDDC), as the name implies, is to bring the intelligence and operations of various datacenter functions into software. This type of integration provides us with the ability to gain insights and analytics in a much more controlled, tightly integrated fashion.&lt;/p&gt;
+&lt;p&gt;VMware NSX is the market leader in network virtualisation. In this post, we have a look at a selection of tools which come with NSX, enabling a greater understanding of exactly what is transpiring in our NSX environment.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>vRealize Log insight – Frequently Overlooked Centralised Log Management</title>
+      <link>http://localhost:1313/2018/01/15/vrealize-log-insight-frequently-overlooked-centralised-log-management/</link>
+      <pubDate>Mon, 15 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2018/01/15/vrealize-log-insight-frequently-overlooked-centralised-log-management/</guid>
+      
+      <description>&lt;p&gt;Log analysis has always been a standardised practice for activities such as root cause analysis or advanced troubleshooting. However, ingesting and analysing these logs from different devices, types, locations and formats can be a challenge. In this post, we have a look at vRealize Log Insight and what it can deliver.&lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;h2 id=&#34;what-is-it&#34;&gt;&lt;strong&gt;What is it?&lt;/strong&gt;&lt;/h2&gt;
+&lt;p&gt;vRealize Log Insight is a product in the vRealize suite specifically designed for heterogeneous and scalable log management across physical, virtual and cloud-based environments. It is designed to be agnostic across what it can ingest logs from and is therefore valid candidate in a lot of deployments.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Homelab Networking Refresh</title>
+      <link>http://localhost:1313/2017/12/18/homelab-networking-refresh/</link>
+      <pubDate>Mon, 18 Dec 2017 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2017/12/18/homelab-networking-refresh/</guid>
+      
+      <description>&lt;h1 id=&#34;adios-netgear-router&#34;&gt;Adios, Netgear router&lt;/h1&gt;
+&lt;p&gt;In hindsight, I shouldn&amp;rsquo;t have bought a Netgear D7000 router. The reviews were good but after about 6 months of ownership, it decided to exhibit some pretty awful symptoms. One of which was completely and indiscriminately drop all wireless clients regardless of device type, range, band or frequency it resided on. A reconnect to the wireless network would prompt the passphrase again, weirdly. Even after putting in the passphrase (again) it wouldn&amp;rsquo;t connect. The &lt;strong&gt;only&lt;/strong&gt; way to rectify this was to physically reboot the router.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Embracing the SDDC with NSX-V automation</title>
+      <link>http://localhost:1313/2017/12/11/embracing-the-sddc-with-nsx-automation/</link>
+      <pubDate>Mon, 11 Dec 2017 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2017/12/11/embracing-the-sddc-with-nsx-automation/</guid>
+      
+      <description>&lt;p&gt;The Software Defined Data Center (SDDC for short) has become a widely adopted and embraced model for modern datacentre implementations. Conveying the benefits of the SDDC, particularly the non-technical aspects can be a challenge. In this blog post we take a practical example of a single activity we can automate in NSX and the benefits that come from it, both technical and non-technical.&lt;/p&gt;
+&lt;h1 id=&#34;the-nsx-api&#34;&gt;&lt;strong&gt;The NSX API&lt;/strong&gt;&lt;/h1&gt;
+&lt;p&gt;An API (&lt;strong&gt;A&lt;/strong&gt;pplication &lt;strong&gt;P&lt;/strong&gt;rogramming &lt;strong&gt;I&lt;/strong&gt;nterface), in simple terms is an intermediary that allows two applications to communicate with each other via a common syntax. Although we may not be aware of it, it’s likely we use API’s every day when we use applications such as Facebook, LinkedIn, vSphere and countless others. For example, when you create a logical switch in the vSphere web client, behind the scenes an API call is made to the NSX manager to facilitate that request.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>VMware Cloud on AWS</title>
+      <link>http://localhost:1313/2017/11/24/vmware-cloud-on-aws/</link>
+      <pubDate>Fri, 24 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2017/11/24/vmware-cloud-on-aws/</guid>
+      
+      <description>&lt;p&gt;Perhaps one of VMware’s most significant announcements made in recent times is the partnership with Amazon Web Services (AWS), including the ability to leverage AWS’s infrastructure to provision vSphere managed resources. What exactly does this mean and what benefits could this bring to the enterprise?&lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;h1 id=&#34;collaboration-of-two-giants&#34;&gt;&lt;strong&gt;Collaboration of Two Giants&lt;/strong&gt;&lt;/h1&gt;
+&lt;p&gt;To understand and appreciate the significance of this partnership we must acknowledge the position and perspective of each.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;images/vmware.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Market leader in private cloud offerings&lt;/li&gt;
+&lt;li&gt;Deep roots and history in virtualisation&lt;/li&gt;
+&lt;li&gt;Expanding portfolio&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;images/amazon-300x131.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>NSX Livefire Course</title>
+      <link>http://localhost:1313/2017/10/04/nsx-livefire-course/</link>
+      <pubDate>Wed, 04 Oct 2017 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2017/10/04/nsx-livefire-course/</guid>
+      
+      <description>&lt;p&gt;&lt;img src=&#34;images/Vmware.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;p&gt;Recently I was lucky enough to attend a NSX livefire course hosted at the VMware EMEA HQ in Staines, It&amp;rsquo;s designed to facilitate a intensive knowledge transfer of NSX related subject matter. All participants are bound by NDA, however most of the information is GA with the exception of roadmap information.&lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;h1 id=&#34;day-one&#34;&gt;Day One&lt;/h1&gt;
+&lt;p&gt;Day one was focused on introducing all the participants, laying a foundation for the course objectives as well as some background info on NSX. In addition the following topics were covered:&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Homelab - Nested ESXi with NSX and vSAN</title>
+      <link>http://localhost:1313/2017/10/03/homelab-nested-esxi-with-nsx-and-vsan/</link>
+      <pubDate>Tue, 03 Oct 2017 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2017/10/03/homelab-nested-esxi-with-nsx-and-vsan/</guid>
+      
+      <description>&lt;h1 id=&#34;the-rebuild&#34;&gt;The Rebuild&lt;/h1&gt;
+&lt;p&gt;I decided to trash and rebuild my nested homelab to include both NSX and vSAN. When I attempted to prepare the hosts for NSX I received the following message:&lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;images/Error.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;ve not had this issue before so I conducted some research. I found a lot of blog posts / comments / KB articles linking this issue to VUM. For example : &lt;a href=&#34;https://kb.vmware.com/selfservice/microsites/search.do?language=en_US&amp;amp;cmd=displayKC&amp;amp;externalId=2053782&#34;&gt;https://kb.vmware.com/selfservice/microsites/search.do?language=en_US&amp;amp;cmd=displayKC&amp;amp;externalId=2053782&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;However, after following the instructions I couldn&amp;rsquo;t set the &amp;ldquo;bypassVumEnabled&amp;rdquo; setting. Nor could I manually install the NSX vibs and was presented with the following:&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Homelab v2 - Part 1</title>
+      <link>http://localhost:1313/2017/05/19/homelab-v2-part1/</link>
+      <pubDate>Fri, 19 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2017/05/19/homelab-v2-part1/</guid>
+      
+      <description>&lt;h1 id=&#34;out-with-the-old&#34;&gt;Out with the old&lt;/h1&gt;
+&lt;p&gt;My previous homelab, although functional was starting to hit the limits of 32GB of RAM, particularly when running vCenter, vSAN, NSX, etc concurrently.&lt;/p&gt;
+&lt;p&gt;A family member had use for my old lab so I decided to sell it and get a replacement whitebox.&lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;h1 id=&#34;requirements&#34;&gt;Requirements&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Quiet&lt;/strong&gt; - As this would live in my office and powered on pretty much 24/7 it need a silent running machine&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Power efficient&lt;/strong&gt; - I&amp;rsquo;d rather not rack up the electric bill.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;64GB Ram Support&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt; &lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>My Nested NSX Home Lab</title>
+      <link>http://localhost:1313/2017/01/15/my-nested-nsx-home-lab/</link>
+      <pubDate>Sun, 15 Jan 2017 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2017/01/15/my-nested-nsx-home-lab/</guid>
+      
+      <description>&lt;p&gt;With the ever growing popularity of SDDC solutions I&amp;rsquo;ve decided to invest some time in learning VMware NSX and sit the VCP6-NV Exam. For this I&amp;rsquo;ve re-purposed my existing homelab and configured it for NSX. I have a fairly simple setup consisting of a single whitebox &amp;ldquo;server&amp;rdquo; that will accommodate nested ESXi hypervisors and a HP Microserver acting as a iSCSI target.&lt;/p&gt;
+&lt;p&gt;Whitebox specs:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Motherboard:&lt;/strong&gt; MSI B85M-E45 Socket 1150&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;CPU:&lt;/strong&gt; Intel Core i7 4785T 35W TDP&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>VCP6-NV Passed!</title>
+      <link>http://localhost:1313/2016/05/01/vcp6-nv-passed/</link>
+      <pubDate>Sun, 01 May 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2016/05/01/vcp6-nv-passed/</guid>
+      
+      <description>&lt;h1 id=&#34;motivation&#34;&gt;Motivation&lt;/h1&gt;
+&lt;p&gt;SDDC solutions are becoming increasingly more popular, and although I&amp;rsquo;m probably a little biased, I would say that NSX is leading the software defined networking front. Following on from my previous post about my nested NSX homelab I sat and (thankfully passed) the VCP6-NV exam.&lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;h1 id=&#34;study-materials&#34;&gt;Study Materials&lt;/h1&gt;
+&lt;p&gt;The official cert guide - &lt;a href=&#34;https://www.amazon.co.uk/VCP6-NV-Official-2V0-641-Vmware-Certification/dp/0789754800/ref=sr_1_1?ie=UTF8&amp;amp;qid=1493819639&amp;amp;sr=8-1&amp;amp;keywords=vcp6-NV&#34;&gt;https://www.amazon.co.uk/VCP6-NV-Official-2V0-641-Vmware-Certification/dp/0789754800/ref=sr_1_1?ie=UTF8&amp;amp;qid=1493819639&amp;amp;sr=8-1&amp;amp;keywords=vcp6-NV&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Practice (non exam) questions - &lt;a href=&#34;http://www.elasticsky.co.uk/practice-questions/&#34;&gt;http://www.elasticsky.co.uk/practice-questions/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Blueprint - &lt;a href=&#34;https://mylearn.vmware.com/lcms/web/portals/certification/exam_prep_guides/Exam_Prep_Guide_2V0-642_v2.3.pdf&#34;&gt;https://mylearn.vmware.com/mgrReg/plan.cfm?plan=95141&amp;amp;ui=www_cert&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Pluralsight NSX videos&lt;/p&gt;
+&lt;p&gt;Homelab&lt;/p&gt;
+&lt;p&gt;Lots of time&lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;h1 id=&#34;experience&#34;&gt;Experience&lt;/h1&gt;
+&lt;p&gt;This was a particularly tough exam. As I would describe myself as somewhat inexperienced in NSX compared to vSphere, I found the exam challenging. I&amp;rsquo;ve noticed that VMware have recently revised the exam reducing the number of questions down to 77 from 85, which is nice.&lt;/p&gt;</description>
+      
+    </item>
+    
+  </channel>
+</rss>

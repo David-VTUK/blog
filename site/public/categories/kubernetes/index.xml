@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Kubernetes on Virtualthoughts</title>
+    <link>http://localhost:1313/categories/kubernetes/</link>
+    <description>Recent content in Kubernetes on Virtualthoughts</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-gb</language>
+    <lastBuildDate>Sun, 16 Nov 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/categories/kubernetes/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ArgoCD - Ordering with ApplicationSets</title>
+      <link>http://localhost:1313/2025/11/16/argocd-ordering-with-applicationsets/</link>
+      <pubDate>Sun, 16 Nov 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2025/11/16/argocd-ordering-with-applicationsets/</guid>
+      
+      <description>&lt;p&gt;&lt;a href=&#34;https://www.virtualthoughts.co.uk/2025/02/21/customising-argocd-applicationsets-with-template-patches/&#34;&gt;In a previous post&lt;/a&gt;, I alluded to the use of ApplicationSets for my homelab deployments. I continue to leverage them, to the point I now have quite a number of applications managed by one:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;ArgoCD (Itself)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Cert-Manager&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Cilium&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;External-snapshotter&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Gateway API CRD&amp;rsquo;s&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Gateway API gateways&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Homepage&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Kanboard&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Kubevirt&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Longhorn&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;OpenTelemetry Operator&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Sealed Secrets&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;System Upgrade Controller&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The problem I had, was there was no ordering, dependency management or concurrency limits, so applications would simply update as and whenever changes were pushed.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>KubeVirt on ARM64 - CDI Workaround</title>
+      <link>http://localhost:1313/2025/04/07/kubevirt-on-arm64-cdi-workaround/</link>
+      <pubDate>Mon, 07 Apr 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2025/04/07/kubevirt-on-arm64-cdi-workaround/</guid>
+      
+      <description>&lt;p&gt;According to the KubeVirt documentation, &lt;a href=&#34;https://kubevirt.io/user-guide/cluster_admin/operations_on_Arm64/#containerized-data-importer&#34;&gt;CDI is not currently supported on ARM64&lt;/a&gt;, which is the architecture my Turing RK1 nodes use.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;images/GWO_1UbWgAAyL1_.jpg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;As a workaround, I experimented with writing an image directly to a PVC which can then be cloned/mounted to a KubeVirt VM. This example &lt;code&gt;dd&#39;s&lt;/code&gt; an ISO image to a PVC:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;PersistentVolumeClaim&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;fedora-workstation-pvc&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;accessModes&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    - &lt;span style=&#34;color:#ae81ff&#34;&gt;ReadWriteOnce&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;resources&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;requests&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;storage&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;30Gi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;volumeMode&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Block&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;batch/v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Job&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;upload-fedora-workstation-job&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;template&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;containers&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;writer&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;image&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;fedora:latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;command&lt;/span&gt;: [&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/bin/bash&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;-c&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;args&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          - |&lt;span style=&#34;color:#e6db74&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;            set -e
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;            echo &amp;#34;[1/3] Installing tools...&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;            dnf install -y curl xz
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;            echo &amp;#34;[2/3] Downloading and decompressing Fedora Workstation image...&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;            curl -L https://download.fedoraproject.org/pub/fedora/linux/releases/41/Workstation/aarch64/images/Fedora-Workstation-41-1.4.aarch64.raw.xz | xz -d &amp;gt; /tmp/disk.raw
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;            echo &amp;#34;[3/3] Writing image to PVC block device...&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;            dd if=/tmp/disk.raw of=/dev/vda bs=4M status=progress conv=fsync
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;            echo &amp;#34;Done writing Fedora Workstation image to PVC!&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;volumeDevices&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;disk&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &lt;span style=&#34;color:#f92672&#34;&gt;devicePath&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;/dev/vda&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;volumeMounts&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;tmp&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &lt;span style=&#34;color:#f92672&#34;&gt;mountPath&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;/tmp&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;securityContext&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &lt;span style=&#34;color:#f92672&#34;&gt;runAsUser&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;restartPolicy&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Never&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;volumes&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;disk&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;persistentVolumeClaim&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &lt;span style=&#34;color:#f92672&#34;&gt;claimName&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;fedora-workstation-pvc&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;tmp&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;emptyDir&lt;/span&gt;: {}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Which can then be mounted to a VM:&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Customising ArgoCD ApplicationSets with Template Patches</title>
+      <link>http://localhost:1313/2025/02/21/customising-argocd-applicationsets-with-template-patches/</link>
+      <pubDate>Fri, 21 Feb 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2025/02/21/customising-argocd-applicationsets-with-template-patches/</guid>
+      
+      <description>&lt;p&gt;In a recent attempt to automate my homelab cluster (&lt;a href=&#34;https://www.virtualthoughts.co.uk/2024/08/30/kubernetes-on-turing-pi-2-automation-with-ansible-cilium-and-cert-manager/&#34;&gt;ref&lt;/a&gt;), I now manage all of my cluster applications using ArgoCD, including &lt;code&gt;cilium&lt;/code&gt;. I also leverage &lt;code&gt;[applicationSet](https://argo-cd.readthedocs.io/en/stable/user-guide/application-set/)&lt;/code&gt; objects in ArgoCD as an app-of-apps pattern.&lt;/p&gt;
+&lt;p&gt;After a Cilium update however, it would fail to sync:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;images/image.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;One way to address this is to add `ServerSideApply=true` to the the resulting application manifest:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;argoproj.io/v1alpha1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;ApplicationSet&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;bootstrap-applications&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;namespace&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;argocd&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;goTemplate&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;goTemplateOptions&lt;/span&gt;: [&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;missingkey=error&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;generators&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  - &lt;span style=&#34;color:#f92672&#34;&gt;git&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;repoURL&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;https://github.com/David-VTUK/turing-pi-automation.git&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;revision&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;HEAD&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;directories&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      - &lt;span style=&#34;color:#f92672&#34;&gt;path&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;argocd-apps/helm-charts/import-from-cluster-standup/*&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;template&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;{{ .path.basename }}&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;project&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;default&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;source&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;repoURL&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;https://github.com/David-VTUK/turing-pi-automation.git&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;targetRevision&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;HEAD&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;path&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;{{ .path.path }}&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;helm&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &lt;span style=&#34;color:#f92672&#34;&gt;valueFiles&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            - &lt;span style=&#34;color:#ae81ff&#34;&gt;values.yaml&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;destination&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;server&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;https://kubernetes.default.svc&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;namespace&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;{{ .path.basename }}&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;syncPolicy&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;automated&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &lt;span style=&#34;color:#f92672&#34;&gt;prune&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &lt;span style=&#34;color:#f92672&#34;&gt;selfHeal&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;syncOptions&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          - &lt;span style=&#34;color:#ae81ff&#34;&gt;CreateNamespace=true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          - &lt;span style=&#34;color:#ae81ff&#34;&gt;ServerSideApply=true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The downside to this, however, is &lt;strong&gt;all&lt;/strong&gt; applications from this &lt;code&gt;applicationset&lt;/code&gt; will inherit this value, which is less than ideal.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Kubernetes on RK1 / Turing Pi 2: Automation with Ansible, Cilium and Cert-Manager</title>
+      <link>http://localhost:1313/2024/08/30/kubernetes-on-turing-pi-2-automation-with-ansible-cilium-and-cert-manager/</link>
+      <pubDate>Fri, 30 Aug 2024 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2024/08/30/kubernetes-on-turing-pi-2-automation-with-ansible-cilium-and-cert-manager/</guid>
+      
+      <description>&lt;p&gt;&lt;a href=&#34;https://github.com/David-VTUK/turing-pi-ansible&#34;&gt;TLDR: Take me to the Playbook&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Note - This is just a high-level overview, I&amp;rsquo;ll likely follow up with a post dedicated on the CIlium/BGP configuration.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;images/PXL_20240830_120436916-2048x1152.jpg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;ve had my Turing Pi 2 board for a while now, and during that time I&amp;rsquo;ve struggled to decide which automation tooling to use to bootstrap K3s to it. However, I reached a decision to use &lt;a href=&#34;https://www.ansible.com/&#34;&gt;Ansible&lt;/a&gt;. It&amp;rsquo;s not something I&amp;rsquo;m overly familiar with, but this would provide a good opportunity to learn by doing.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Changing the default apps wildcard certificate in OCP4</title>
+      <link>http://localhost:1313/2023/12/30/changing-the-default-apps-wildcard-certificate-in-ocp4/</link>
+      <pubDate>Sat, 30 Dec 2023 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2023/12/30/changing-the-default-apps-wildcard-certificate-in-ocp4/</guid>
+      
+      <description>&lt;p&gt;In a standard OCP4 installation, several &lt;code&gt;route&lt;/code&gt; objects are created by default and secured with a internally signed wildcard certificate.&lt;/p&gt;
+&lt;p&gt;These &lt;code&gt;routes&lt;/code&gt; are configured as &lt;code&gt;&amp;lt;app-name&amp;gt;.apps.&amp;lt;domain&amp;gt;&lt;/code&gt;. In my example, I have a cluster with the assigned domain &lt;code&gt;ocp-acm.virtualthoughts.co.uk&lt;/code&gt;, which results in the &lt;code&gt;routes&lt;/code&gt; below:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;oauth-openshift.apps.ocp-acm.virtualthoughts.co.uk
+console-openshift-console.apps.ocp-acm.virtualthoughts.co.uk
+grafana-openshift-monitoring.apps.ocp-acm.virtualthoughts.co.uk
+thanos-querier-openshift-monitoring.apps.ocp-acm.virtualthoughts.co.uk
+prometheus-k8s-openshift-monitoring.apps.ocp-acm.virtualthoughts.co.uk
+alertmanager-main-openshift-monitoring.apps.ocp-acm.virtualthoughts.co.uk
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Inspecting &lt;code&gt;console-openshift-console.apps.ocp-acm.virtualthoughts.co.uk&lt;/code&gt; shows us the default wildcard TLS certificate used by the Ingress Operator:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;images/default-wildcard.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Because it&amp;rsquo;s internally signed, it&amp;rsquo;s not trusted by default by external clients. However, this can be changed.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Improving the CI/build process for the community Rancher Exporter</title>
+      <link>http://localhost:1313/2023/06/05/improving-the-ci-build-process-for-the-community-rancher-exporter/</link>
+      <pubDate>Mon, 05 Jun 2023 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2023/06/05/improving-the-ci-build-process-for-the-community-rancher-exporter/</guid>
+      
+      <description>&lt;p&gt;One of my side projects is developing and maintaining an &lt;a href=&#34;https://github.com/David-VTUK/prometheus-rancher-exporter&#34;&gt;unofficial Prometheus Exporter for Rancher&lt;/a&gt;. It exposes metrics pertaining to Rancher-specific resources including, but not limited to managed clusters, Kubernetes versions, and more. Below shows an example dashboard based on these metrics.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;images/overview-dashboard.png&#34; alt=&#34;overview-dashboard.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Incidentally, if you are using Rancher, I&amp;rsquo;d love to hear your thoughts/feedback.&lt;/p&gt;
+&lt;h2 id=&#34;previous-ci-workflow&#34;&gt;Previous CI workflow&lt;/h2&gt;
+&lt;p&gt;The flowchart below outlines the existing process. Whilst automated, pushing directly to &lt;code&gt;latest&lt;/code&gt; is bad practice.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Debugging cloud-init not executing runcmd commands</title>
+      <link>http://localhost:1313/2023/01/18/debugging-cloud-init-not-executing-runcmd-commands/</link>
+      <pubDate>Wed, 18 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2023/01/18/debugging-cloud-init-not-executing-runcmd-commands/</guid>
+      
+      <description>&lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
+&lt;p&gt;Rancher leverages cloud-init for the provisioning of Virtual Machines on a number of infrastructure providers, as below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;images/image.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;I recently encountered an issue whereby vSphere based clusters using an Ubuntu VM template would successfully provision, but SLES based VM templates would not.&lt;/p&gt;
+&lt;h2 id=&#34;what-does-rancher-use-cloud-init-for&#34;&gt;What does Rancher use cloud-init for?&lt;/h2&gt;
+&lt;p&gt;This is covered in the &lt;a href=&#34;https://www.youtube.com/watch?v=ozLPpyrqwf8&#34;&gt;Masterclass&lt;/a&gt; session I co-hosted, but as a refresher, particularly with the &lt;code&gt;vSphere&lt;/code&gt; driver, Rancher will mount an ISO image to the VM to deliver the &lt;code&gt;user-data&lt;/code&gt; portion of a &lt;code&gt;cloud-init&lt;/code&gt; configuration. The contents of which look like this:&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Evaluating Harvester in vSphere</title>
+      <link>http://localhost:1313/2021/12/20/evaluating-harvester-in-vsphere/</link>
+      <pubDate>Mon, 20 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2021/12/20/evaluating-harvester-in-vsphere/</guid>
+      
+      <description>&lt;p&gt;&lt;strong&gt;Disclaimer - The use of nested virtualisation is not a supported topology&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.harvesterhci.io&#34;&gt;Harvester&lt;/a&gt; is an open-source HCI solution aimed at managing Virtual Machines, similar to vSphere and Nutanix, with key differences including (but not limited to):&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Fully Open Source&lt;/li&gt;
+&lt;li&gt;Leveraging Kubernetes-native technologies&lt;/li&gt;
+&lt;li&gt;Integration with Rancher&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Testing/evaluating any hyperconverged solution can be difficult - It usually requires having dedicated hardware as these solutions are designed to work directly on bare metal. However, we can circumvent this by leveraging &lt;strong&gt;&lt;em&gt;nested virtualisation&lt;/em&gt;&lt;/strong&gt; - something which may be familiar with a lot of homelabbers (myself included) - which involves using an existing virtualisation solution provision workloads that also leverage virtualisation technology.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Taking a Modular Approach to my Homelab with Pulumi</title>
+      <link>http://localhost:1313/2021/11/17/taking-a-modular-approach-to-my-homelab-with-pulumi/</link>
+      <pubDate>Wed, 17 Nov 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2021/11/17/taking-a-modular-approach-to-my-homelab-with-pulumi/</guid>
+      
+      <description>&lt;h2 id=&#34;architecture&#34;&gt;Architecture&lt;/h2&gt;
+&lt;p&gt;After reviewing the key components of my lab environment, I translated these into the Pulumi stacks as illustrated in the diagram below. &lt;a href=&#34;https://www.pulumi.com/docs/guides/organizing-projects-stacks/&#34;&gt;Pulumi has a blog post about the benefits of adopting multiple stacks&lt;/a&gt; and I found organising my homelab this way enables greater flexibility and organisation. I can also use stacks as a &amp;ldquo;template&amp;rdquo; to further build out my lab environment, for example, repeating the &amp;ldquo;Tools-Cluster&amp;rdquo; stack to add additional clusters.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Creating Kubernetes Clusters with Rancher and Pulumi</title>
+      <link>http://localhost:1313/2021/05/13/creating-rancher-clusters-with-pulumi/</link>
+      <pubDate>Thu, 13 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2021/05/13/creating-rancher-clusters-with-pulumi/</guid>
+      
+      <description>&lt;p&gt;tldr; &lt;a href=&#34;https://github.com/David-VTUK/pulumi-rancher-demos&#34;&gt;Here&lt;/a&gt; is the code repo&lt;/p&gt;
+&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;
+&lt;p&gt;My Job at Suse (via Rancher) involves hosting a lot of demos, product walk-throughs and various other activities that necessitate spinning up tailored environments on-demand. To facilitate this, I previously leaned towards Terraform, and have since curated a list of individual scripts I have to manage on an individual basis as they address a specific use case.&lt;/p&gt;
+&lt;p&gt;This approach reached a point where it became difficult to manage. Ideally, I wanted an IaC environment that catered for:&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>K3s, Rancher and Pulumi</title>
+      <link>http://localhost:1313/2021/04/06/k3s-rancher-and-pulumi/</link>
+      <pubDate>Tue, 06 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2021/04/06/k3s-rancher-and-pulumi/</guid>
+      
+      <description>&lt;p&gt;TLDR; Repo can be found &lt;a href=&#34;https://github.com/David-VTUK/vSphere-K3s-Rancher-Pulumi&#34;&gt;here&lt;/a&gt; (Be warned, I&amp;rsquo;m at best, a hobbyist programmer and certainly not a software engineer in my day job)&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;ve been recently getting acquainted with &lt;a href=&#34;https://www.pulumi.com/&#34;&gt;Pulumi&lt;/a&gt; as an alternative to Terraform for managing my infrastructure. I decided to create a repo that would do a number of activities to stand up Rancher in a new K3s cluster, all managed by Pulumi in my vSphere Homelab, consisting of the following activities:&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>End to end automation with CircleCI and ArgoCD Part 1 - Overview</title>
+      <link>http://localhost:1313/2020/06/24/end-to-end-automation-with-circleci-and-argocd-part-1-overview/</link>
+      <pubDate>Wed, 24 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2020/06/24/end-to-end-automation-with-circleci-and-argocd-part-1-overview/</guid>
+      
+      <description>&lt;p&gt;Part 1 of this 3 part series goes through the process of setting up a CI/CD pipeline leveraging CircleCI and ArgoCD. The overall architecture is depicted below:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;&lt;img src=&#34;images/CICD-856x1024.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;CI/CD Delivery Pipeline&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;The steps that will be implemented/accommodated are:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Developer commits code to a GitHub repo that is monitored by CircleCI.&lt;/li&gt;
+&lt;li&gt;CircleCI will perform the following tasks on all commits into the &lt;code&gt;master&lt;/code&gt; branch:
+&lt;ol&gt;
+&lt;li&gt;Test the code. In this example, we&amp;rsquo;re leveraging &lt;code&gt;go test&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;If Testing completes successfully, build (compile) the code.&lt;/li&gt;
+&lt;li&gt;If building the code completes successfully, construct a docker image to accommodate the service. Push this image to DockerHub&lt;/li&gt;
+&lt;li&gt;If creating the Docker Image completes successfully, construct a basic deployment YAML file including the tag of the image that was recently uploaded.&lt;/li&gt;
+&lt;li&gt;Commit the YAML file to a separate GitHub repo, monitored by ArgoCD.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;Argo CD will deploy the YAML manifest:
+&lt;ol&gt;
+&lt;li&gt;Automatically into the &lt;code&gt;Test&lt;/code&gt; cluster&lt;/li&gt;
+&lt;li&gt;With manual approval into the &lt;code&gt;Prod&lt;/code&gt; cluster&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.virtualthoughts.co.uk/2020/06/24/end-to-end-automation-with-circleci-and-argocd-part-2-circleci-configuration/&#34;&gt;Part 2 - CircleCI Configuration&lt;/a&gt;&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>End to end automation with CircleCI and ArgoCD Part 2 - CircleCI Configuration</title>
+      <link>http://localhost:1313/2020/06/24/end-to-end-automation-with-circleci-and-argocd-part-2-circleci-configuration/</link>
+      <pubDate>Wed, 24 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2020/06/24/end-to-end-automation-with-circleci-and-argocd-part-2-circleci-configuration/</guid>
+      
+      <description>&lt;p&gt;&lt;a href=&#34;https://circleci.com/&#34;&gt;CircleCI&lt;/a&gt; is a continuous integration technology that is capable of building extremely complex pipelines. Being cloud-hosted and offering a free tier makes it very easy to get up and running.&lt;/p&gt;
+&lt;h2 id=&#34;sign-up-and-set-up&#34;&gt;Sign Up and Set-Up&lt;/h2&gt;
+&lt;p&gt;Simply navigate to CircleCI&amp;rsquo;s website and log in with either Github or Bitbucket.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;images/image-1024x407.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Select your org:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;images/image-5ef09a1fc6640.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Select your project. For me, it&amp;rsquo;s CircleCI-Webapp-CI (Feel free to fork it or leverage your own)&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;images/image-5ef0a041d87e3-1024x302.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The next step is to create a CircleCI config file that will dictate the steps in the pipeline. CircleCI provides a template to work with:&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>End to end automation with CircleCI and ArgoCD Part 3 – ArgoCD</title>
+      <link>http://localhost:1313/2020/06/24/end-to-end-automation-with-circleci-and-argocd-part-3-argocd/</link>
+      <pubDate>Wed, 24 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2020/06/24/end-to-end-automation-with-circleci-and-argocd-part-3-argocd/</guid>
+      
+      <description>&lt;p&gt;&lt;a href=&#34;https://argoproj.github.io&#34;&gt;ArgoCD&lt;/a&gt; is a Continuous Delivery tool designed for Kubernetes, This will be used to take the generated YAML file from the CI process and apply it to two clusters.&lt;/p&gt;
+&lt;p&gt;In this section, the following part of the overall CI/CD pipeline being implemented is depicted below.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;images/CICD-Page-3.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;ArgoCD will monitor for changes in the &lt;code&gt;Webapp-CD&lt;/code&gt; Github Repo.&lt;/li&gt;
+&lt;li&gt;All changes are automatically applied to the &lt;code&gt;Test&lt;/code&gt; cluster.&lt;/li&gt;
+&lt;li&gt;All changes will be staged for manual approval to &lt;code&gt;Prod&lt;/code&gt; cluster&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;install-argocd&#34;&gt;Install ArgoCD&lt;/h2&gt;
+&lt;p&gt;ArgoCD has extensive installation documentation &lt;a href=&#34;https://argoproj.github.io/argo-cd/getting_started/&#34;&gt;here&lt;/a&gt;. For ease, a community Helm chart has also been created.&lt;/p&gt;</description>
+      
+    </item>
+    
+  </channel>
+</rss>

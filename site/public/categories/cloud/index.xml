@@ -1,0 +1,588 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Cloud on Virtualthoughts</title>
+    <link>http://localhost:1313/categories/cloud/</link>
+    <description>Recent content in Cloud on Virtualthoughts</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-gb</language>
+    <lastBuildDate>Sun, 16 Nov 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/categories/cloud/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ArgoCD - Ordering with ApplicationSets</title>
+      <link>http://localhost:1313/2025/11/16/argocd-ordering-with-applicationsets/</link>
+      <pubDate>Sun, 16 Nov 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2025/11/16/argocd-ordering-with-applicationsets/</guid>
+      
+      <description>&lt;p&gt;&lt;a href=&#34;https://www.virtualthoughts.co.uk/2025/02/21/customising-argocd-applicationsets-with-template-patches/&#34;&gt;In a previous post&lt;/a&gt;, I alluded to the use of ApplicationSets for my homelab deployments. I continue to leverage them, to the point I now have quite a number of applications managed by one:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;ArgoCD (Itself)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Cert-Manager&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Cilium&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;External-snapshotter&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Gateway API CRD&amp;rsquo;s&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Gateway API gateways&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Homepage&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Kanboard&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Kubevirt&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Longhorn&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;OpenTelemetry Operator&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Sealed Secrets&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;System Upgrade Controller&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The problem I had, was there was no ordering, dependency management or concurrency limits, so applications would simply update as and whenever changes were pushed.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>KubeVirt on ARM64 - CDI Workaround</title>
+      <link>http://localhost:1313/2025/04/07/kubevirt-on-arm64-cdi-workaround/</link>
+      <pubDate>Mon, 07 Apr 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2025/04/07/kubevirt-on-arm64-cdi-workaround/</guid>
+      
+      <description>&lt;p&gt;According to the KubeVirt documentation, &lt;a href=&#34;https://kubevirt.io/user-guide/cluster_admin/operations_on_Arm64/#containerized-data-importer&#34;&gt;CDI is not currently supported on ARM64&lt;/a&gt;, which is the architecture my Turing RK1 nodes use.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;images/GWO_1UbWgAAyL1_.jpg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;As a workaround, I experimented with writing an image directly to a PVC which can then be cloned/mounted to a KubeVirt VM. This example &lt;code&gt;dd&#39;s&lt;/code&gt; an ISO image to a PVC:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;PersistentVolumeClaim&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;fedora-workstation-pvc&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;accessModes&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    - &lt;span style=&#34;color:#ae81ff&#34;&gt;ReadWriteOnce&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;resources&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;requests&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;storage&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;30Gi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;volumeMode&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Block&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;batch/v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Job&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;upload-fedora-workstation-job&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;template&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;containers&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;writer&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;image&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;fedora:latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;command&lt;/span&gt;: [&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/bin/bash&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;-c&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;args&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          - |&lt;span style=&#34;color:#e6db74&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;            set -e
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;            echo &amp;#34;[1/3] Installing tools...&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;            dnf install -y curl xz
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;            echo &amp;#34;[2/3] Downloading and decompressing Fedora Workstation image...&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;            curl -L https://download.fedoraproject.org/pub/fedora/linux/releases/41/Workstation/aarch64/images/Fedora-Workstation-41-1.4.aarch64.raw.xz | xz -d &amp;gt; /tmp/disk.raw
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;            echo &amp;#34;[3/3] Writing image to PVC block device...&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;            dd if=/tmp/disk.raw of=/dev/vda bs=4M status=progress conv=fsync
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;            echo &amp;#34;Done writing Fedora Workstation image to PVC!&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;volumeDevices&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;disk&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &lt;span style=&#34;color:#f92672&#34;&gt;devicePath&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;/dev/vda&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;volumeMounts&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;tmp&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &lt;span style=&#34;color:#f92672&#34;&gt;mountPath&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;/tmp&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;securityContext&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &lt;span style=&#34;color:#f92672&#34;&gt;runAsUser&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;restartPolicy&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Never&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;volumes&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;disk&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;persistentVolumeClaim&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &lt;span style=&#34;color:#f92672&#34;&gt;claimName&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;fedora-workstation-pvc&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;tmp&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;emptyDir&lt;/span&gt;: {}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Which can then be mounted to a VM:&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Replicating my vSphere network configuration in Openshift Virtualisation</title>
+      <link>http://localhost:1313/2024/02/05/replicating-my-vsphere-network-configuration-in-openshift-virtualisation/</link>
+      <pubDate>Mon, 05 Feb 2024 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2024/02/05/replicating-my-vsphere-network-configuration-in-openshift-virtualisation/</guid>
+      
+      <description>&lt;p&gt;&lt;a href=&#34;https://www.redhat.com/en/technologies/cloud-computing/openshift/virtualization&#34;&gt;Red Hat Openshift Virtualisation&lt;/a&gt; provides a platform for running and managing Virtual Machines alongside Containers using a consistent API. It also provides a mechanism for migrating VMs from platforms such as vSphere.&lt;/p&gt;
+&lt;p&gt;As I have both environments, I wanted to deploy an Openshift Virtualisation setup that mimics my current vSphere setup so I could migrate Virtual Machines to it.&lt;/p&gt;
+&lt;h2 id=&#34;existing-vsphere-design&#34;&gt;Existing vSphere Design&lt;/h2&gt;
+&lt;p&gt;Below is a diagram depicting my current vSphere setup. My ESXi hosts are dual-homed with a separation of management (vmkernel) and virtual machine traffic.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Diving into an eBPF &#43; Go Example: Part 1</title>
+      <link>http://localhost:1313/2024/01/24/diving-into-an-ebpf-go-example-part-1/</link>
+      <pubDate>Wed, 24 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2024/01/24/diving-into-an-ebpf-go-example-part-1/</guid>
+      
+      <description>&lt;p&gt;&lt;a href=&#34;https://www.virtualthoughts.co.uk/2024/01/24/diving-into-an-ebpf-go-example-part-1/&#34;&gt;Part 1&lt;/a&gt; / &lt;a href=&#34;https://www.virtualthoughts.co.uk/2024/01/23/diving-into-an-ebpf-go-example-part-2/&#34;&gt;Part 2&lt;/a&gt; / &lt;a href=&#34;https://www.virtualthoughts.co.uk/2024/01/24/diving-into-an-ebpf-go-example-part-3-bonus-round/&#34;&gt;Part 3&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Preamble&lt;/strong&gt;: In preparation for writing this I looked at some excellent content created by &lt;a href=&#34;https://github.com/lizrice&#34;&gt;Liz Rice&lt;/a&gt; and &lt;a href=&#34;https://github.com/thebsdbox&#34;&gt;Daniel Finneran&lt;/a&gt; - including videos, code and literature. I highly recommend checking out their work.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://ebpf-go.dev/guides/getting-started/&#34;&gt;The Cilium eBPF documentation&lt;/a&gt; has some excellent examples of getting started with eBPF and Go. As a &amp;ldquo;hobbyist&amp;rdquo; programmer, I wanted to cement some of these concepts by digging deeper into one of the examples. Part of my learning style is to compile my own notes on a given topic, and this post is essentially that.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Diving into an eBPF &#43; Go Example: Part 3 (Bonus Round)</title>
+      <link>http://localhost:1313/2024/01/24/diving-into-an-ebpf-go-example-part-3-bonus-round/</link>
+      <pubDate>Wed, 24 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2024/01/24/diving-into-an-ebpf-go-example-part-3-bonus-round/</guid>
+      
+      <description>&lt;p&gt;&lt;a href=&#34;https://www.virtualthoughts.co.uk/2024/01/24/diving-into-an-ebpf-go-example-part-1/&#34;&gt;Part 1&lt;/a&gt; / &lt;a href=&#34;https://www.virtualthoughts.co.uk/2024/01/23/diving-into-an-ebpf-go-example-part-2/&#34;&gt;Part 2&lt;/a&gt; / &lt;a href=&#34;https://www.virtualthoughts.co.uk/2024/01/24/diving-into-an-ebpf-go-example-part-3-bonus-round/&#34;&gt;Part 3&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;With one example explored, I wanted to put a spin on it - Therefore, I had an idea:&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&amp;ldquo;Can I use eBPF to identify and store the contents of the &lt;code&gt;protocol&lt;/code&gt; header for IP packets on a specific interface?&amp;rdquo;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;images/header.drawio-1024x467.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;It&amp;rsquo;s more of a rhetorical question - of course we can! The code can be found &lt;a href=&#34;https://github.com/David-VTUK/eBPF-Frolics/tree/main/layer4&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;To summarise, the eBPF C program is a little more complicated. It still leverages XDP, however instead of counting the number of packets, it will inspect each IP packet, extract the &lt;a href=&#34;https://en.wikipedia.org/wiki/List_of_IP_protocol_numbers&#34;&gt;protocol number&lt;/a&gt;, and store it in a map.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Diving into an eBPF &#43; Go Example: Part 2</title>
+      <link>http://localhost:1313/2024/01/23/diving-into-an-ebpf-go-example-part-2/</link>
+      <pubDate>Tue, 23 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2024/01/23/diving-into-an-ebpf-go-example-part-2/</guid>
+      
+      <description>&lt;p&gt;&lt;a href=&#34;https://www.virtualthoughts.co.uk/2024/01/24/diving-into-an-ebpf-go-example-part-1/&#34;&gt;Part 1&lt;/a&gt; / &lt;a href=&#34;https://www.virtualthoughts.co.uk/2024/01/23/diving-into-an-ebpf-go-example-part-2/&#34;&gt;Part 2&lt;/a&gt; / &lt;a href=&#34;https://www.virtualthoughts.co.uk/2024/01/24/diving-into-an-ebpf-go-example-part-3-bonus-round/&#34;&gt;Part 3&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;In Part 1, we had a look at creating the eBPF program in C, which we will need to compile into eBPF bytecode and inject into our Go application&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;images/go.png&#34; alt=&#34;https://ebpf.io/static/1a1bb6f1e64b1ad5597f57dc17cf1350/6515f/go.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Rather than copy/paste the exact instructions, the &lt;a href=&#34;https://ebpf-go.dev/guides/getting-started/#compile-ebpf-c-and-generate-scaffolding-using-bpf2go&#34;&gt;ebpf-go&lt;/a&gt; documentation outlines the process in the toolchain to create the scaffolding for the Go application.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-cpp&#34; data-lang=&#34;cpp&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;package main
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;import&lt;/span&gt; (
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;log&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;net&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;os&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;os/signal&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;time&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;github.com/cilium/ebpf/link&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;github.com/cilium/ebpf/rlimit&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;func main() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// Remove resource limits for kernels &amp;lt;5.11.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; err :&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; rlimit.RemoveMemlock(); err &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; nil { 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        log.Fatal(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Removing memlock:&amp;#34;&lt;/span&gt;, err)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// Load the compiled eBPF ELF and load it into the kernel.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    var objs counterObjects 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; err :&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; loadCounterObjects(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;objs, nil); err &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; nil {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        log.Fatal(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Loading eBPF objects:&amp;#34;&lt;/span&gt;, err)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    defer objs.Close() 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    ifname :&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;eth0&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;// Change this to an interface on your machine.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    iface, err :&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; net.InterfaceByName(ifname)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; err &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; nil {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        log.Fatalf(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Getting interface %s: %s&amp;#34;&lt;/span&gt;, ifname, err)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// Attach count_packets to the network interface.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    link, err :&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; link.AttachXDP(link.XDPOptions{ 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        Program:   objs.CountPackets,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        Interface: iface.Index,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    })
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; err &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; nil {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        log.Fatal(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Attaching XDP:&amp;#34;&lt;/span&gt;, err)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    defer link.Close() 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    log.Printf(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Counting incoming packets on %s..&amp;#34;&lt;/span&gt;, ifname)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// Periodically fetch the packet counter from PktCount,
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// exit the program when interrupted.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    tick :&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; time.Tick(time.Second)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    stop :&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; make(chan os.Signal, &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    signal.Notify(stop, os.Interrupt)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        select {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;-&lt;/span&gt;tick:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            var count uint64
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            err :&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; objs.PktCount.Lookup(uint32(&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;), &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;count) 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; err &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; nil {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                log.Fatal(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Map lookup:&amp;#34;&lt;/span&gt;, err)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            log.Printf(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Received %d packets&amp;#34;&lt;/span&gt;, count)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;-&lt;/span&gt;stop:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            log.Print(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Received signal, exiting..&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As there&amp;rsquo;s already an example, let&amp;rsquo;s dig into the prominent sections:&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Changing the default apps wildcard certificate in OCP4</title>
+      <link>http://localhost:1313/2023/12/30/changing-the-default-apps-wildcard-certificate-in-ocp4/</link>
+      <pubDate>Sat, 30 Dec 2023 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2023/12/30/changing-the-default-apps-wildcard-certificate-in-ocp4/</guid>
+      
+      <description>&lt;p&gt;In a standard OCP4 installation, several &lt;code&gt;route&lt;/code&gt; objects are created by default and secured with a internally signed wildcard certificate.&lt;/p&gt;
+&lt;p&gt;These &lt;code&gt;routes&lt;/code&gt; are configured as &lt;code&gt;&amp;lt;app-name&amp;gt;.apps.&amp;lt;domain&amp;gt;&lt;/code&gt;. In my example, I have a cluster with the assigned domain &lt;code&gt;ocp-acm.virtualthoughts.co.uk&lt;/code&gt;, which results in the &lt;code&gt;routes&lt;/code&gt; below:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;oauth-openshift.apps.ocp-acm.virtualthoughts.co.uk
+console-openshift-console.apps.ocp-acm.virtualthoughts.co.uk
+grafana-openshift-monitoring.apps.ocp-acm.virtualthoughts.co.uk
+thanos-querier-openshift-monitoring.apps.ocp-acm.virtualthoughts.co.uk
+prometheus-k8s-openshift-monitoring.apps.ocp-acm.virtualthoughts.co.uk
+alertmanager-main-openshift-monitoring.apps.ocp-acm.virtualthoughts.co.uk
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Inspecting &lt;code&gt;console-openshift-console.apps.ocp-acm.virtualthoughts.co.uk&lt;/code&gt; shows us the default wildcard TLS certificate used by the Ingress Operator:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;images/default-wildcard.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Because it&amp;rsquo;s internally signed, it&amp;rsquo;s not trusted by default by external clients. However, this can be changed.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Improving the CI/build process for the community Rancher Exporter</title>
+      <link>http://localhost:1313/2023/06/05/improving-the-ci-build-process-for-the-community-rancher-exporter/</link>
+      <pubDate>Mon, 05 Jun 2023 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2023/06/05/improving-the-ci-build-process-for-the-community-rancher-exporter/</guid>
+      
+      <description>&lt;p&gt;One of my side projects is developing and maintaining an &lt;a href=&#34;https://github.com/David-VTUK/prometheus-rancher-exporter&#34;&gt;unofficial Prometheus Exporter for Rancher&lt;/a&gt;. It exposes metrics pertaining to Rancher-specific resources including, but not limited to managed clusters, Kubernetes versions, and more. Below shows an example dashboard based on these metrics.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;images/overview-dashboard.png&#34; alt=&#34;overview-dashboard.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Incidentally, if you are using Rancher, I&amp;rsquo;d love to hear your thoughts/feedback.&lt;/p&gt;
+&lt;h2 id=&#34;previous-ci-workflow&#34;&gt;Previous CI workflow&lt;/h2&gt;
+&lt;p&gt;The flowchart below outlines the existing process. Whilst automated, pushing directly to &lt;code&gt;latest&lt;/code&gt; is bad practice.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Debugging cloud-init not executing runcmd commands</title>
+      <link>http://localhost:1313/2023/01/18/debugging-cloud-init-not-executing-runcmd-commands/</link>
+      <pubDate>Wed, 18 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2023/01/18/debugging-cloud-init-not-executing-runcmd-commands/</guid>
+      
+      <description>&lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
+&lt;p&gt;Rancher leverages cloud-init for the provisioning of Virtual Machines on a number of infrastructure providers, as below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;images/image.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;I recently encountered an issue whereby vSphere based clusters using an Ubuntu VM template would successfully provision, but SLES based VM templates would not.&lt;/p&gt;
+&lt;h2 id=&#34;what-does-rancher-use-cloud-init-for&#34;&gt;What does Rancher use cloud-init for?&lt;/h2&gt;
+&lt;p&gt;This is covered in the &lt;a href=&#34;https://www.youtube.com/watch?v=ozLPpyrqwf8&#34;&gt;Masterclass&lt;/a&gt; session I co-hosted, but as a refresher, particularly with the &lt;code&gt;vSphere&lt;/code&gt; driver, Rancher will mount an ISO image to the VM to deliver the &lt;code&gt;user-data&lt;/code&gt; portion of a &lt;code&gt;cloud-init&lt;/code&gt; configuration. The contents of which look like this:&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Evaluating Harvester in vSphere</title>
+      <link>http://localhost:1313/2021/12/20/evaluating-harvester-in-vsphere/</link>
+      <pubDate>Mon, 20 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2021/12/20/evaluating-harvester-in-vsphere/</guid>
+      
+      <description>&lt;p&gt;&lt;strong&gt;Disclaimer - The use of nested virtualisation is not a supported topology&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.harvesterhci.io&#34;&gt;Harvester&lt;/a&gt; is an open-source HCI solution aimed at managing Virtual Machines, similar to vSphere and Nutanix, with key differences including (but not limited to):&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Fully Open Source&lt;/li&gt;
+&lt;li&gt;Leveraging Kubernetes-native technologies&lt;/li&gt;
+&lt;li&gt;Integration with Rancher&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Testing/evaluating any hyperconverged solution can be difficult - It usually requires having dedicated hardware as these solutions are designed to work directly on bare metal. However, we can circumvent this by leveraging &lt;strong&gt;&lt;em&gt;nested virtualisation&lt;/em&gt;&lt;/strong&gt; - something which may be familiar with a lot of homelabbers (myself included) - which involves using an existing virtualisation solution provision workloads that also leverage virtualisation technology.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Creating Kubernetes Clusters with Rancher and Pulumi</title>
+      <link>http://localhost:1313/2021/05/13/creating-rancher-clusters-with-pulumi/</link>
+      <pubDate>Thu, 13 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2021/05/13/creating-rancher-clusters-with-pulumi/</guid>
+      
+      <description>&lt;p&gt;tldr; &lt;a href=&#34;https://github.com/David-VTUK/pulumi-rancher-demos&#34;&gt;Here&lt;/a&gt; is the code repo&lt;/p&gt;
+&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;
+&lt;p&gt;My Job at Suse (via Rancher) involves hosting a lot of demos, product walk-throughs and various other activities that necessitate spinning up tailored environments on-demand. To facilitate this, I previously leaned towards Terraform, and have since curated a list of individual scripts I have to manage on an individual basis as they address a specific use case.&lt;/p&gt;
+&lt;p&gt;This approach reached a point where it became difficult to manage. Ideally, I wanted an IaC environment that catered for:&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>K3s, Rancher and Pulumi</title>
+      <link>http://localhost:1313/2021/04/06/k3s-rancher-and-pulumi/</link>
+      <pubDate>Tue, 06 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2021/04/06/k3s-rancher-and-pulumi/</guid>
+      
+      <description>&lt;p&gt;TLDR; Repo can be found &lt;a href=&#34;https://github.com/David-VTUK/vSphere-K3s-Rancher-Pulumi&#34;&gt;here&lt;/a&gt; (Be warned, I&amp;rsquo;m at best, a hobbyist programmer and certainly not a software engineer in my day job)&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;ve been recently getting acquainted with &lt;a href=&#34;https://www.pulumi.com/&#34;&gt;Pulumi&lt;/a&gt; as an alternative to Terraform for managing my infrastructure. I decided to create a repo that would do a number of activities to stand up Rancher in a new K3s cluster, all managed by Pulumi in my vSphere Homelab, consisting of the following activities:&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Rancher, vSphere Network Protocol Profiles and static IP addresses for k8s nodes [Updated 2023]</title>
+      <link>http://localhost:1313/2020/03/29/rancher-vsphere-network-protocol-profiles-and-static-ip-addresses-for-k8s-nodes/</link>
+      <pubDate>Sun, 29 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2020/03/29/rancher-vsphere-network-protocol-profiles-and-static-ip-addresses-for-k8s-nodes/</guid>
+      
+      <description>&lt;p&gt;&lt;strong&gt;Edit:&lt;/strong&gt; This post has been updated to reflect changes in newer versions of Rancher.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; As mentioned by Jonathan in the comments, disabling cloud-init&amp;rsquo;s initial network configuration is recommended. To do this, create a file:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;/etc/cloud/cloud.cfg.d/99-disable-network-config.cfg&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;To contain:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;network: {config: disabled}&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;In your VM template.&lt;/p&gt;
+&lt;p&gt;How networking configuration is applied to k8s nodes (or VM&amp;rsquo;s in general) in on-premises environments is usually achieved by one of two ways - DHCP or static. For some, DHCP is not a popular option and static addresses can be time-consuming to manage, particularly when there&amp;rsquo;s no IPAM feature in Rancher. In this blog post I go through how to leverage vSphere Network Protocol Profiles in conjunction with Rancher and Cloud-Init to reliably, and predictably apply static IP addresses to deployed nodes.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>On-prem K8s clusters with Rancher, Terraform and Ubuntu</title>
+      <link>http://localhost:1313/2019/12/27/on-prem-k8s-clusters-with-rancher-terraform-and-ubuntu/</link>
+      <pubDate>Fri, 27 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2019/12/27/on-prem-k8s-clusters-with-rancher-terraform-and-ubuntu/</guid>
+      
+      <description>&lt;p&gt;One of the attractive characteristics of Kubernetes is how it can run pretty much anywhere - in the cloud, in the data center, on the edge, on your local machine and much more. Leveraging existing investments in datacenter resources can be logical when deciding where to place new Kubernetes clusters, and this post goes into automating this with Rancher and Terraform.&lt;/p&gt;
+&lt;h2 id=&#34;primer&#34;&gt;Primer&lt;/h2&gt;
+&lt;p&gt;For this exercise the following is leveraged:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Rancher 2.3&lt;/li&gt;
+&lt;li&gt;vSphere 6.7&lt;/li&gt;
+&lt;li&gt;Ubuntu 18.04 LTS&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;An Ubuntu VM will be created and configured into a template to spin up Kubernetes nodes.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Pi-Hole and K8s v2 - Now with DNS over HTTPS</title>
+      <link>http://localhost:1313/2019/11/07/pi-hole-and-k8s-v2-now-with-dns-over-https/</link>
+      <pubDate>Thu, 07 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2019/11/07/pi-hole-and-k8s-v2-now-with-dns-over-https/</guid>
+      
+      <description>&lt;p&gt;In a previous post, I went through the process of configuring Pi-Hole within a Kubernetes cluster for the purpose of facilitating a network-wide adblocking. Although helpful, I wanted to augment this with DNS over HTTPS.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/David-VTUK/piholev2&#34;&gt;Complete manifests can be found here&lt;/a&gt;. Shout out to &lt;a href=&#34;https://github.com/visibilityspots&#34;&gt;visibilityspots&lt;/a&gt; for the &lt;a href=&#34;https://hub.docker.com/r/visibilityspots/cloudflared/&#34;&gt;cloudflared image on Dockerhub&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;why&#34;&gt;Why?&lt;/h2&gt;
+&lt;p&gt;DNS, as a protocol, is insecure and can be prone to manipulation and man-in-the-middle attacks. DNS over HTTPS helps address this by encrypting the data between the DNS over HTTPS client and the DNS over HTTPS-based DNS resolver. One of which is provided by Cloudflare.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Creating a highly available, cross AZ, loadbalanced ETCD cluster in AWS with Terraform</title>
+      <link>http://localhost:1313/2019/09/08/creating-a-highly-available-cross-az-loadbalanced-etcd-cluster-in-aws-with-terraform/</link>
+      <pubDate>Sun, 08 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2019/09/08/creating-a-highly-available-cross-az-loadbalanced-etcd-cluster-in-aws-with-terraform/</guid>
+      
+      <description>&lt;p&gt;Having experimented with Terraform recently, I decided to leverage this tool by creating an etcd cluster in AWS. This blog post goes through the steps used to accomplish this. For readability, I&amp;rsquo;ve only quoted pertinent code snippets, but all of the code can be found at &lt;a href=&#34;https://github.com/David-VTUK/terraformec2&#34;&gt;https://github.com/David-VTUK/terraformec2&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;disclaimer&#34;&gt;Disclaimer&lt;/h2&gt;
+&lt;p&gt;I do not profess to be an Etcd, Terraform or AWS expert, therefore he be dragons in the form of implementations unlikely to be best practice or production-ready. In particular, I would like to revisit this at some point and enhance it to include:&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Application security with mutual TLS (mTLS) via Istio</title>
+      <link>http://localhost:1313/2019/07/15/application-security-with-mutual-tls-mtls-via-istio/</link>
+      <pubDate>Mon, 15 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2019/07/15/application-security-with-mutual-tls-mtls-via-istio/</guid>
+      
+      <description>&lt;h1 id=&#34;tls-overview&#34;&gt;TLS Overview&lt;/h1&gt;
+&lt;p&gt;If we take an example of accessing a website such as https://www.virtualthoughts.co.uk/, these are the high-level steps of what occurs:&lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;images/https3.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;The client initiates a connection to the web server requesting an HTTPS connection.&lt;/li&gt;
+&lt;li&gt;The web server responds with its public key. The client validates the key with its list of known Certificate Authorities.&lt;/li&gt;
+&lt;li&gt;A session key is generated by the client and encrypted with the web server&amp;rsquo;s public key and is sent back to the web server.&lt;/li&gt;
+&lt;li&gt;The web server decrypts the session key with its private key. End to end encryption is established.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;By default, the TLS protocol only proves the identity of the server to the client using X.509 certificate and the authentication of the client to the server is left to the application layer.  For external, public-facing websites, this is an acceptable and well-established implementation of TLS. But what about communication between different microservices?&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Step by Step - Istio up and running</title>
+      <link>http://localhost:1313/2019/06/23/step-by-step-istio-up-and-running/</link>
+      <pubDate>Sun, 23 Jun 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2019/06/23/step-by-step-istio-up-and-running/</guid>
+      
+      <description>&lt;p&gt;Service Mesh is a pretty hot topic in the Kubernetes ecosystem currently, and I wanted to get it up and running in my own lab environment. Istio&amp;rsquo;s documentation has a pre-baked solution to demonstrate some of its capabilities (a book app, if memory serves me correctly), but I wanted to deploy my own app to get more &amp;ldquo;hands-on&amp;rdquo; experience with the tech, even if it&amp;rsquo;s only very basic to start with.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Introducing Velero - Backup and DR for Kubernetes Applications</title>
+      <link>http://localhost:1313/2019/06/12/introducing-velero-backup-and-dr-for-kubernetes-applications/</link>
+      <pubDate>Wed, 12 Jun 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2019/06/12/introducing-velero-backup-and-dr-for-kubernetes-applications/</guid>
+      
+      <description>&lt;p&gt;&lt;img src=&#34;images/1*YsbUiVbFviN34Vh8zop4xQ.png&#34; alt=&#34;Image result for velero logo heptio&#34;&gt;&lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;h1 id=&#34;what-is-velero&#34;&gt;What is Velero?&lt;/h1&gt;
+&lt;p&gt;Velero (previously known as Heptio ARK) provides a suite of tools to backup Kubernetes resources and applications for two main purposes:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Disaster Recovery&lt;/strong&gt; - Recover Kubernetes cluster components and applications.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Migration&lt;/strong&gt; - Migrate your Kubernetes applications to another Kubernetes cluster.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Migrating Kubernetes applications is a compelling use case. One of the significant benefits of using Kubernetes is the predictability of the platform and consequently the portability of applications that reside on it. With the main exception of nuances with persistent storage, the Kubernetes API will fell almost indistinguishable whether it resides on prem, GKE, AKS, EKS and elsewhere. If you have your Kubernetes-based application on one provider and want to migrate it to another or duplicate it to run elsewhere for dev/test, this can easily be achieved. Especially with Velero.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Bootstrapping Prometheus, Grafana and Alertmanager to PKS deployed K8s Clusters</title>
+      <link>http://localhost:1313/2019/05/14/bootstrapping-prometheus-grafana-and-alertmanager-to-pks-deployed-k8s-clusters/</link>
+      <pubDate>Tue, 14 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2019/05/14/bootstrapping-prometheus-grafana-and-alertmanager-to-pks-deployed-k8s-clusters/</guid>
+      
+      <description>&lt;p&gt;PKS is a comprehensive platform for the provisioning and management of Kubernetes clusters, which can be further enhanced by leveraging its extensibility options. In this post, we will modify a plan to deploy a yaml manifest file which provisions Prometheus, Grafana, and Alertmanager backed by NSX-T load balancers.&lt;/p&gt;
+&lt;h1 id=&#34;why-prometheus-grafana-and-alertmanager&#34;&gt;Why Prometheus, Grafana and Alertmanager?&lt;/h1&gt;
+&lt;p&gt;The &lt;a href=&#34;https://en.wikipedia.org/wiki/Cloud_Native_Computing_Foundation&#34; title=&#34;Cloud Native Computing Foundation&#34;&gt;Cloud Native Computing Foundation&lt;/a&gt; accepted Prometheus as its second incubated project, the first being Kubernetes. Originally developed by SoundCloud. It has quickly become a popular platform for the monitoring of Kubernetes platforms. Built upon a powerful analytics engine, extensive and highly flexible data modeling can be accomplished with relative ease.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>CKA Exam Experience (Inc study &amp; lab guide)</title>
+      <link>http://localhost:1313/2019/05/07/cka-exam-experience-inc-study-lab-guide/</link>
+      <pubDate>Tue, 07 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2019/05/07/cka-exam-experience-inc-study-lab-guide/</guid>
+      
+      <description>&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
+&lt;p&gt;Over the long bank holiday weekend, I sat and passed the Certified Kubernetes Exam (CKA). This blog post goes over my experience (With respect to the NDA) together with a lab guide I&amp;rsquo;ve made which I&amp;rsquo;ve uploaded hoping it might help others.&lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;images/339.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;h1 id=&#34;format&#34;&gt;Format&lt;/h1&gt;
+&lt;p&gt;The online exams consist of a set of performance-based items (problems) to be solved on the command line. For the CKA there are 24 questions of varying difficulty. At the time of writing, the only option to sit this exam is through remote proctoring.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Exposing the K8s dashboard via a NSX-T Load balancer</title>
+      <link>http://localhost:1313/2019/04/15/exposing-the-k8s-dashboard-via-a-nsx-t-load-balancer/</link>
+      <pubDate>Mon, 15 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2019/04/15/exposing-the-k8s-dashboard-via-a-nsx-t-load-balancer/</guid>
+      
+      <description>&lt;p&gt;For the following to work, your k8s infrastructure needs to leverage some kind of CNI that&amp;rsquo;s able to provision load balancers. For this example I&amp;rsquo;m leveraging PKS which has native integration with NSX-T.&lt;/p&gt;
+&lt;p&gt;The default way to access the Kubernetes dashboard is to leverage the kubectl proxy command. However, this is somewhat limiting for a production environment. An alternative way is to expose the dashboard through a load balancer.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;images/980.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>PKS, Harbor and the importance of container registries</title>
+      <link>http://localhost:1313/2019/02/27/pks-harbor-and-the-importance-of-container-registries/</link>
+      <pubDate>Wed, 27 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2019/02/27/pks-harbor-and-the-importance-of-container-registries/</guid>
+      
+      <description>&lt;h1 id=&#34;whatare-container-registries-and-why-do-we-need-them&#34;&gt;What are container registries and why do we need them?&lt;/h1&gt;
+&lt;p&gt;A lot of the time, particularly when individuals and organisations are evaluating, testing and experimenting with containers they will use &lt;em&gt;public&lt;/em&gt; container registries such as Docker Hub.  These public registries provide an easy-to-use, simple way to access images. As developers, application owners, system admins etc gain familiarity and experience additional operational considerations need to be explored, such as:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Organisation&lt;/strong&gt; - How can we organise container images in a meaningful way? Such as by environment state (Prod/Dev/Test) and application type?&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;RBAC&lt;/strong&gt; - How can we implement role-based access control to a container registry?&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Vulnerability Scanning&lt;/strong&gt; - How can we scan container images for known vulnerabilities?&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Efficiency&lt;/strong&gt; - How can we centrally manage all our container images and deploy an application from them?&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Security&lt;/strong&gt; - Some images need to kept under lock and key, rather than using an external service like Docker Hub.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;introducing-vmware-harbor-registry&#34;&gt;Introducing VMware Harbor Registry&lt;/h1&gt;
+&lt;p&gt;VMware Harbor Registry has been designed to address these considerations as enterprise-class container registry solution with integration into PKS. In this post, We&amp;rsquo;ll have a quick primer on getting up and running with Harbor in PKS and explore some of its features. To begin, we need to download PKS Harbor from the Pivotal site and import it into ops manager.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Kubernetes zero to hero - from single VM webserver to a scalable microservices infrastructure</title>
+      <link>http://localhost:1313/2018/07/13/kubernetes-zero-to-hero-from-single-vm-webserver-to-a-scalable-microservices-infrastructure/</link>
+      <pubDate>Fri, 13 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2018/07/13/kubernetes-zero-to-hero-from-single-vm-webserver-to-a-scalable-microservices-infrastructure/</guid>
+      
+      <description>&lt;h1 id=&#34;preamble&#34;&gt;Preamble&lt;/h1&gt;
+&lt;p&gt;Having spent a number of months familiarising myself with container technology I inevitably got &amp;ldquo;stuck in&amp;rdquo; with Kubernetes. Containers are brilliant, but I personally don&amp;rsquo;t see the value of managing individual containers - it&amp;rsquo;s still the pets vs cattle mentality. Orchestrating containers with the likes of Kubernetes, however, makes a &lt;strong&gt;ton&lt;/strong&gt; of sense and reinforces the microservices approach to building and deploying applications.&lt;/p&gt;
+&lt;p&gt;To test myself, I decided to document end-to-end the entire journey from taking a web server residing on a standalone virtual machine, containerise it, and deploying it via Kubernetes.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Introducing VMware Kubernetes Engine</title>
+      <link>http://localhost:1313/2018/06/27/introducing-vmware-kubernetes-engine/</link>
+      <pubDate>Wed, 27 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2018/06/27/introducing-vmware-kubernetes-engine/</guid>
+      
+      <description>&lt;p&gt;On the 26th of June 2018, VMware publically announced VKE - VMware Kubernetes Engine in Beta (with GA planned for later on this year). For me, the development of this solution flew under the radar, and its subsequent release came as quite a surprise - albeit quite a good one. So, where exactly does this solution fit with other Kubernetes based solutions that currently exist?&lt;/p&gt;
+&lt;h1 id=&#34;vke-overview&#34;&gt;VKE Overview&lt;/h1&gt;
+&lt;p&gt;VKE sits within VMware&amp;rsquo;s portfolio of cloud-native solutions as is pitched as a fully managed, Kubernetes-as-a-service offering. Therefore we have multiple ways we can consume Kubernetes resources from the VMware ecosystem, depicted in the diagram below.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Hybrid Cloud monitoring with VMware vRealize Operations</title>
+      <link>http://localhost:1313/2018/06/12/hybrid-cloud-monitoring-with-vmware-vrealize-operations/</link>
+      <pubDate>Tue, 12 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2018/06/12/hybrid-cloud-monitoring-with-vmware-vrealize-operations/</guid>
+      
+      <description>&lt;p&gt;Applications and the underlying infrastructure, be it public, private or hybrid cloud are becoming increasingly sophisticated. Because of this, the way in which we monitor and observe these environments requires more sophisticated tools. In this blog post, we look at vRealize Operations and how it can be a facilitator of true hybrid cloud monitoring.&lt;/p&gt;
+&lt;h1 id=&#34;what-is-vrealize-operations&#34;&gt;&lt;strong&gt;What is vRealize Operations?&lt;/strong&gt;&lt;/h1&gt;
+&lt;p&gt;vRealize Operations forms part of the overall vRealize suite from VMware – a collection of products targeted to accommodate cloud management and automation. In particular, vRealize Operations, as the name implies, primarily caters to operations management with full visibility across physical, virtual and cloud-based environments. The anatomy of vRealize Operations is depicted below&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>GCP Kubernetes &amp; VMware Wavefront - a practical demonstration</title>
+      <link>http://localhost:1313/2018/06/04/gcp-kubernetes-vmware-wavefront-a-practical-demonstration/</link>
+      <pubDate>Mon, 04 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2018/06/04/gcp-kubernetes-vmware-wavefront-a-practical-demonstration/</guid>
+      
+      <description>&lt;h1 id=&#34;wavefront&#34;&gt;Wavefront&lt;/h1&gt;
+&lt;p&gt;Back in 2017, VMware acquired Wavefront - a company based in the US which focuses predominantly on real-time metrics and monitoring of a really&amp;hellip;really vast array of platforms and technologies. We have technologies that aid in adopting and promoting cloud-native implementations, but monitoring, in some peoples eyes, can be a bit of an afterthought. Wavefront to the rescue. Having developed some Kubernetes and Docker knowledge myself, it seemed rather fitting to get an example going.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Serverless and Containers - from a former ops guy</title>
+      <link>http://localhost:1313/2018/05/11/serverless-and-containers-from-a-former-ops-guy/</link>
+      <pubDate>Fri, 11 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2018/05/11/serverless-and-containers-from-a-former-ops-guy/</guid>
+      
+      <description>&lt;h1 id=&#34;post-aws-summit-2018-thoughts-on-serverless-and-containers&#34;&gt;Post-AWS Summit 2018 Thoughts on Serverless and Containers&lt;/h1&gt;
+&lt;p&gt;&lt;img src=&#34;images/Keynote.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;I was lucky enough to attend the AWS summit in London in May 2018. It was a first for me,  and the experience was pretty awesome. With a veritable smorgasbord of chalk talks, instructor-led demos and vendor presence there was something for everyone. I gravitated towards the docker/lambda sessions as I had recently picked up learning container technology, which got me thinking - from my perspective (previous ops-centric), how does container technology compare to the likes of serverless? When would you use one over the other? Whilst on the train home from London I decided to jot down my notes into this post.&lt;/p&gt;</description>
+      
+    </item>
+    
+  </channel>
+</rss>

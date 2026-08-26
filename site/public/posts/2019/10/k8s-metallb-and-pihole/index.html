@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en-gb"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title itemprop="name">K8s, MetalLB and Pihole | Virtualthoughts</title>
+<meta property="og:title" content="K8s, MetalLB and Pihole | Virtualthoughts" />
+<meta name="twitter:title" content="K8s, MetalLB and Pihole | Virtualthoughts" />
+<meta itemprop="name" content="K8s, MetalLB and Pihole | Virtualthoughts" />
+<meta name="application-name" content="K8s, MetalLB and Pihole | Virtualthoughts" />
+<meta property="og:site_name" content="Virtualthoughts" />
+
+<meta name="description" content="Minimal Hugo blog theme with light and dark mode support">
+<meta itemprop="description" content="Minimal Hugo blog theme with light and dark mode support" />
+<meta property="og:description" content="Minimal Hugo blog theme with light and dark mode support" />
+<meta name="twitter:description" content="Minimal Hugo blog theme with light and dark mode support" />
+
+<meta property="og:locale" content="en-gb" />
+<meta name="language" content="en-gb" />
+
+  <link rel="alternate" hreflang="en-gb" href="http://localhost:1313/posts/2019/10/k8s-metallb-and-pihole/" title="English" />
+
+
+
+
+
+    
+    
+    
+
+    <meta property="og:type" content="article" />
+    <meta property="og:article:published_time" content=2019-10-23T00:00:00Z />
+    <meta property="article:published_time" content=2019-10-23T00:00:00Z />
+    <meta property="og:url" content="http://localhost:1313/posts/2019/10/k8s-metallb-and-pihole/" />
+
+    
+    <meta property="og:article:author" content="David Holder" />
+    <meta property="article:author" content="David Holder" />
+    <meta name="author" content="David Holder" />
+    
+    
+
+    
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "K8s, MetalLB and Pihole",
+        "author": {
+        "@type": "Person",
+        "name": "David Holder"
+        },
+        "datePublished": "2019-10-23",
+        "description": "",
+        "wordCount":  1042 ,
+        "mainEntityOfPage": "http://localhost:1313/posts/2019/10/k8s-metallb-and-pihole/",
+        "dateModified": "2019-10-23",
+        "image": {
+        "@type": "ImageObject",
+        "url": ""
+        },
+        "publisher": {
+        "@type": "Organization",
+        "name": "Virtualthoughts"
+        }
+    }
+    </script>
+
+
+<meta name="generator" content="Hugo 0.162.1">
+
+    
+    <meta property="og:url" content="http://localhost:1313/posts/2019/10/k8s-metallb-and-pihole/">
+	<meta property="og:site_name" content="Virtualthoughts">
+	<meta property="og:title" content="K8s, MetalLB and Pihole">
+	<meta property="og:description" content="An ongoing project of mine involves the migration of home services (Unifi, Pi-hole, etc) to my Kubernetes cluster. This post explores my approach to migrating Pi-hole, with the help of MetalLB.
+MetalLB Overview MetalLB is a load balancer implementation for environments that do not natively provide this functionality. For example, with AWS, Azure, GCP and others, provisioning a “LoadBalancer” service will make API calls to the respective cloud provider to provision a load balancer. For bare-metal / on-premises and similar environments this may not work (depending on the CNI used). MetalLB bridges this functionality to these environments so services can be exposed externally.">
+	<meta property="og:locale" content="en_gb">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="posts">
+		<meta property="article:published_time" content="2019-10-23T00:00:00+00:00">
+		<meta property="article:modified_time" content="2019-10-23T00:00:00+00:00">
+
+
+    
+    
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="K8s, MetalLB and Pihole">
+	<meta name="twitter:description" content="An ongoing project of mine involves the migration of home services (Unifi, Pi-hole, etc) to my Kubernetes cluster. This post explores my approach to migrating Pi-hole, with the help of MetalLB.
+MetalLB Overview MetalLB is a load balancer implementation for environments that do not natively provide this functionality. For example, with AWS, Azure, GCP and others, provisioning a “LoadBalancer” service will make API calls to the respective cloud provider to provision a load balancer. For bare-metal / on-premises and similar environments this may not work (depending on the CNI used). MetalLB bridges this functionality to these environments so services can be exposed externally.">
+
+
+    
+
+    <link rel="canonical" href="http://localhost:1313/posts/2019/10/k8s-metallb-and-pihole/">
+    <link href="/style.min.2d921c18cf1ec555ffc03d59a8adc211c402c68c930c27d6a0c306ab175a8d09.css" rel="stylesheet">
+    <link href="/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+
+
+
+<link rel="manifest" href="http://localhost:1313/site.webmanifest">
+
+<meta name="msapplication-config" content="/browserconfig.xml">
+<meta name="msapplication-TileColor" content="#2d89ef">
+<meta name="theme-color" content="#434648">
+    <meta name="color-scheme" content="light dark">
+
+    
+    <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+    
+    
+</head>
+<body data-theme = "dark" class="notransition">
+
+<script src="/js/theme.js"></script>
+
+<div class="navbar" role="navigation">
+    <nav class="menu" aria-label="Main Navigation">
+        <a href="http://localhost:1313/" class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" 
+viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+stroke-linejoin="round" class="feather feather-home">
+<title>Home</title>
+<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+<polyline points="9 22 9 12 15 12 15 22"></polyline>
+</svg>
+        </a>
+        <input type="checkbox" id="menu-trigger" class="menu-trigger" />
+        <label for="menu-trigger">
+            <span class="menu-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" stroke="currentColor" fill="none" viewBox="0 0 14 14"><title>Menu</title><path stroke-linecap="round" stroke-linejoin="round" d="M10.595 7L3.40726 7"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 3.51488L3.49301 3.51488"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 10.4851H3.49301"></path><path stroke-linecap="round" stroke-linejoin="round" d="M0.5 12.5V1.5C0.5 0.947715 0.947715 0.5 1.5 0.5H12.5C13.0523 0.5 13.5 0.947715 13.5 1.5V12.5C13.5 13.0523 13.0523 13.5 12.5 13.5H1.5C0.947715 13.5 0.5 13.0523 0.5 12.5Z"></path></svg>
+            </span>
+        </label>
+
+        <div class="trigger">
+            <ul class="trigger-container">
+                
+                
+                <li>
+                    <a class="menu-link " href="/">
+                        Home
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link active" href="/posts/">
+                        Posts
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link " href="/about/">
+                        About
+                    </a>
+                    
+                </li>
+                
+                <li class="menu-separator">
+                    <span>|</span>
+                </li>
+                
+                
+            </ul>
+            <a id="mode" href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-sunny" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>LIGHT</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-moon" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>DARK</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+            </a>
+        </div>
+    </nav>
+</div>
+
+<div class="wrapper post">
+    <main class="page-content" aria-label="Content">
+        <article>
+            <header class="header">
+                <h1 class="header-title">K8s, MetalLB and Pihole</h1>
+                
+                
+                
+                <div class="post-meta">
+                    <time datetime="2019-10-23T00:00:00&#43;00:00" itemprop="datePublished"> 23 Oct 2019 </time>
+                </div>
+                
+            </header>
+            
+            <div class="page-content">
+                <p>An ongoing project of mine involves the migration of home services (Unifi, Pi-hole, etc) to my Kubernetes cluster. This post explores my approach to migrating Pi-hole, with the help of MetalLB.</p>
+<h1 id="metallb-overview">MetalLB Overview</h1>
+<p><a href="https://metallb.universe.tf/">MetalLB</a> is a load balancer implementation for environments that do not natively provide this functionality. For example, with AWS, Azure, GCP and others, provisioning a &ldquo;LoadBalancer&rdquo; service will make API calls to the respective cloud provider to provision a load balancer. For bare-metal / on-premises and similar environments this may not work (depending on the CNI used). MetalLB bridges this functionality to these environments so services can be exposed externally.</p>
+<p> </p>
+<p><img src="/posts/2019/10/k8s-metallb-and-pihole/images/MetalLB.png" alt=""></p>
+<p> </p>
+<p>MetalLB consists of the following components:</p>
+<ul>
+<li><strong>Controller Deployment</strong> - A single replica deployment responsible for IP assignment.</li>
+<li><strong>Speaker DaemonSet</strong> - Facilitates communication based on the specified protocols used for external services.</li>
+<li><strong>Controller and Speaker service accounts</strong> - RBAC permissions required for respective components.</li>
+<li><strong>Configuration ConfigMap</strong> - Specifies parameters for either L2 or BGP configuration. The former being used in this example for simplicity.</li>
+</ul>
+<p>The Speaker and Controller components can be deployed by applying the MetalLB manifest:</p>
+<p>[code language=&ldquo;bash&rdquo;] kubectl apply -f <a href="https://raw.githubusercontent.com/google/metallb/v0.8.1/manifests/metallb.yaml">https://raw.githubusercontent.com/google/metallb/v0.8.1/manifests/metallb.yaml</a> [/code]</p>
+<p>A configmap is used to complement the deployment by specifying the required parameters. Below is an example I&rsquo;ve used.</p>
+<p>[code language=&ldquo;bash&rdquo;] apiVersion: v1 kind: ConfigMap metadata: namespace: metallb-system name: config data: config: | address-pools: - name: default protocol: layer2 addresses: - 172.16.10.221-172.16.10.230 [/code]</p>
+<p>The end result is any service of type &ldquo;LoadBalancer&rdquo; will be provisioned from the pool of IP addresses in the above configmap.</p>
+<p> </p>
+<h1 id="pi-hole-overview">PI-Hole Overview</h1>
+<p>Pi-Hole is a network-wide adblocker. It&rsquo;s designed to act as a DNS resolver employing some intelligence to identify and block requests to known ad sites. An advantage of implementing it vs something like Ublock Origin, is PiHole operates at the network level, and is, therefore, device/client agnostic and requires no plugins/software on the originating device.</p>
+<p> </p>
+<p> </p>
+<p><img src="/posts/2019/10/k8s-metallb-and-pihole/images/PiHole2.png" alt=""></p>
+<p>The makers of Pi-Hole have an <a href="https://hub.docker.com/r/pihole/pihole/">official Dockerhub repo</a> for running Pi-Hole as a container, which makes it easier to run in Kubernetes, but with some caveats, as is described below.</p>
+<h1 id="storing-persistent-data-with-pi-hole">Storing Persistent Data with Pi-Hole</h1>
+<p>A Pi-Hole container can be fired up with relative ease and provides some effective ad-blocking functionality but if the container is deleted or restarted, any additional configuration post-creation will be lost, it would, therefore, be convenient to have a persistent location for the Pi-Hole configuration, so blocklist / regex entries / etc could be modified. <a href="https://discourse.pi-hole.net/t/what-files-does-pi-hole-use/1684">The makers of Pi-Hole have documented the location and use of various configuration files</a>. Of interest are the following:</p>
+<p><code>adlists.list</code>: a custom user-defined list of blocklist URL’s (public blocklists maintained by Pi-Hole users). Located in /etc/pihole</p>
+<p><code>regex.list</code> : file of regex filters that are compiled with each pihole-FTL start or restart. Located in /etc/pihole</p>
+<p> </p>
+<h2 id="approach-1---persistent-volumes">Approach #1 - Persistent Volumes</h2>
+<p>This approach leverages a persistent volume mounted to /etc/pihole with a &ldquo;Retain&rdquo; policy. This would ensure that if the container terminates, the information in /etc/pihole would be retained. One disadvantage of this includes the operational overhead of implementing and managing Persistent Volumes.</p>
+<p><img src="/posts/2019/10/k8s-metallb-and-pihole/images/pv1.png" alt=""></p>
+<h2 id="approach-2---config-maps">Approach #2 - Config Maps</h2>
+<p>This approach leverages configmaps mounted directly to the pod, presented as files. Using this method will ensure consistency of configuration parameters without the need to maintain persistent volumes, with the added benefit of residing within the etcd database and is therefore included in etcd backups. This method also completely abstracts the configuration from the pod, which can easily facilitate updates/changes.</p>
+<p><img src="/posts/2019/10/k8s-metallb-and-pihole/images/configmaps.png" alt=""></p>
+<p> </p>
+<h1 id="implementation">Implementation</h1>
+<p>Given the options, I felt #2 was better suited for my environment. YAML manifests can be found in <a href="https://github.com/David-VTUK/k8spihole">https://github.com/David-VTUK/k8spihole</a>.</p>
+<p> </p>
+<h2 id="00-namespaceyaml">00-namespace.yaml</h2>
+<p>Create a namespace for our application. This will be referenced later</p>
+<p>[code language=&ldquo;bash&rdquo;] apiVersion: v1 kind: ConfigMap metadata: namespace: metallb-system name: config data: config: | address-pools: - name: default protocol: layer2 addresses: - 172.16.10.221-172.16.10.230 [/code]</p>
+<h2 id="01-configmapsyaml">01-configmaps.yaml</h2>
+<p>This is where our persistent configuration will be stored.</p>
+<p>Location for adlists:</p>
+<p>[code language=&ldquo;bash&rdquo;] apiVersion: v1 kind: ConfigMap metadata: name: pihole-adlists namespace: pihole-test data: adlists.list: | <a href="https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts">https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts</a> &hellip;&hellip;etc [/code]</p>
+<p>Location for regex values</p>
+<p>[code language=&ldquo;bash&rdquo;] apiVersion: v1 kind: ConfigMap metadata: name: pihole-regex namespace: pihole-test data: regex.list: | ^(.+[-_.])??adse?rv(er?|ice)?s?[0-9]*[-.] &hellip;&hellip;etc [/code]</p>
+<p>Setting environment variables for the timezone and upstream DNS servers.</p>
+<p>[code language=&ldquo;bash&rdquo;] apiVersion: v1 kind: ConfigMap metadata: name: pihole-env namespace: pihole-test data: TZ: UTC DNS1: 1.1.1.1 DNS2: 1.0.0.1 [/code]</p>
+<h2 id="02-deploymentyaml">02-deployment.yaml</h2>
+<p>This manifest defines the parameters of the deployment, of significance are how the config maps are consumed. For example, the environment variables are set from the respective configmap:</p>
+<p>[code language=&ldquo;bash&rdquo;] containers: - name: pihole image: pihole/pihole env: - name: TZ valueFrom: configMapKeyRef: name: pihole-env key: TZ [/code]</p>
+<p>The files are mounted from the aforementioned configmaps as volumes:</p>
+<p>[code language=&ldquo;bash&rdquo;] volumeMounts: - name: pihole-adlists mountPath: /etc/pihole/adlists.list subPath: adlists.list - name: pihole-regex mountPath: /etc/pihole/regex.list subPath: regex.list volumes: - name: pihole-adlists configMap: name: pihole-adlists - name: pihole-regex configMap: name: pihole-regex [/code]</p>
+<h2 id="03-serviceyaml">03-service.yaml</h2>
+<p>Currently, you cannot mix UDP and TCP services on the same Kubernetes load balancer, therefore two services are created. One for the DNS queries (UDP 53) and one for the web interface (TCP 80)</p>
+<p>[code language=&ldquo;bash&rdquo;] kind: Service apiVersion: v1 metadata: name: pihole-web-service namespace : pihole-test spec: selector: app: pihole ports: - protocol: TCP port: 80 targetPort: 80 name : web type: LoadBalancer &mdash; kind: Service apiVersion: v1 metadata: name: pihole-dns-service namespace: pihole-test spec: selector: app: pihole ports: - protocol: UDP port: 53 targetPort: 53 name : dns type: LoadBalancer [/code]</p>
+<h1 id="deployment">Deployment</h1>
+<p>After configuring the configmaps, the manifests can be deployed:</p>
+<p>[code language=&ldquo;bash&rdquo;] david@david-desktop:~/pihole$ kubectl apply -f . namespace/pihole-test created configmap/pihole-adlists created configmap/pihole-regex created configmap/pihole-env created deployment.apps/pihole-deployment created service/pihole-web-service created service/pihole-dns-service created [/code]</p>
+<p>Extract the password for Pi-Hole from the container:</p>
+<p>[code language=&ldquo;bash&rdquo;] david@david-desktop:<del>/pihole$ kubectl get po -n pihole-test NAME READY STATUS RESTARTS AGE pihole-deployment-6ffb58fb8f-2mc97 1/1 Running 0 2m24s david@david-desktop:</del>/pihole$ kubectl logs pihole-deployment-6ffb58fb8f-2mc97 -n pihole-test | grep random Assigning random password: j6ddiTdS [/code]</p>
+<p>Identify the IP address of the web service:</p>
+<p>[code language=&ldquo;bash&rdquo;] david@david-desktop:~/pihole$ kubectl get svc -n pihole-test NAME TYPE CLUSTER-IP EXTERNAL-IP PORT(S) AGE pihole-dns-service LoadBalancer 10.100.40.39 172.16.10.226 53:31725/UDP 3m38s pihole-web-service LoadBalancer 10.107.251.224 172.16.10.225 80:30735/TCP 3m38s [/code]</p>
+<p>Access Pi-Hole on the web service external IP using the password extracted from the pod:</p>
+<p><img src="/posts/2019/10/k8s-metallb-and-pihole/images/161.png" alt=""></p>
+<p>All that remains is to reconfigure DHCP or static settings to point to the pihole-dns-service Loadbalancer address for its DNS queries.</p>
+<p>I&rsquo;m quite surprised how much it has blocked thus far (~48 hours of usage):</p>
+<p><img src="/posts/2019/10/k8s-metallb-and-pihole/images/525.png" alt=""></p>
+<p> </p>
+<p>Happy Ad Blocking!</p>
+
+            </div>
+        </article></main>
+</div>
+<footer class="footer">
+    <span class="footer_item"> </span>
+    &nbsp;
+
+    <div class="footer_social-icons">
+<a href="https://github.com/David-VTUK" target="_blank" rel="noopener noreferrer me"
+    title="Github">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path
+        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+    </path>
+</svg>
+</a>
+<a href="/index.xml" target="_blank" rel="noopener noreferrer me"
+    title="Rss">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 11a9 9 0 0 1 9 9" />
+    <path d="M4 4a16 16 0 0 1 16 16" />
+    <circle cx="5" cy="19" r="1" />
+</svg>
+</a>
+</div>
+    <small class="footer_copyright">
+        © 2026 David Holder.
+        Powered by <a href="https://github.com/hugo-sid/hugo-blog-awesome" target="_blank" rel="noopener">Hugo blog awesome</a>.
+    </small>
+</footer><a href="#" title="Go to top" id="totop">
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" stroke="currentColor" viewBox="0 96 960 960">
+    <path d="M283 704.739 234.261 656 480 410.261 725.739 656 677 704.739l-197-197-197 197Z"/>
+</svg>
+
+</a>
+
+
+    
+
+
+
+
+
+
+    
+    <script async src="http://localhost:1313/js/main.js" ></script>
+
+    
+
+</body>
+</html>

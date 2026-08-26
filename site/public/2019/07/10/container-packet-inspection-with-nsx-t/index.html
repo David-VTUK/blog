@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en-gb"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title itemprop="name">Container Packet Inspection with NSX-T | Virtualthoughts</title>
+<meta property="og:title" content="Container Packet Inspection with NSX-T | Virtualthoughts" />
+<meta name="twitter:title" content="Container Packet Inspection with NSX-T | Virtualthoughts" />
+<meta itemprop="name" content="Container Packet Inspection with NSX-T | Virtualthoughts" />
+<meta name="application-name" content="Container Packet Inspection with NSX-T | Virtualthoughts" />
+<meta property="og:site_name" content="Virtualthoughts" />
+
+<meta name="description" content="Minimal Hugo blog theme with light and dark mode support">
+<meta itemprop="description" content="Minimal Hugo blog theme with light and dark mode support" />
+<meta property="og:description" content="Minimal Hugo blog theme with light and dark mode support" />
+<meta name="twitter:description" content="Minimal Hugo blog theme with light and dark mode support" />
+
+<meta property="og:locale" content="en-gb" />
+<meta name="language" content="en-gb" />
+
+  <link rel="alternate" hreflang="en" href="http://localhost:1313/2019/07/10/container-packet-inspection-with-nsx-t/" title="" />
+
+
+
+
+
+    
+    
+    
+
+    <meta property="og:type" content="article" />
+    <meta property="og:article:published_time" content=2019-07-10T00:00:00Z />
+    <meta property="article:published_time" content=2019-07-10T00:00:00Z />
+    <meta property="og:url" content="http://localhost:1313/2019/07/10/container-packet-inspection-with-nsx-t/" />
+
+    
+    <meta property="og:article:author" content="David Holder" />
+    <meta property="article:author" content="David Holder" />
+    <meta name="author" content="David Holder" />
+    
+    
+
+    
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "Container Packet Inspection with NSX-T",
+        "author": {
+        "@type": "Person",
+        "name": "David Holder"
+        },
+        "datePublished": "2019-07-10",
+        "description": "",
+        "wordCount":  341 ,
+        "mainEntityOfPage": "http://localhost:1313/2019/07/10/container-packet-inspection-with-nsx-t/",
+        "dateModified": "2019-07-10",
+        "image": {
+        "@type": "ImageObject",
+        "url": ""
+        },
+        "publisher": {
+        "@type": "Organization",
+        "name": "Virtualthoughts"
+        }
+    }
+    </script>
+
+
+<meta name="generator" content="Hugo 0.162.1">
+
+    
+    <meta property="og:url" content="http://localhost:1313/2019/07/10/container-packet-inspection-with-nsx-t/">
+	<meta property="og:site_name" content="Virtualthoughts">
+	<meta property="og:title" content="Container Packet Inspection with NSX-T">
+	<meta property="og:description" content="For troubleshooting (or just being a bit nosey) we have a number of tools that allow us to inspect the traffic between two endpoints. When it comes to containers however, our approach has to be adjusted slightly. When using NSX-T as a CNI, we have some of these tools available to us out of the box.
+App Overview For this example, I’ve deployed a standard Wordpress deployment consisting of a frontend (web) pod and a backend (DB) pod. The objective is to identify and capture the traffic between these pods.">
+	<meta property="og:locale" content="en_gb">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="posts">
+		<meta property="article:published_time" content="2019-07-10T00:00:00+00:00">
+		<meta property="article:modified_time" content="2019-07-10T00:00:00+00:00">
+
+
+    
+    
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="Container Packet Inspection with NSX-T">
+	<meta name="twitter:description" content="For troubleshooting (or just being a bit nosey) we have a number of tools that allow us to inspect the traffic between two endpoints. When it comes to containers however, our approach has to be adjusted slightly. When using NSX-T as a CNI, we have some of these tools available to us out of the box.
+App Overview For this example, I’ve deployed a standard Wordpress deployment consisting of a frontend (web) pod and a backend (DB) pod. The objective is to identify and capture the traffic between these pods.">
+
+
+    
+
+    <link rel="canonical" href="http://localhost:1313/2019/07/10/container-packet-inspection-with-nsx-t/">
+    <link href="/style.min.562556c74d7ca5d6d6aa72c6e342d478360cdb10904c9eacda75792f6e6a7eb0.css" rel="stylesheet">
+    <link href="/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+
+
+
+<link rel="manifest" href="http://localhost:1313/site.webmanifest">
+
+<meta name="msapplication-config" content="/browserconfig.xml">
+<meta name="msapplication-TileColor" content="#2d89ef">
+<meta name="theme-color" content="#434648">
+    <meta name="color-scheme" content="light dark">
+
+    
+    <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+    
+    
+</head>
+<body data-theme = "dark" class="notransition">
+
+<script src="/js/theme.js"></script>
+
+<div class="navbar" role="navigation">
+    <nav class="menu" aria-label="Main Navigation">
+        <a href="http://localhost:1313/" class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" 
+viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+stroke-linejoin="round" class="feather feather-home">
+<title>Home</title>
+<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+<polyline points="9 22 9 12 15 12 15 22"></polyline>
+</svg>
+        </a>
+        <input type="checkbox" id="menu-trigger" class="menu-trigger" />
+        <label for="menu-trigger">
+            <span class="menu-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" stroke="currentColor" fill="none" viewBox="0 0 14 14"><title>Menu</title><path stroke-linecap="round" stroke-linejoin="round" d="M10.595 7L3.40726 7"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 3.51488L3.49301 3.51488"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 10.4851H3.49301"></path><path stroke-linecap="round" stroke-linejoin="round" d="M0.5 12.5V1.5C0.5 0.947715 0.947715 0.5 1.5 0.5H12.5C13.0523 0.5 13.5 0.947715 13.5 1.5V12.5C13.5 13.0523 13.0523 13.5 12.5 13.5H1.5C0.947715 13.5 0.5 13.0523 0.5 12.5Z"></path></svg>
+            </span>
+        </label>
+
+        <div class="trigger">
+            <ul class="trigger-container">
+                
+                
+                <li>
+                    <a class="menu-link " href="/">
+                        Home
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link active" href="/posts/">
+                        Posts
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link " href="/about/">
+                        About
+                    </a>
+                    
+                </li>
+                
+                <li class="menu-separator">
+                    <span>|</span>
+                </li>
+                
+                
+            </ul>
+            <a id="mode" href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-sunny" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>LIGHT</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-moon" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>DARK</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+            </a>
+        </div>
+    </nav>
+</div>
+
+<div class="wrapper post">
+    <main class="page-content" aria-label="Content">
+        <article>
+            <header class="header">
+                <h1 class="header-title">Container Packet Inspection with NSX-T</h1>
+                
+                
+                
+                <div class="post-meta">
+                    <time datetime="2019-07-10T00:00:00&#43;00:00" itemprop="datePublished"> 10 Jul 2019 </time>
+                </div>
+                
+            </header>
+            
+            <div class="page-content">
+                <p>For troubleshooting (or just being a bit nosey) we have a number of tools that allow us to inspect the traffic between two endpoints. When it comes to containers however, our approach has to be adjusted slightly. When using NSX-T as a CNI, we have some of these tools available to us out of the box.</p>
+<h1 id="app-overview">App Overview</h1>
+<p><img src="images/app-2.png" alt=""></p>
+<p> </p>
+<p>For this example, I&rsquo;ve deployed a standard Wordpress deployment consisting of a frontend (web) pod and a backend (DB) pod. The objective is to identify and capture the traffic between these pods.</p>
+<p> </p>
+<h1 id="configure-nsx-t-port-mirroring">Configure NSX-T Port Mirroring</h1>
+<p>Navigate to the &ldquo;Port Mirroring Session&rdquo; section in NSX-T via &ldquo;Advanced Networking &amp; Security&rdquo; and click &ldquo;Add&rdquo;</p>
+<p><img src="images/1.png" alt=""></p>
+<p>Define a Local SPAN session:</p>
+<p><img src="images/331.png" alt=""></p>
+<p>Define the transport node (Source ESXI host)</p>
+<p><img src="images/282.png" alt=""></p>
+<p>Select the physical NIC(s) that participate in the n-vds configuration that we want to capture packets from.</p>
+<p><strong>Important:</strong> Enable &ldquo;Encapsulated Packet&rdquo; (Disabled by default) so we can inspect the underlying Geneve overlay packets. However, the NIC we want to mirror to <strong>must</strong> support the increased overall packet size. Therefore, adjust the MTU of the nic on the Wireshark host accordingly.</p>
+<p><img src="images/2.png" alt=""></p>
+<p> </p>
+<p>Select the source VNIC to capture from - This is the NIC of the Kubernetes worker node VM.</p>
+<p> </p>
+<p> </p>
+<p><img src="images/131.png" alt=""></p>
+<p>Finally, select the destination for traffic mirroring. For this example, it&rsquo;s a NIC on a VM I have Wireshark installed on</p>
+<p><img src="images/296.png" alt=""></p>
+<h1 id="traffic-inspection">Traffic Inspection</h1>
+<p>With all the hard work out of the way, we can simply provide a filter in Wireshark to show only packets originating from my Wordpress Web Pod and terminating at the Wordpress DB pod:</p>
+<p><img src="images/429.png" alt=""></p>
+<p>Notes:</p>
+<ul>
+<li>The overall frame size of 1600 further validates our requirement to have the recipient of the traffic mirroring having an interface configured accordingly.</li>
+<li>Because we previously defined the mirroring of encapsulated packets we can see the overlay information</li>
+<li>We can see the entire packet structure consisting of:
+<ul>
+<li>Outer Ethernet (NSX-T Transport Node MAC)</li>
+<li>Outer IP (NSX-T VTEP IP)</li>
+<li>Geneve UDP</li>
+<li>Geneve Data</li>
+<li>Inner Ethernet (Pod Ethernet addresses)</li>
+<li>Inner IP (Pod IP addresses)</li>
+<li>Inner TCP (MYSQL connection)</li>
+<li>Inner Payload (MYSQL Query) - Highlighted</li>
+</ul>
+</li>
+</ul>
+
+            </div>
+        </article></main>
+</div>
+<footer class="footer">
+    <span class="footer_item"> </span>
+    &nbsp;
+
+    <div class="footer_social-icons">
+<a href="https://github.com/David-VTUK" target="_blank" rel="noopener noreferrer me"
+    title="Github">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path
+        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+    </path>
+</svg>
+</a>
+<a href="/index.xml" target="_blank" rel="noopener noreferrer me"
+    title="Rss">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 11a9 9 0 0 1 9 9" />
+    <path d="M4 4a16 16 0 0 1 16 16" />
+    <circle cx="5" cy="19" r="1" />
+</svg>
+</a>
+</div>
+    <small class="footer_copyright">
+        © 2026 David Holder.
+        Powered by <a href="https://github.com/hugo-sid/hugo-blog-awesome" target="_blank" rel="noopener">Hugo blog awesome</a>.
+    </small>
+</footer><a href="#" title="Go to top" id="totop">
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" stroke="currentColor" viewBox="0 96 960 960">
+    <path d="M283 704.739 234.261 656 480 410.261 725.739 656 677 704.739l-197-197-197 197Z"/>
+</svg>
+
+</a>
+
+
+    
+
+
+
+
+
+
+    
+    <script async src="http://localhost:1313/js/main.js" ></script>
+
+    
+
+</body>
+</html>

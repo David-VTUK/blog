@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en-gb"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title itemprop="name">NSX-T, Kubernetes and Microsegmentation | Virtualthoughts</title>
+<meta property="og:title" content="NSX-T, Kubernetes and Microsegmentation | Virtualthoughts" />
+<meta name="twitter:title" content="NSX-T, Kubernetes and Microsegmentation | Virtualthoughts" />
+<meta itemprop="name" content="NSX-T, Kubernetes and Microsegmentation | Virtualthoughts" />
+<meta name="application-name" content="NSX-T, Kubernetes and Microsegmentation | Virtualthoughts" />
+<meta property="og:site_name" content="Virtualthoughts" />
+
+<meta name="description" content="Minimal Hugo blog theme with light and dark mode support">
+<meta itemprop="description" content="Minimal Hugo blog theme with light and dark mode support" />
+<meta property="og:description" content="Minimal Hugo blog theme with light and dark mode support" />
+<meta name="twitter:description" content="Minimal Hugo blog theme with light and dark mode support" />
+
+<meta property="og:locale" content="en-gb" />
+<meta name="language" content="en-gb" />
+
+  <link rel="alternate" hreflang="en" href="http://localhost:1313/2018/08/01/nsx-t-kubernetes-and-microsegmentation/" title="" />
+
+
+
+
+
+    
+    
+    
+
+    <meta property="og:type" content="article" />
+    <meta property="og:article:published_time" content=2018-08-01T00:00:00Z />
+    <meta property="article:published_time" content=2018-08-01T00:00:00Z />
+    <meta property="og:url" content="http://localhost:1313/2018/08/01/nsx-t-kubernetes-and-microsegmentation/" />
+
+    
+    <meta property="og:article:author" content="David Holder" />
+    <meta property="article:author" content="David Holder" />
+    <meta name="author" content="David Holder" />
+    
+    
+
+    
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "NSX-T, Kubernetes and Microsegmentation",
+        "author": {
+        "@type": "Person",
+        "name": "David Holder"
+        },
+        "datePublished": "2018-08-01",
+        "description": "",
+        "wordCount":  716 ,
+        "mainEntityOfPage": "http://localhost:1313/2018/08/01/nsx-t-kubernetes-and-microsegmentation/",
+        "dateModified": "2018-08-01",
+        "image": {
+        "@type": "ImageObject",
+        "url": ""
+        },
+        "publisher": {
+        "@type": "Organization",
+        "name": "Virtualthoughts"
+        }
+    }
+    </script>
+
+
+<meta name="generator" content="Hugo 0.162.1">
+
+    
+    <meta property="og:url" content="http://localhost:1313/2018/08/01/nsx-t-kubernetes-and-microsegmentation/">
+	<meta property="og:site_name" content="Virtualthoughts">
+	<meta property="og:title" content="NSX-T, Kubernetes and Microsegmentation">
+	<meta property="og:description" content="For the uninitiated, VMware NSX comes in two “flavours”, NSX-V which is heavily integrated with vSphere, and NSX-T which is more IaaS agnostic. NSX-T also has more emphasis on facilitating container-based applications, providing a number of features into our container ecosystem. In this blog post, we discuss the microsegmentation capabilities provided by NSX-T in combination with container technology.
+What is Microsegmentation? Prior to Software-defined networking, firewall functions were largely centralised, typically manifested as edge devices which were and still are, good for controlling traffic to and from the datacenter, otherwise known as north-south traffic:">
+	<meta property="og:locale" content="en_gb">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="posts">
+		<meta property="article:published_time" content="2018-08-01T00:00:00+00:00">
+		<meta property="article:modified_time" content="2018-08-01T00:00:00+00:00">
+
+
+    
+    
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="NSX-T, Kubernetes and Microsegmentation">
+	<meta name="twitter:description" content="For the uninitiated, VMware NSX comes in two “flavours”, NSX-V which is heavily integrated with vSphere, and NSX-T which is more IaaS agnostic. NSX-T also has more emphasis on facilitating container-based applications, providing a number of features into our container ecosystem. In this blog post, we discuss the microsegmentation capabilities provided by NSX-T in combination with container technology.
+What is Microsegmentation? Prior to Software-defined networking, firewall functions were largely centralised, typically manifested as edge devices which were and still are, good for controlling traffic to and from the datacenter, otherwise known as north-south traffic:">
+
+
+    
+
+    <link rel="canonical" href="http://localhost:1313/2018/08/01/nsx-t-kubernetes-and-microsegmentation/">
+    <link href="/style.min.562556c74d7ca5d6d6aa72c6e342d478360cdb10904c9eacda75792f6e6a7eb0.css" rel="stylesheet">
+    <link href="/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+
+
+
+<link rel="manifest" href="http://localhost:1313/site.webmanifest">
+
+<meta name="msapplication-config" content="/browserconfig.xml">
+<meta name="msapplication-TileColor" content="#2d89ef">
+<meta name="theme-color" content="#434648">
+    <meta name="color-scheme" content="light dark">
+
+    
+    <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+    
+    
+</head>
+<body data-theme = "dark" class="notransition">
+
+<script src="/js/theme.js"></script>
+
+<div class="navbar" role="navigation">
+    <nav class="menu" aria-label="Main Navigation">
+        <a href="http://localhost:1313/" class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" 
+viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+stroke-linejoin="round" class="feather feather-home">
+<title>Home</title>
+<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+<polyline points="9 22 9 12 15 12 15 22"></polyline>
+</svg>
+        </a>
+        <input type="checkbox" id="menu-trigger" class="menu-trigger" />
+        <label for="menu-trigger">
+            <span class="menu-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" stroke="currentColor" fill="none" viewBox="0 0 14 14"><title>Menu</title><path stroke-linecap="round" stroke-linejoin="round" d="M10.595 7L3.40726 7"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 3.51488L3.49301 3.51488"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 10.4851H3.49301"></path><path stroke-linecap="round" stroke-linejoin="round" d="M0.5 12.5V1.5C0.5 0.947715 0.947715 0.5 1.5 0.5H12.5C13.0523 0.5 13.5 0.947715 13.5 1.5V12.5C13.5 13.0523 13.0523 13.5 12.5 13.5H1.5C0.947715 13.5 0.5 13.0523 0.5 12.5Z"></path></svg>
+            </span>
+        </label>
+
+        <div class="trigger">
+            <ul class="trigger-container">
+                
+                
+                <li>
+                    <a class="menu-link " href="/">
+                        Home
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link active" href="/posts/">
+                        Posts
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link " href="/about/">
+                        About
+                    </a>
+                    
+                </li>
+                
+                <li class="menu-separator">
+                    <span>|</span>
+                </li>
+                
+                
+            </ul>
+            <a id="mode" href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-sunny" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>LIGHT</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-moon" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>DARK</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+            </a>
+        </div>
+    </nav>
+</div>
+
+<div class="wrapper post">
+    <main class="page-content" aria-label="Content">
+        <article>
+            <header class="header">
+                <h1 class="header-title">NSX-T, Kubernetes and Microsegmentation</h1>
+                
+                
+                
+                <div class="post-meta">
+                    <time datetime="2018-08-01T00:00:00&#43;00:00" itemprop="datePublished"> 1 Aug 2018 </time>
+                </div>
+                
+            </header>
+            
+            <div class="page-content">
+                <p>For the uninitiated, VMware NSX comes in two &ldquo;flavours&rdquo;, NSX-V which is heavily integrated with vSphere, and NSX-T which is more IaaS agnostic. NSX-T also has more emphasis on facilitating container-based applications, providing a  number of features into our container ecosystem. In this blog post, we discuss the microsegmentation capabilities provided by NSX-T in combination with container technology.</p>
+<h1 id="what-is-microsegmentation">What is Microsegmentation?</h1>
+<p>Prior to Software-defined networking, firewall functions were largely centralised, typically manifested as edge devices which were and still are, good for controlling traffic to and from the datacenter, otherwise known as north-south traffic:</p>
+<p><img src="images/879.png" alt=""></p>
+<p>The problem with this model, however, is the lack of control for resources that reside within the datacenter, aka east-west traffic. Thankfully, VMware NSX (-V or -T) can facilitate this, manifested by the distributed firewall.</p>
+<p><img src="images/763.png" alt=""></p>
+<p>Because of the distributed firewall, we have complete control over lateral movement within our datacenter. In the example above we can define firewall rules between logical tiers of our application which enforce permitted traffic.</p>
+<p> </p>
+<h1 id="but-what-about-containers">But what about containers?</h1>
+<p>Containers are fundamentally different from Virtual machines in both how they&rsquo;re instantiated and how they&rsquo;re managed. Containers run on hosts that are usually VM&rsquo;s themselves, so how can we achieve the same level of lateral network security we have with Virtual Machines, but with containers?</p>
+<p> </p>
+<h1 id="introducing-the-nsx-t-container-plugin">Introducing the NSX-T Container Plugin</h1>
+<p>The NSX-T container plugin facilitates the exposure of container &ldquo;Pods&rdquo; as NSX-T logical switch ports and because of this, we can implement microsegmentation rules as well as expose Pod&rsquo;s to the wider NSX ecosystem, using the same approach we have with Virtual Machines.</p>
+<p>Additionally, we can leverage other NSX-T constructs with our YAML files. For example, we can request load balancers from NSX-T to facilitate our application, which I will demonstrate further on. For this example, I&rsquo;ve leveraged PKS to facilitate the Kubernetes infrastructure.</p>
+<p><img src="images/934.png" alt=""></p>
+<h1 id="microsegmentation-in-action">Microsegmentation in action</h1>
+<p>Talk is cheap, so here&rsquo;s a demonstration of the concepts previously discussed. First, we need a multitier app. For my example, I&rsquo;m simply using a bunch of nginx images, but with some imagination you can think of more relevant use cases:</p>
+<h2 id="declaring-load-balancers">Declaring Load balancers</h2>
+<p>To begin with, I declare two load balancers, one for each tier of my application. Inclusion into these load balancers is determined by tags.</p>
+<p>[code language=&ldquo;bash&rdquo;]</p>
+<p>apiVersion: v1 kind: Service metadata: name: web-loadbalancer labels: namespace: vt-web spec: type: LoadBalancer ports: - port: 80 protocol: TCP targetPort: 80 selector: app: web-frontend tier: frontend &mdash; apiVersion: v1 kind: Service metadata: name: app-loadbalancer labels: namespace: vt-web spec: type: LoadBalancer ports: - port: 8080 protocol: TCP targetPort: 80 selector: app: web-midtier tier: midtier &mdash;</p>
+<p>[/code]</p>
+<h2 id="declaring-containers">Declaring Containers</h2>
+<p>Next, I define the containers I want to run for this application.</p>
+<p>[code language=&ldquo;bash&rdquo;] &lt;pre&gt;&mdash; apiVersion: extensions/v1beta1 kind: Deployment metadata: name: web-frontend namespace: vt-web spec: replicas: 2 template: metadata: labels: app: vt-webapp tier: webtier spec: containers: - name: web-frontend image: nginx:latest ports: - containerPort: 80 &mdash; apiVersion: extensions/v1beta1 kind: Deployment metadata: name: web-midtier namespace: vt-web spec: replicas: 2 template: metadata: labels: app: web-midtier tier: apptier spec: containers: - name: web-midtier image: nginx:latest ports: - containerPort: 80&lt;/pre&gt; [/code]</p>
+<p>Logically, this app looks like this:</p>
+<p> </p>
+<p><img src="images/951.png" alt=""></p>
+<p> </p>
+<h1 id="deploying-app">Deploying app</h1>
+<p>[code language=&ldquo;bash&rdquo;] david@ubuntu_1804:<del>/vt-webapp$ kubectl create namespace vt-web namespace &ldquo;vt-web&rdquo; created david@ubuntu_1804:</del>/vt-webapp$ kubectl apply -f webappv2.yaml service &ldquo;web-loadbalancer&rdquo; created service &ldquo;app-loadbalancer&rdquo; created deployment &ldquo;web-frontend&rdquo; created deployment &ldquo;web-midtier&rdquo; created [/code]</p>
+<p> </p>
+<h1 id="testing-microsegmentation">Testing Microsegmentation</h1>
+<p>At this stage, we&rsquo;re not leveraging the Microsegmentation capabilities of NSX-T.  To validate this we can simply do a traceflow between two web-frontend containers over port 80:</p>
+<p> </p>
+<p><img src="images/859.png" alt=""></p>
+<p>As expected, traffic between these two containers is permitted. So, lets change that. In the NSX-T web interface go to inventory -&gt; Groups and click on &ldquo;Add&rdquo;. Give it a meaningful name.</p>
+<p><img src="images/568.png" alt=""></p>
+<p>As for membership Criteria, we can select the tags we&rsquo;ve previously designed, namely <em>tier</em> and <em>app</em>.</p>
+<p><img src="images/435.png" alt=""></p>
+<p>Click &ldquo;add&rdquo;. After which we can validate:</p>
+<p><img src="images/460.png" alt=""></p>
+<p>We can then create a firewall rule to block TCP 80 between members of this group:</p>
+<p><img src="images/545.png" alt=""></p>
+<p>Consequently, if we run the same traceflow exercise:</p>
+<p><img src="images/159.png" alt=""></p>
+<h1 id="conclusion">Conclusion</h1>
+<p>NSX-T provides an extremely comprehensive framework for containerised applications. Given the nature of containers in general, I think container + microsegmentation are a winning combination to secure these workloads. Dynamic inclusion adheres to the automated mentality of containers, and with very little effort we can implement microsegmentation using a framework that is agnostic - the principles are the same between VM&rsquo;s and containers.</p>
+
+            </div>
+        </article></main>
+</div>
+<footer class="footer">
+    <span class="footer_item"> </span>
+    &nbsp;
+
+    <div class="footer_social-icons">
+<a href="https://github.com/David-VTUK" target="_blank" rel="noopener noreferrer me"
+    title="Github">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path
+        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+    </path>
+</svg>
+</a>
+<a href="/index.xml" target="_blank" rel="noopener noreferrer me"
+    title="Rss">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 11a9 9 0 0 1 9 9" />
+    <path d="M4 4a16 16 0 0 1 16 16" />
+    <circle cx="5" cy="19" r="1" />
+</svg>
+</a>
+</div>
+    <small class="footer_copyright">
+        © 2026 David Holder.
+        Powered by <a href="https://github.com/hugo-sid/hugo-blog-awesome" target="_blank" rel="noopener">Hugo blog awesome</a>.
+    </small>
+</footer><a href="#" title="Go to top" id="totop">
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" stroke="currentColor" viewBox="0 96 960 960">
+    <path d="M283 704.739 234.261 656 480 410.261 725.739 656 677 704.739l-197-197-197 197Z"/>
+</svg>
+
+</a>
+
+
+    
+
+
+
+
+
+
+    
+    <script async src="http://localhost:1313/js/main.js" ></script>
+
+    
+
+</body>
+</html>

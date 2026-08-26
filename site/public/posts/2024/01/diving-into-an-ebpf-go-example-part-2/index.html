@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en-gb"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title itemprop="name">Diving into an eBPF &#43; Go Example: Part 2 | Virtualthoughts</title>
+<meta property="og:title" content="Diving into an eBPF &#43; Go Example: Part 2 | Virtualthoughts" />
+<meta name="twitter:title" content="Diving into an eBPF &#43; Go Example: Part 2 | Virtualthoughts" />
+<meta itemprop="name" content="Diving into an eBPF &#43; Go Example: Part 2 | Virtualthoughts" />
+<meta name="application-name" content="Diving into an eBPF &#43; Go Example: Part 2 | Virtualthoughts" />
+<meta property="og:site_name" content="Virtualthoughts" />
+
+<meta name="description" content="Minimal Hugo blog theme with light and dark mode support">
+<meta itemprop="description" content="Minimal Hugo blog theme with light and dark mode support" />
+<meta property="og:description" content="Minimal Hugo blog theme with light and dark mode support" />
+<meta name="twitter:description" content="Minimal Hugo blog theme with light and dark mode support" />
+
+<meta property="og:locale" content="en-gb" />
+<meta name="language" content="en-gb" />
+
+  <link rel="alternate" hreflang="en-gb" href="http://localhost:1313/posts/2024/01/diving-into-an-ebpf-go-example-part-2/" title="English" />
+
+
+
+
+
+    
+    
+    
+
+    <meta property="og:type" content="article" />
+    <meta property="og:article:published_time" content=2024-01-23T00:00:00Z />
+    <meta property="article:published_time" content=2024-01-23T00:00:00Z />
+    <meta property="og:url" content="http://localhost:1313/posts/2024/01/diving-into-an-ebpf-go-example-part-2/" />
+
+    
+    <meta property="og:article:author" content="David Holder" />
+    <meta property="article:author" content="David Holder" />
+    <meta name="author" content="David Holder" />
+    
+    
+
+    
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "Diving into an eBPF + Go Example: Part 2",
+        "author": {
+        "@type": "Person",
+        "name": "David Holder"
+        },
+        "datePublished": "2024-01-23",
+        "description": "",
+        "wordCount":  561 ,
+        "mainEntityOfPage": "http://localhost:1313/posts/2024/01/diving-into-an-ebpf-go-example-part-2/",
+        "dateModified": "2024-01-23",
+        "image": {
+        "@type": "ImageObject",
+        "url": ""
+        },
+        "publisher": {
+        "@type": "Organization",
+        "name": "Virtualthoughts"
+        }
+    }
+    </script>
+
+
+<meta name="generator" content="Hugo 0.162.1">
+
+    
+    <meta property="og:url" content="http://localhost:1313/posts/2024/01/diving-into-an-ebpf-go-example-part-2/">
+	<meta property="og:site_name" content="Virtualthoughts">
+	<meta property="og:title" content="Diving into an eBPF &#43; Go Example: Part 2">
+	<meta property="og:description" content="Part 1 / Part 2 / Part 3
+In Part 1, we had a look at creating the eBPF program in C, which we will need to compile into eBPF bytecode and inject into our Go application
+Rather than copy/paste the exact instructions, the ebpf-go documentation outlines the process in the toolchain to create the scaffolding for the Go application.
+package main import ( &#34;log&#34; &#34;net&#34; &#34;os&#34; &#34;os/signal&#34; &#34;time&#34; &#34;github.com/cilium/ebpf/link&#34; &#34;github.com/cilium/ebpf/rlimit&#34; ) func main() { // Remove resource limits for kernels &lt;5.11. if err := rlimit.RemoveMemlock(); err != nil { log.Fatal(&#34;Removing memlock:&#34;, err) } // Load the compiled eBPF ELF and load it into the kernel. var objs counterObjects if err := loadCounterObjects(&amp;objs, nil); err != nil { log.Fatal(&#34;Loading eBPF objects:&#34;, err) } defer objs.Close() ifname := &#34;eth0&#34; // Change this to an interface on your machine. iface, err := net.InterfaceByName(ifname) if err != nil { log.Fatalf(&#34;Getting interface %s: %s&#34;, ifname, err) } // Attach count_packets to the network interface. link, err := link.AttachXDP(link.XDPOptions{ Program: objs.CountPackets, Interface: iface.Index, }) if err != nil { log.Fatal(&#34;Attaching XDP:&#34;, err) } defer link.Close() log.Printf(&#34;Counting incoming packets on %s..&#34;, ifname) // Periodically fetch the packet counter from PktCount, // exit the program when interrupted. tick := time.Tick(time.Second) stop := make(chan os.Signal, 5) signal.Notify(stop, os.Interrupt) for { select { case &lt;-tick: var count uint64 err := objs.PktCount.Lookup(uint32(0), &amp;count) if err != nil { log.Fatal(&#34;Map lookup:&#34;, err) } log.Printf(&#34;Received %d packets&#34;, count) case &lt;-stop: log.Print(&#34;Received signal, exiting..&#34;) return } } } As there’s already an example, let’s dig into the prominent sections:">
+	<meta property="og:locale" content="en_gb">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="posts">
+		<meta property="article:published_time" content="2024-01-23T00:00:00+00:00">
+		<meta property="article:modified_time" content="2024-01-23T00:00:00+00:00">
+
+
+    
+    
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="Diving into an eBPF &#43; Go Example: Part 2">
+	<meta name="twitter:description" content="Part 1 / Part 2 / Part 3
+In Part 1, we had a look at creating the eBPF program in C, which we will need to compile into eBPF bytecode and inject into our Go application
+Rather than copy/paste the exact instructions, the ebpf-go documentation outlines the process in the toolchain to create the scaffolding for the Go application.
+package main import ( &#34;log&#34; &#34;net&#34; &#34;os&#34; &#34;os/signal&#34; &#34;time&#34; &#34;github.com/cilium/ebpf/link&#34; &#34;github.com/cilium/ebpf/rlimit&#34; ) func main() { // Remove resource limits for kernels &lt;5.11. if err := rlimit.RemoveMemlock(); err != nil { log.Fatal(&#34;Removing memlock:&#34;, err) } // Load the compiled eBPF ELF and load it into the kernel. var objs counterObjects if err := loadCounterObjects(&amp;objs, nil); err != nil { log.Fatal(&#34;Loading eBPF objects:&#34;, err) } defer objs.Close() ifname := &#34;eth0&#34; // Change this to an interface on your machine. iface, err := net.InterfaceByName(ifname) if err != nil { log.Fatalf(&#34;Getting interface %s: %s&#34;, ifname, err) } // Attach count_packets to the network interface. link, err := link.AttachXDP(link.XDPOptions{ Program: objs.CountPackets, Interface: iface.Index, }) if err != nil { log.Fatal(&#34;Attaching XDP:&#34;, err) } defer link.Close() log.Printf(&#34;Counting incoming packets on %s..&#34;, ifname) // Periodically fetch the packet counter from PktCount, // exit the program when interrupted. tick := time.Tick(time.Second) stop := make(chan os.Signal, 5) signal.Notify(stop, os.Interrupt) for { select { case &lt;-tick: var count uint64 err := objs.PktCount.Lookup(uint32(0), &amp;count) if err != nil { log.Fatal(&#34;Map lookup:&#34;, err) } log.Printf(&#34;Received %d packets&#34;, count) case &lt;-stop: log.Print(&#34;Received signal, exiting..&#34;) return } } } As there’s already an example, let’s dig into the prominent sections:">
+
+
+    
+
+    <link rel="canonical" href="http://localhost:1313/posts/2024/01/diving-into-an-ebpf-go-example-part-2/">
+    <link href="/style.min.2d921c18cf1ec555ffc03d59a8adc211c402c68c930c27d6a0c306ab175a8d09.css" rel="stylesheet">
+    <link href="/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+
+
+
+<link rel="manifest" href="http://localhost:1313/site.webmanifest">
+
+<meta name="msapplication-config" content="/browserconfig.xml">
+<meta name="msapplication-TileColor" content="#2d89ef">
+<meta name="theme-color" content="#434648">
+    <meta name="color-scheme" content="light dark">
+
+    
+    <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+    
+    
+</head>
+<body data-theme = "dark" class="notransition">
+
+<script src="/js/theme.js"></script>
+
+<div class="navbar" role="navigation">
+    <nav class="menu" aria-label="Main Navigation">
+        <a href="http://localhost:1313/" class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" 
+viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+stroke-linejoin="round" class="feather feather-home">
+<title>Home</title>
+<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+<polyline points="9 22 9 12 15 12 15 22"></polyline>
+</svg>
+        </a>
+        <input type="checkbox" id="menu-trigger" class="menu-trigger" />
+        <label for="menu-trigger">
+            <span class="menu-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" stroke="currentColor" fill="none" viewBox="0 0 14 14"><title>Menu</title><path stroke-linecap="round" stroke-linejoin="round" d="M10.595 7L3.40726 7"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 3.51488L3.49301 3.51488"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 10.4851H3.49301"></path><path stroke-linecap="round" stroke-linejoin="round" d="M0.5 12.5V1.5C0.5 0.947715 0.947715 0.5 1.5 0.5H12.5C13.0523 0.5 13.5 0.947715 13.5 1.5V12.5C13.5 13.0523 13.0523 13.5 12.5 13.5H1.5C0.947715 13.5 0.5 13.0523 0.5 12.5Z"></path></svg>
+            </span>
+        </label>
+
+        <div class="trigger">
+            <ul class="trigger-container">
+                
+                
+                <li>
+                    <a class="menu-link " href="/">
+                        Home
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link active" href="/posts/">
+                        Posts
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link " href="/about/">
+                        About
+                    </a>
+                    
+                </li>
+                
+                <li class="menu-separator">
+                    <span>|</span>
+                </li>
+                
+                
+            </ul>
+            <a id="mode" href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-sunny" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>LIGHT</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-moon" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>DARK</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+            </a>
+        </div>
+    </nav>
+</div>
+
+<div class="wrapper post">
+    <main class="page-content" aria-label="Content">
+        <article>
+            <header class="header">
+                <h1 class="header-title">Diving into an eBPF &#43; Go Example: Part 2</h1>
+                
+                
+                
+                <div class="post-meta">
+                    <time datetime="2024-01-23T00:00:00&#43;00:00" itemprop="datePublished"> 23 Jan 2024 </time>
+                </div>
+                
+            </header>
+            
+            <div class="page-content">
+                <p><a href="https://www.virtualthoughts.co.uk/2024/01/24/diving-into-an-ebpf-go-example-part-1/">Part 1</a> / <a href="https://www.virtualthoughts.co.uk/2024/01/23/diving-into-an-ebpf-go-example-part-2/">Part 2</a> / <a href="https://www.virtualthoughts.co.uk/2024/01/24/diving-into-an-ebpf-go-example-part-3-bonus-round/">Part 3</a></p>
+<p>In Part 1, we had a look at creating the eBPF program in C, which we will need to compile into eBPF bytecode and inject into our Go application</p>
+<p><img src="/posts/2024/01/diving-into-an-ebpf-go-example-part-2/images/go.png" alt="https://ebpf.io/static/1a1bb6f1e64b1ad5597f57dc17cf1350/6515f/go.png"></p>
+<p>Rather than copy/paste the exact instructions, the <a href="https://ebpf-go.dev/guides/getting-started/#compile-ebpf-c-and-generate-scaffolding-using-bpf2go">ebpf-go</a> documentation outlines the process in the toolchain to create the scaffolding for the Go application.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>package main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">import</span> (
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;log&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;net&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;os&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;os/signal&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;time&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;github.com/cilium/ebpf/link&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;github.com/cilium/ebpf/rlimit&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>func main() {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Remove resource limits for kernels &lt;5.11.
+</span></span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> err :<span style="color:#f92672">=</span> rlimit.RemoveMemlock(); err <span style="color:#f92672">!=</span> nil { 
+</span></span><span style="display:flex;"><span>        log.Fatal(<span style="color:#e6db74">&#34;Removing memlock:&#34;</span>, err)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Load the compiled eBPF ELF and load it into the kernel.
+</span></span></span><span style="display:flex;"><span>    var objs counterObjects 
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> err :<span style="color:#f92672">=</span> loadCounterObjects(<span style="color:#f92672">&amp;</span>objs, nil); err <span style="color:#f92672">!=</span> nil {
+</span></span><span style="display:flex;"><span>        log.Fatal(<span style="color:#e6db74">&#34;Loading eBPF objects:&#34;</span>, err)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    defer objs.Close() 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    ifname :<span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;eth0&#34;</span> <span style="color:#75715e">// Change this to an interface on your machine.
+</span></span></span><span style="display:flex;"><span>    iface, err :<span style="color:#f92672">=</span> net.InterfaceByName(ifname)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> err <span style="color:#f92672">!=</span> nil {
+</span></span><span style="display:flex;"><span>        log.Fatalf(<span style="color:#e6db74">&#34;Getting interface %s: %s&#34;</span>, ifname, err)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Attach count_packets to the network interface.
+</span></span></span><span style="display:flex;"><span>    link, err :<span style="color:#f92672">=</span> link.AttachXDP(link.XDPOptions{ 
+</span></span><span style="display:flex;"><span>        Program:   objs.CountPackets,
+</span></span><span style="display:flex;"><span>        Interface: iface.Index,
+</span></span><span style="display:flex;"><span>    })
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> err <span style="color:#f92672">!=</span> nil {
+</span></span><span style="display:flex;"><span>        log.Fatal(<span style="color:#e6db74">&#34;Attaching XDP:&#34;</span>, err)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    defer link.Close() 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    log.Printf(<span style="color:#e6db74">&#34;Counting incoming packets on %s..&#34;</span>, ifname)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Periodically fetch the packet counter from PktCount,
+</span></span></span><span style="display:flex;"><span>    <span style="color:#75715e">// exit the program when interrupted.
+</span></span></span><span style="display:flex;"><span>    tick :<span style="color:#f92672">=</span> time.Tick(time.Second)
+</span></span><span style="display:flex;"><span>    stop :<span style="color:#f92672">=</span> make(chan os.Signal, <span style="color:#ae81ff">5</span>)
+</span></span><span style="display:flex;"><span>    signal.Notify(stop, os.Interrupt)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> {
+</span></span><span style="display:flex;"><span>        select {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">case</span> <span style="color:#f92672">&lt;-</span>tick:
+</span></span><span style="display:flex;"><span>            var count uint64
+</span></span><span style="display:flex;"><span>            err :<span style="color:#f92672">=</span> objs.PktCount.Lookup(uint32(<span style="color:#ae81ff">0</span>), <span style="color:#f92672">&amp;</span>count) 
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> err <span style="color:#f92672">!=</span> nil {
+</span></span><span style="display:flex;"><span>                log.Fatal(<span style="color:#e6db74">&#34;Map lookup:&#34;</span>, err)
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            log.Printf(<span style="color:#e6db74">&#34;Received %d packets&#34;</span>, count)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">case</span> <span style="color:#f92672">&lt;-</span>stop:
+</span></span><span style="display:flex;"><span>            log.Print(<span style="color:#e6db74">&#34;Received signal, exiting..&#34;</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>As there&rsquo;s already an example, let&rsquo;s dig into the prominent sections:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>    <span style="color:#75715e">// Load the compiled eBPF ELF and load it into the kernel.
+</span></span></span><span style="display:flex;"><span>    var objs counterObjects 
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> err :<span style="color:#f92672">=</span> loadCounterObjects(<span style="color:#f92672">&amp;</span>objs, nil); err <span style="color:#f92672">!=</span> nil {
+</span></span><span style="display:flex;"><span>        log.Fatal(<span style="color:#e6db74">&#34;Loading eBPF objects:&#34;</span>, err)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    defer objs.Close() 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    ifname :<span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;eth0&#34;</span> <span style="color:#75715e">// Change this to an interface on your machine.
+</span></span></span><span style="display:flex;"><span>    iface, err :<span style="color:#f92672">=</span> net.InterfaceByName(ifname)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> err <span style="color:#f92672">!=</span> nil {
+</span></span><span style="display:flex;"><span>        log.Fatalf(<span style="color:#e6db74">&#34;Getting interface %s: %s&#34;</span>, ifname, err)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Attach count_packets to the network interface.
+</span></span></span><span style="display:flex;"><span>    link, err :<span style="color:#f92672">=</span> link.AttachXDP(link.XDPOptions{ 
+</span></span><span style="display:flex;"><span>        Program:   objs.CountPackets,
+</span></span><span style="display:flex;"><span>        Interface: iface.Index,
+</span></span><span style="display:flex;"><span>    })
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> err <span style="color:#f92672">!=</span> nil {
+</span></span><span style="display:flex;"><span>        log.Fatal(<span style="color:#e6db74">&#34;Attaching XDP:&#34;</span>, err)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    defer link.Close() 
+</span></span></code></pre></div><p><code>counterObjects</code> : This is a struct type generated by running <code>bpf2go</code>, representing our compiled eBPF ELF.</p>
+<p><code>loadCounterObjects()</code> : Attempts to load the eBPF object, and captures an error if it cannot do so.</p>
+<p><code>defer objs.Close()</code> : Ensure proper cleanup of any resources associated with the loaded eBPF objects on exit. This is a common practice to prevent resource leaks.</p>
+<p><code>link.AttachXDP</code>: This function call is used to attach an XDP program to a specific network device. The <code>Program</code> being our C-based eBPF Program we defined as <code>CountPackets</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">// From counter.c
+</span></span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>SEC(<span style="color:#e6db74">&#34;xdp&#34;</span>) 
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> count_packets() {
+</span></span></code></pre></div><p>Finally, we need a way of fetching data from the eBPF map storing our Packet counter:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>  <span style="color:#75715e">// Periodically fetch the packet counter from PktCount,
+</span></span></span><span style="display:flex;"><span>    <span style="color:#75715e">// exit the program when interrupted.
+</span></span></span><span style="display:flex;"><span>    tick :<span style="color:#f92672">=</span> time.Tick(time.Second)
+</span></span><span style="display:flex;"><span>    stop :<span style="color:#f92672">=</span> make(chan os.Signal, <span style="color:#ae81ff">5</span>)
+</span></span><span style="display:flex;"><span>    signal.Notify(stop, os.Interrupt)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> {
+</span></span><span style="display:flex;"><span>        select {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">case</span> <span style="color:#f92672">&lt;-</span>tick:
+</span></span><span style="display:flex;"><span>            var count uint64
+</span></span><span style="display:flex;"><span>            err :<span style="color:#f92672">=</span> objs.PktCount.Lookup(uint32(<span style="color:#ae81ff">0</span>), <span style="color:#f92672">&amp;</span>count) 
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> err <span style="color:#f92672">!=</span> nil {
+</span></span><span style="display:flex;"><span>                log.Fatal(<span style="color:#e6db74">&#34;Map lookup:&#34;</span>, err)
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            log.Printf(<span style="color:#e6db74">&#34;Received %d packets&#34;</span>, count)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">case</span> <span style="color:#f92672">&lt;-</span>stop:
+</span></span><span style="display:flex;"><span>            log.Print(<span style="color:#e6db74">&#34;Received signal, exiting..&#34;</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span></code></pre></div><p>Here, we leverage two channels, one that will loop indefinitely, printing out the <code>value</code> in the first index of the <code>map</code>, (the packet counter) and a second channel that will quit the application in the event of a termination signal from the Operating System.</p>
+<p><a href="https://www.virtualthoughts.co.uk/2024/01/24/diving-into-an-ebpf-go-example-part-1/">Part 1</a> / <a href="https://www.virtualthoughts.co.uk/2024/01/23/diving-into-an-ebpf-go-example-part-2/">Part 2</a> / <a href="https://www.virtualthoughts.co.uk/2024/01/24/diving-into-an-ebpf-go-example-part-3-bonus-round/">Part 3</a></p>
+
+            </div>
+        </article></main>
+</div>
+<footer class="footer">
+    <span class="footer_item"> </span>
+    &nbsp;
+
+    <div class="footer_social-icons">
+<a href="https://github.com/David-VTUK" target="_blank" rel="noopener noreferrer me"
+    title="Github">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path
+        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+    </path>
+</svg>
+</a>
+<a href="/index.xml" target="_blank" rel="noopener noreferrer me"
+    title="Rss">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 11a9 9 0 0 1 9 9" />
+    <path d="M4 4a16 16 0 0 1 16 16" />
+    <circle cx="5" cy="19" r="1" />
+</svg>
+</a>
+</div>
+    <small class="footer_copyright">
+        © 2026 David Holder.
+        Powered by <a href="https://github.com/hugo-sid/hugo-blog-awesome" target="_blank" rel="noopener">Hugo blog awesome</a>.
+    </small>
+</footer><a href="#" title="Go to top" id="totop">
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" stroke="currentColor" viewBox="0 96 960 960">
+    <path d="M283 704.739 234.261 656 480 410.261 725.739 656 677 704.739l-197-197-197 197Z"/>
+</svg>
+
+</a>
+
+
+    
+
+
+
+
+
+
+    
+    <script async src="http://localhost:1313/js/main.js" ></script>
+
+    
+
+</body>
+</html>

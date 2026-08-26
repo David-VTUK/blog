@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en-gb"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title itemprop="name">Creating Kubernetes Clusters with Rancher and Pulumi | Virtualthoughts</title>
+<meta property="og:title" content="Creating Kubernetes Clusters with Rancher and Pulumi | Virtualthoughts" />
+<meta name="twitter:title" content="Creating Kubernetes Clusters with Rancher and Pulumi | Virtualthoughts" />
+<meta itemprop="name" content="Creating Kubernetes Clusters with Rancher and Pulumi | Virtualthoughts" />
+<meta name="application-name" content="Creating Kubernetes Clusters with Rancher and Pulumi | Virtualthoughts" />
+<meta property="og:site_name" content="Virtualthoughts" />
+
+<meta name="description" content="Minimal Hugo blog theme with light and dark mode support">
+<meta itemprop="description" content="Minimal Hugo blog theme with light and dark mode support" />
+<meta property="og:description" content="Minimal Hugo blog theme with light and dark mode support" />
+<meta name="twitter:description" content="Minimal Hugo blog theme with light and dark mode support" />
+
+<meta property="og:locale" content="en-gb" />
+<meta name="language" content="en-gb" />
+
+  <link rel="alternate" hreflang="en" href="http://localhost:1313/2021/05/13/creating-rancher-clusters-with-pulumi/" title="" />
+
+
+
+
+
+    
+    
+    
+
+    <meta property="og:type" content="article" />
+    <meta property="og:article:published_time" content=2021-05-13T00:00:00Z />
+    <meta property="article:published_time" content=2021-05-13T00:00:00Z />
+    <meta property="og:url" content="http://localhost:1313/2021/05/13/creating-rancher-clusters-with-pulumi/" />
+
+    
+    <meta property="og:article:author" content="David Holder" />
+    <meta property="article:author" content="David Holder" />
+    <meta name="author" content="David Holder" />
+    
+    
+
+    
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "Creating Kubernetes Clusters with Rancher and Pulumi",
+        "author": {
+        "@type": "Person",
+        "name": "David Holder"
+        },
+        "datePublished": "2021-05-13",
+        "description": "",
+        "wordCount":  989 ,
+        "mainEntityOfPage": "http://localhost:1313/2021/05/13/creating-rancher-clusters-with-pulumi/",
+        "dateModified": "2021-05-13",
+        "image": {
+        "@type": "ImageObject",
+        "url": ""
+        },
+        "publisher": {
+        "@type": "Organization",
+        "name": "Virtualthoughts"
+        }
+    }
+    </script>
+
+
+<meta name="generator" content="Hugo 0.162.1">
+
+    
+    <meta property="og:url" content="http://localhost:1313/2021/05/13/creating-rancher-clusters-with-pulumi/">
+	<meta property="og:site_name" content="Virtualthoughts">
+	<meta property="og:title" content="Creating Kubernetes Clusters with Rancher and Pulumi">
+	<meta property="og:description" content="tldr; Here is the code repo
+Intro My Job at Suse (via Rancher) involves hosting a lot of demos, product walk-throughs and various other activities that necessitate spinning up tailored environments on-demand. To facilitate this, I previously leaned towards Terraform, and have since curated a list of individual scripts I have to manage on an individual basis as they address a specific use case.
+This approach reached a point where it became difficult to manage. Ideally, I wanted an IaC environment that catered for:">
+	<meta property="og:locale" content="en_gb">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="posts">
+		<meta property="article:published_time" content="2021-05-13T00:00:00+00:00">
+		<meta property="article:modified_time" content="2021-05-13T00:00:00+00:00">
+
+
+    
+    
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="Creating Kubernetes Clusters with Rancher and Pulumi">
+	<meta name="twitter:description" content="tldr; Here is the code repo
+Intro My Job at Suse (via Rancher) involves hosting a lot of demos, product walk-throughs and various other activities that necessitate spinning up tailored environments on-demand. To facilitate this, I previously leaned towards Terraform, and have since curated a list of individual scripts I have to manage on an individual basis as they address a specific use case.
+This approach reached a point where it became difficult to manage. Ideally, I wanted an IaC environment that catered for:">
+
+
+    
+
+    <link rel="canonical" href="http://localhost:1313/2021/05/13/creating-rancher-clusters-with-pulumi/">
+    <link href="/style.min.562556c74d7ca5d6d6aa72c6e342d478360cdb10904c9eacda75792f6e6a7eb0.css" rel="stylesheet">
+    <link href="/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+
+
+
+<link rel="manifest" href="http://localhost:1313/site.webmanifest">
+
+<meta name="msapplication-config" content="/browserconfig.xml">
+<meta name="msapplication-TileColor" content="#2d89ef">
+<meta name="theme-color" content="#434648">
+    <meta name="color-scheme" content="light dark">
+
+    
+    <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+    
+    
+</head>
+<body data-theme = "dark" class="notransition">
+
+<script src="/js/theme.js"></script>
+
+<div class="navbar" role="navigation">
+    <nav class="menu" aria-label="Main Navigation">
+        <a href="http://localhost:1313/" class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" 
+viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+stroke-linejoin="round" class="feather feather-home">
+<title>Home</title>
+<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+<polyline points="9 22 9 12 15 12 15 22"></polyline>
+</svg>
+        </a>
+        <input type="checkbox" id="menu-trigger" class="menu-trigger" />
+        <label for="menu-trigger">
+            <span class="menu-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" stroke="currentColor" fill="none" viewBox="0 0 14 14"><title>Menu</title><path stroke-linecap="round" stroke-linejoin="round" d="M10.595 7L3.40726 7"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 3.51488L3.49301 3.51488"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 10.4851H3.49301"></path><path stroke-linecap="round" stroke-linejoin="round" d="M0.5 12.5V1.5C0.5 0.947715 0.947715 0.5 1.5 0.5H12.5C13.0523 0.5 13.5 0.947715 13.5 1.5V12.5C13.5 13.0523 13.0523 13.5 12.5 13.5H1.5C0.947715 13.5 0.5 13.0523 0.5 12.5Z"></path></svg>
+            </span>
+        </label>
+
+        <div class="trigger">
+            <ul class="trigger-container">
+                
+                
+                <li>
+                    <a class="menu-link " href="/">
+                        Home
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link active" href="/posts/">
+                        Posts
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link " href="/about/">
+                        About
+                    </a>
+                    
+                </li>
+                
+                <li class="menu-separator">
+                    <span>|</span>
+                </li>
+                
+                
+            </ul>
+            <a id="mode" href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-sunny" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>LIGHT</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-moon" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>DARK</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+            </a>
+        </div>
+    </nav>
+</div>
+
+<div class="wrapper post">
+    <main class="page-content" aria-label="Content">
+        <article>
+            <header class="header">
+                <h1 class="header-title">Creating Kubernetes Clusters with Rancher and Pulumi</h1>
+                
+                
+                
+                <div class="post-meta">
+                    <time datetime="2021-05-13T00:00:00&#43;00:00" itemprop="datePublished"> 13 May 2021 </time>
+                </div>
+                
+            </header>
+            
+            <div class="page-content">
+                <p>tldr; <a href="https://github.com/David-VTUK/pulumi-rancher-demos">Here</a> is the code repo</p>
+<h2 id="intro">Intro</h2>
+<p>My Job at Suse (via Rancher) involves hosting a lot of demos, product walk-throughs and various other activities that necessitate spinning up tailored environments on-demand. To facilitate this, I previously leaned towards Terraform, and have since curated a list of individual scripts I have to manage on an individual basis as they address a specific use case.</p>
+<p>This approach reached a point where it became difficult to manage. Ideally, I wanted an IaC environment that catered for:</p>
+<ul>
+<li>Easy, in-code looping (ie <code>for</code> and <code>range</code>)</li>
+<li>&ldquo;Proper&rdquo; condition handling, ie if monitoring == true, install monitoring vs the slightly awkward HCL equivalent of repurposing <code>count</code> as a sudo-replacement for condition handling.</li>
+<li>Influence what&rsquo;s installed by config options/vars.</li>
+<li>Complete end-to end creation of cluster objects, in my example, create:
+<ul>
+<li>AWS EC2 VPC</li>
+<li>AWS Subnets</li>
+<li>AWS AZ&rsquo;s</li>
+<li>AWS IGW</li>
+<li>AWS Security Group</li>
+<li>1x Rancher provisioned EC2 cluster</li>
+<li>3x single node K3S clusters used for Fleet</li>
+</ul>
+</li>
+</ul>
+<!-- raw HTML omitted -->
+<p><img src="images/pulumiArchitecture.png" alt=""></p>
+<!-- raw HTML omitted -->
+<p>Architectural Overview</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p><a href="https://www.pulumi.com/">Pulumi</a> addresses these requirements pretty comprehensively. Additionally, I can re-use existing logic from my Terraform code as the Rancher2 Pulumi provider is based on the Terraform implementation, but I can leverage <code>Go</code> tools/features to build my environment.</p>
+<h2 id="code-tour---core">Code Tour - Core</h2>
+<p>The core objects are created directly, using types from the Pulumi packages:</p>
+<p>VPC:</p>
+<pre tabindex="0"><code>// Create AWS VPC
+vpc, err := ec2.NewVpc(ctx, &#34;david-pulumi-vpc&#34;, &amp;ec2.VpcArgs{
+	CidrBlock:          pulumi.String(&#34;10.0.0.0/16&#34;),
+	Tags:               pulumi.StringMap{&#34;Name&#34;: pulumi.String(&#34;david-pulumi-vpc&#34;)},
+	EnableDnsHostnames: pulumi.Bool(true),
+	EnableDnsSupport:   pulumi.Bool(true),
+})
+</code></pre><p>You will notice some interesting <code>types</code> in the above - such as <code>pulumi.Bool</code> and <code>pulumi.String</code>. The reason for this is, we need to treat cloud deployments as asynchronous operations. Some values we will know at runtime (expose port 80), some will only be known at runtime (the ID of a VPC, as below). These Pulumi types are a facilitator of this asynchronous paradigm.</p>
+<p>IGW</p>
+<pre tabindex="0"><code>// Create IGW
+igw, err := ec2.NewInternetGateway(ctx, &#34;david-pulumi-gw&#34;, &amp;ec2.InternetGatewayArgs{
+	VpcId: vpc.ID(),
+})
+</code></pre><p>Moving to something slightly more complex, such as looping around regions and assigning a subnet to each:</p>
+<pre tabindex="0"><code>// Get the list of AZ&#39;s for the defined region
+azState := &#34;available&#34;
+zoneList, err := aws.GetAvailabilityZones(ctx, &amp;aws.GetAvailabilityZonesArgs{
+	State: &amp;azState,
+})
+
+if err != nil {
+	return err
+}
+
+//How many AZ&#39;s to spread nodes across. Default to 3.
+zoneNumber := 3
+zones := []string{&#34;a&#34;, &#34;b&#34;, &#34;c&#34;}
+
+var subnets []*ec2.Subnet
+
+// Iterate through the AZ&#39;s for the VPC and create a subnet in each
+for i := 0; i &lt; zoneNumber; i++ {
+	subnet, err := ec2.NewSubnet(ctx, &#34;david-pulumi-subnet-&#34;+strconv.Itoa(i), &amp;ec2.SubnetArgs{
+		AvailabilityZone:    pulumi.String(zoneList.Names[i]),
+		Tags:                pulumi.StringMap{&#34;Name&#34;: pulumi.String(&#34;david-pulumi-subnet-&#34; + strconv.Itoa(i))},
+		VpcId:               vpc.ID(),
+		CidrBlock:           pulumi.String(&#34;10.0.&#34; + strconv.Itoa(i) + &#34;.0/24&#34;),
+		MapPublicIpOnLaunch: pulumi.Bool(true),
+	})
+</code></pre><p>This is repeated for each type</p>
+<h2 id="code-tour---config">Code Tour - Config</h2>
+<p>The config file allows us to store information required by providers (unless using env variables or something externally) and values that we can use to influence the resources that are created. In particular, I added the following boolean values:</p>
+<pre tabindex="0"><code>config:
+  Rancher-Demo-Env:installCIS: false
+  Rancher-Demo-Env:installIstio: false
+  Rancher-Demo-Env:installLogging: false
+  Rancher-Demo-Env:installLonghorn: false
+  Rancher-Demo-Env:installMonitoring: false
+  Rancher-Demo-Env:installOPA: false
+  Rancher-Demo-Env:installFleetClusters: false
+</code></pre><p>This directly influence what will be created in my main demo cluster, as well as individual &ldquo;Fleet&rdquo; clusters. Within the main Pulumi code, these values are extracted:</p>
+<pre tabindex="0"><code>conf := config.New(ctx, &#34;&#34;)
+InstallIstio := conf.GetBool(&#34;installIstio&#34;)
+installOPA := conf.GetBool(&#34;installOPA&#34;)
+installCIS := conf.GetBool(&#34;installCIS&#34;)
+installLogging := conf.GetBool(&#34;installLogging&#34;)
+installLonghorn := conf.GetBool(&#34;installLonghorn&#34;)
+installMonitoring := conf.GetBool(&#34;installMonitoring&#34;)
+installFleetClusters := conf.GetBool(&#34;installFleetClusters&#34;)
+</code></pre><p>Because of this, native condition handling can be leveraged to influence what&rsquo;s created:</p>
+<pre tabindex="0"><code>if installIstio {
+	_, err := rancher2.NewAppV2(ctx, &#34;istio&#34;, &amp;rancher2.AppV2Args{
+		ChartName:    pulumi.String(&#34;rancher-istio&#34;),
+		ClusterId:    cluster.ID(),
+		Namespace:    pulumi.String(&#34;istio-system&#34;),
+		RepoName:     pulumi.String(&#34;rancher-charts&#34;),
+		ChartVersion: pulumi.String(&#34;1.8.300&#34;),
+	}, pulumi.DependsOn([]pulumi.Resource{clusterSync}))
+
+	if err != nil {
+		return err
+	}
+}
+</code></pre><p>As there&rsquo;s a much more dynamic nature to this project, I have a single template which I can tailor to address a number of use-cases with a huge amount of customisation. One could argue the same could be done in Terraform with using <code>count</code>, but I find this method cleaner. In addition, my next step is to implement some testing using go&rsquo;s native features to further enhance this project.</p>
+<h2 id="bootstrapping-k3s">Bootstrapping K3s</h2>
+<p>One challenge I encountered was being able to create and import K3s clusters. Currently, only RKE clusters can be directly created from Rancher. To address this, I created the cluster object in Rancher, extract the join command, and passed it together with the K3s install script so after K3s has stood up, it will run the join command:</p>
+<pre tabindex="0"><code>if installFleetClusters {
+	// create some EC2 instances to install K3s on:
+	for i := 0; i &lt; 3; i++ {
+		cluster, _ := rancher2.NewCluster(ctx, &#34;david-pulumi-fleet-&#34;+strconv.Itoa(i), &amp;rancher2.ClusterArgs{
+			Name: pulumi.String(&#34;david-pulumi-fleet-&#34; + strconv.Itoa(i)),
+		})
+
+		joincommand := cluster.ClusterRegistrationToken.Command().ApplyString(func(command *string) string {
+			getPublicIP := &#34;IP=$(curl -H \&#34;X-aws-ec2-metadata-token: $TOKEN\&#34; -v http://169.254.169.254/latest/meta-data/public-ipv4)&#34;
+			installK3s := &#34;curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.19.5+k3s2 INSTALL_K3S_EXEC=\&#34;--node-external-ip $IP\&#34; sh -&#34;
+			nodecommand := fmt.Sprintf(&#34;#!/bin/bash\n%s\n%s\n%s&#34;, getPublicIP, installK3s, *command)
+			return nodecommand
+		})
+
+		_, err = ec2.NewInstance(ctx, &#34;david-pulumi-fleet-node-&#34;+strconv.Itoa(i), &amp;ec2.InstanceArgs{
+			Ami:                 pulumi.String(&#34;ami-0ff4c8fb495a5a50d&#34;),
+			InstanceType:        pulumi.String(&#34;t2.medium&#34;),
+			KeyName:             pulumi.String(&#34;davidh-keypair&#34;),
+			VpcSecurityGroupIds: pulumi.StringArray{sg.ID()},
+			UserData:            joincommand,
+			SubnetId:            subnets[i].ID(),
+		})
+
+		if err != nil {
+			return err
+		}
+	}
+
+}
+</code></pre><p>End result:</p>
+<pre tabindex="0"><code>     Type                               Name                                  Status       
+ +   pulumi:pulumi:Stack                Rancher-Demo-Env-dev                  creating...  
+ +   pulumi:pulumi:Stack                Rancher-Demo-Env-dev                  creating..   
+ +   pulumi:pulumi:Stack                Rancher-Demo-Env-dev                  creating..   
+ +   ├─ rancher2:index:Cluster          david-pulumi-fleet-1                  created      
+ +   ├─ rancher2:index:Cluster          david-pulumi-fleet-2                  created      
+ +   ├─ rancher2:index:CloudCredential  david-pulumi-cloudcredential          created      
+ +   ├─ aws:ec2:Subnet                  david-pulumi-subnet-1                 created      
+ +   ├─ aws:ec2:Subnet                  david-pulumi-subnet-0                 created      
+ +   ├─ aws:ec2:InternetGateway         david-pulumi-gw                       created     
+ +   ├─ aws:ec2:Subnet                  david-pulumi-subnet-2                 created     
+ +   ├─ aws:ec2:SecurityGroup           david-pulumi-sg                       created     
+ +   ├─ aws:ec2:DefaultRouteTable       david-pulumi-routetable               created     
+ +   ├─ rancher2:index:NodeTemplate     david-pulumi-nodetemplate-eu-west-2b  created     
+ +   ├─ rancher2:index:NodeTemplate     david-pulumi-nodetemplate-eu-west-2a  created     
+ +   ├─ rancher2:index:NodeTemplate     david-pulumi-nodetemplate-eu-west-2c  created     
+ +   ├─ aws:ec2:Instance                david-pulumi-fleet-node-0             created     
+ +   ├─ aws:ec2:Instance                david-pulumi-fleet-node-2             created     
+ +   ├─ aws:ec2:Instance                david-pulumi-fleet-node-1             created     
+ +   ├─ rancher2:index:Cluster          david-pulumi-cluster                  created     
+ +   ├─ rancher2:index:NodePool         david-pulumi-nodepool-2               created     
+ +   ├─ rancher2:index:NodePool         david-pulumi-nodepool-1               created     
+ +   ├─ rancher2:index:NodePool         david-pulumi-nodepool-0               created     
+ +   ├─ rancher2:index:ClusterSync      david-clustersync                     created     
+ +   ├─ rancher2:index:AppV2            opa                                   created     
+ +   ├─ rancher2:index:AppV2            monitoring                            created     
+ +   ├─ rancher2:index:AppV2            istio                                 created     
+ +   ├─ rancher2:index:AppV2            cis                                   created     
+ +   ├─ rancher2:index:AppV2            logging                               created     
+ +   └─ rancher2:index:AppV2            longhorn                              created     
+ 
+Resources:
+    + 29 created
+
+Duration: 19m18s
+</code></pre><p>20mins for a to create all of these resources fully automated is pretty handy. This example also includes all the addons - opa, monitoring, istio, cis, logging and longhorn.</p>
+
+            </div>
+        </article></main>
+</div>
+<footer class="footer">
+    <span class="footer_item"> </span>
+    &nbsp;
+
+    <div class="footer_social-icons">
+<a href="https://github.com/David-VTUK" target="_blank" rel="noopener noreferrer me"
+    title="Github">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path
+        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+    </path>
+</svg>
+</a>
+<a href="/index.xml" target="_blank" rel="noopener noreferrer me"
+    title="Rss">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 11a9 9 0 0 1 9 9" />
+    <path d="M4 4a16 16 0 0 1 16 16" />
+    <circle cx="5" cy="19" r="1" />
+</svg>
+</a>
+</div>
+    <small class="footer_copyright">
+        © 2026 David Holder.
+        Powered by <a href="https://github.com/hugo-sid/hugo-blog-awesome" target="_blank" rel="noopener">Hugo blog awesome</a>.
+    </small>
+</footer><a href="#" title="Go to top" id="totop">
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" stroke="currentColor" viewBox="0 96 960 960">
+    <path d="M283 704.739 234.261 656 480 410.261 725.739 656 677 704.739l-197-197-197 197Z"/>
+</svg>
+
+</a>
+
+
+    
+
+
+
+
+
+
+    
+    <script async src="http://localhost:1313/js/main.js" ></script>
+
+    
+
+</body>
+</html>

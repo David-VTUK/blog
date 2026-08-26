@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en-gb"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title itemprop="name">PKS, Harbor and the importance of container registries | Virtualthoughts</title>
+<meta property="og:title" content="PKS, Harbor and the importance of container registries | Virtualthoughts" />
+<meta name="twitter:title" content="PKS, Harbor and the importance of container registries | Virtualthoughts" />
+<meta itemprop="name" content="PKS, Harbor and the importance of container registries | Virtualthoughts" />
+<meta name="application-name" content="PKS, Harbor and the importance of container registries | Virtualthoughts" />
+<meta property="og:site_name" content="Virtualthoughts" />
+
+<meta name="description" content="Minimal Hugo blog theme with light and dark mode support">
+<meta itemprop="description" content="Minimal Hugo blog theme with light and dark mode support" />
+<meta property="og:description" content="Minimal Hugo blog theme with light and dark mode support" />
+<meta name="twitter:description" content="Minimal Hugo blog theme with light and dark mode support" />
+
+<meta property="og:locale" content="en-gb" />
+<meta name="language" content="en-gb" />
+
+  <link rel="alternate" hreflang="en-gb" href="http://localhost:1313/posts/2019/02/pks-harbor-and-the-importance-of-container-registries/" title="English" />
+
+
+
+
+
+    
+    
+    
+
+    <meta property="og:type" content="article" />
+    <meta property="og:article:published_time" content=2019-02-27T00:00:00Z />
+    <meta property="article:published_time" content=2019-02-27T00:00:00Z />
+    <meta property="og:url" content="http://localhost:1313/posts/2019/02/pks-harbor-and-the-importance-of-container-registries/" />
+
+    
+    <meta property="og:article:author" content="David Holder" />
+    <meta property="article:author" content="David Holder" />
+    <meta name="author" content="David Holder" />
+    
+    
+
+    
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "PKS, Harbor and the importance of container registries",
+        "author": {
+        "@type": "Person",
+        "name": "David Holder"
+        },
+        "datePublished": "2019-02-27",
+        "description": "",
+        "wordCount":  616 ,
+        "mainEntityOfPage": "http://localhost:1313/posts/2019/02/pks-harbor-and-the-importance-of-container-registries/",
+        "dateModified": "2019-02-27",
+        "image": {
+        "@type": "ImageObject",
+        "url": ""
+        },
+        "publisher": {
+        "@type": "Organization",
+        "name": "Virtualthoughts"
+        }
+    }
+    </script>
+
+
+<meta name="generator" content="Hugo 0.162.1">
+
+    
+    <meta property="og:url" content="http://localhost:1313/posts/2019/02/pks-harbor-and-the-importance-of-container-registries/">
+	<meta property="og:site_name" content="Virtualthoughts">
+	<meta property="og:title" content="PKS, Harbor and the importance of container registries">
+	<meta property="og:description" content="What are container registries and why do we need them? A lot of the time, particularly when individuals and organisations are evaluating, testing and experimenting with containers they will use public container registries such as Docker Hub. These public registries provide an easy-to-use, simple way to access images. As developers, application owners, system admins etc gain familiarity and experience additional operational considerations need to be explored, such as:
+Organisation - How can we organise container images in a meaningful way? Such as by environment state (Prod/Dev/Test) and application type? RBAC - How can we implement role-based access control to a container registry? Vulnerability Scanning - How can we scan container images for known vulnerabilities? Efficiency - How can we centrally manage all our container images and deploy an application from them? Security - Some images need to kept under lock and key, rather than using an external service like Docker Hub. Introducing VMware Harbor Registry VMware Harbor Registry has been designed to address these considerations as enterprise-class container registry solution with integration into PKS. In this post, We’ll have a quick primer on getting up and running with Harbor in PKS and explore some of its features. To begin, we need to download PKS Harbor from the Pivotal site and import it into ops manager.">
+	<meta property="og:locale" content="en_gb">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="posts">
+		<meta property="article:published_time" content="2019-02-27T00:00:00+00:00">
+		<meta property="article:modified_time" content="2019-02-27T00:00:00+00:00">
+
+
+    
+    
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="PKS, Harbor and the importance of container registries">
+	<meta name="twitter:description" content="What are container registries and why do we need them? A lot of the time, particularly when individuals and organisations are evaluating, testing and experimenting with containers they will use public container registries such as Docker Hub. These public registries provide an easy-to-use, simple way to access images. As developers, application owners, system admins etc gain familiarity and experience additional operational considerations need to be explored, such as:
+Organisation - How can we organise container images in a meaningful way? Such as by environment state (Prod/Dev/Test) and application type? RBAC - How can we implement role-based access control to a container registry? Vulnerability Scanning - How can we scan container images for known vulnerabilities? Efficiency - How can we centrally manage all our container images and deploy an application from them? Security - Some images need to kept under lock and key, rather than using an external service like Docker Hub. Introducing VMware Harbor Registry VMware Harbor Registry has been designed to address these considerations as enterprise-class container registry solution with integration into PKS. In this post, We’ll have a quick primer on getting up and running with Harbor in PKS and explore some of its features. To begin, we need to download PKS Harbor from the Pivotal site and import it into ops manager.">
+
+
+    
+
+    <link rel="canonical" href="http://localhost:1313/posts/2019/02/pks-harbor-and-the-importance-of-container-registries/">
+    <link href="/style.min.2d921c18cf1ec555ffc03d59a8adc211c402c68c930c27d6a0c306ab175a8d09.css" rel="stylesheet">
+    <link href="/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+
+
+
+<link rel="manifest" href="http://localhost:1313/site.webmanifest">
+
+<meta name="msapplication-config" content="/browserconfig.xml">
+<meta name="msapplication-TileColor" content="#2d89ef">
+<meta name="theme-color" content="#434648">
+    <meta name="color-scheme" content="light dark">
+
+    
+    <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+    
+    
+</head>
+<body data-theme = "dark" class="notransition">
+
+<script src="/js/theme.js"></script>
+
+<div class="navbar" role="navigation">
+    <nav class="menu" aria-label="Main Navigation">
+        <a href="http://localhost:1313/" class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" 
+viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+stroke-linejoin="round" class="feather feather-home">
+<title>Home</title>
+<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+<polyline points="9 22 9 12 15 12 15 22"></polyline>
+</svg>
+        </a>
+        <input type="checkbox" id="menu-trigger" class="menu-trigger" />
+        <label for="menu-trigger">
+            <span class="menu-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" stroke="currentColor" fill="none" viewBox="0 0 14 14"><title>Menu</title><path stroke-linecap="round" stroke-linejoin="round" d="M10.595 7L3.40726 7"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 3.51488L3.49301 3.51488"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 10.4851H3.49301"></path><path stroke-linecap="round" stroke-linejoin="round" d="M0.5 12.5V1.5C0.5 0.947715 0.947715 0.5 1.5 0.5H12.5C13.0523 0.5 13.5 0.947715 13.5 1.5V12.5C13.5 13.0523 13.0523 13.5 12.5 13.5H1.5C0.947715 13.5 0.5 13.0523 0.5 12.5Z"></path></svg>
+            </span>
+        </label>
+
+        <div class="trigger">
+            <ul class="trigger-container">
+                
+                
+                <li>
+                    <a class="menu-link " href="/">
+                        Home
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link active" href="/posts/">
+                        Posts
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link " href="/about/">
+                        About
+                    </a>
+                    
+                </li>
+                
+                <li class="menu-separator">
+                    <span>|</span>
+                </li>
+                
+                
+            </ul>
+            <a id="mode" href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-sunny" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>LIGHT</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-moon" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>DARK</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+            </a>
+        </div>
+    </nav>
+</div>
+
+<div class="wrapper post">
+    <main class="page-content" aria-label="Content">
+        <article>
+            <header class="header">
+                <h1 class="header-title">PKS, Harbor and the importance of container registries</h1>
+                
+                
+                
+                <div class="post-meta">
+                    <time datetime="2019-02-27T00:00:00&#43;00:00" itemprop="datePublished"> 27 Feb 2019 </time>
+                </div>
+                
+            </header>
+            
+            <div class="page-content">
+                <h1 id="whatare-container-registries-and-why-do-we-need-them">What are container registries and why do we need them?</h1>
+<p>A lot of the time, particularly when individuals and organisations are evaluating, testing and experimenting with containers they will use <em>public</em> container registries such as Docker Hub.  These public registries provide an easy-to-use, simple way to access images. As developers, application owners, system admins etc gain familiarity and experience additional operational considerations need to be explored, such as:</p>
+<ul>
+<li><strong>Organisation</strong> - How can we organise container images in a meaningful way? Such as by environment state (Prod/Dev/Test) and application type?</li>
+<li><strong>RBAC</strong> - How can we implement role-based access control to a container registry?</li>
+<li><strong>Vulnerability Scanning</strong> - How can we scan container images for known vulnerabilities?</li>
+<li><strong>Efficiency</strong> - How can we centrally manage all our container images and deploy an application from them?</li>
+<li><strong>Security</strong> - Some images need to kept under lock and key, rather than using an external service like Docker Hub.</li>
+</ul>
+<h1 id="introducing-vmware-harbor-registry">Introducing VMware Harbor Registry</h1>
+<p>VMware Harbor Registry has been designed to address these considerations as enterprise-class container registry solution with integration into PKS. In this post, We&rsquo;ll have a quick primer on getting up and running with Harbor in PKS and explore some of its features. To begin, we need to download PKS Harbor from the Pivotal site and import it into ops manager.</p>
+<p><img src="/posts/2019/02/pks-harbor-and-the-importance-of-container-registries/images/813.png" alt=""></p>
+<p>After which the tile will be added (When doing this for the first time it will have an orange bar at the bottom. Press the tile to configure).</p>
+<p><img src="/posts/2019/02/pks-harbor-and-the-importance-of-container-registries/images/508.png" alt=""></p>
+<p>The following need to be defined with applicable parameters to suit your environment.</p>
+<ul>
+<li><strong>Availability Zone and Networks</strong> - This is where the Harbor VM will reside, and the respective configuration will be dependent on your setup.</li>
+<li><strong>General</strong> - Hostname and IP address settings</li>
+<li><strong>Certificate</strong> - Generate a self-signed certificate, or BYOC (bring your own certificate)</li>
+<li><strong>Credentials</strong> - Define the local admin password</li>
+<li><strong>Authentication</strong> - Choose between
+<ul>
+<li>Internal</li>
+<li>LDAP</li>
+<li>UAA in PKS</li>
+<li>UAA in PAS</li>
+</ul>
+</li>
+<li><strong>Container Registry store</strong> - Choose where to store container images pushed to Harbor
+<ul>
+<li>Local file system</li>
+<li>NFS Server</li>
+<li>S3 Bucket</li>
+<li>Google Cloud Storage</li>
+</ul>
+</li>
+<li><strong>Clair Proxy Settings</strong></li>
+<li><strong>Notary settings</strong></li>
+<li><strong>Resource Config</strong></li>
+</ul>
+<h1 id="vmware-harbor-registry---organisation">VMware Harbor Registry - Organisation</h1>
+<p>Harbor employs the concept of &ldquo;projects&rdquo;. Projects are a way of collecting images for a specific application or service. When images are pushed to Harbor, they reside within a project:</p>
+<p> </p>
+<p><img src="/posts/2019/02/pks-harbor-and-the-importance-of-container-registries/images/792.png" alt=""></p>
+<p>Projects can either be private or public and can be configured during, or after, project creation:</p>
+<p><img src="/posts/2019/02/pks-harbor-and-the-importance-of-container-registries/images/812.png" alt=""></p>
+<p>A project is comprised of a number of components:</p>
+<p><img src="/posts/2019/02/pks-harbor-and-the-importance-of-container-registries/images/431.png" alt=""></p>
+<p> </p>
+<h1 id="vmware-harbor-registry---rbac">VMware Harbor Registry - RBAC</h1>
+<p>In Harbor, we have three role types we can assign to projects:</p>
+<p> </p>
+<p><img src="images/rbac.png" alt="rbac"></p>
+<p><em>Image source: https://github.com/goharbor/harbor/blob/master/docs/user_guide.md#managing-projects</em></p>
+<ul>
+<li><strong>Guest</strong> - Read-only access, can pull images</li>
+<li><strong>Developer</strong> - Read/write access, can pull and push images</li>
+<li><strong>Admin</strong> - Read/Write access, as well as project-level activities, such as modifying parameters and permissions.</li>
+</ul>
+<p>As a practical example, AD groups can be created to facilitate these roles:</p>
+<p><img src="/posts/2019/02/pks-harbor-and-the-importance-of-container-registries/images/928.png" alt=""></p>
+<p>And these AD groups can be mapped to respective permissions within the project</p>
+<p><img src="/posts/2019/02/pks-harbor-and-the-importance-of-container-registries/images/Groups.png" alt=""></p>
+<p> </p>
+<p>Therefore, facilitating RBAC within our Harbor environment. Pretty handy.</p>
+<h1 id="vmware-harbor-registry---vulnerability-scanning">VMware Harbor Registry - Vulnerability Scanning</h1>
+<p>The ability to identify, evaluate and remediate vulnerabilities is a standard operation is modern software development and deployment. Thankfully Harbor addresses this with integration with <a href="https://github.com/coreos/clair">Clair</a> - an open source project that addresses the identification, categorisation and analysis of vulnerabilities within containers. As a demonstration we need to first push an image to Harbor:</p>
+<p><img src="/posts/2019/02/pks-harbor-and-the-importance-of-container-registries/images/736.png" alt=""></p>
+<p>After initiating a scan, Harbor can inform us of what vulnerabilities exist within this container image</p>
+<p><img src="/posts/2019/02/pks-harbor-and-the-importance-of-container-registries/images/175.png" alt=""></p>
+<p>We can then explore more details about these vulnerabilities, including when they were fixed:</p>
+<p><img src="/posts/2019/02/pks-harbor-and-the-importance-of-container-registries/images/749.png" alt=""></p>
+<p> </p>
+<h1 id="conclusion">Conclusion</h1>
+<p>Harbor provides us with an enterprise level, container registry solution. This blog post has only scratched the surface, and with constant development being invested into the project, expect more features and improvements.</p>
+
+            </div>
+        </article></main>
+</div>
+<footer class="footer">
+    <span class="footer_item"> </span>
+    &nbsp;
+
+    <div class="footer_social-icons">
+<a href="https://github.com/David-VTUK" target="_blank" rel="noopener noreferrer me"
+    title="Github">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path
+        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+    </path>
+</svg>
+</a>
+<a href="/index.xml" target="_blank" rel="noopener noreferrer me"
+    title="Rss">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 11a9 9 0 0 1 9 9" />
+    <path d="M4 4a16 16 0 0 1 16 16" />
+    <circle cx="5" cy="19" r="1" />
+</svg>
+</a>
+</div>
+    <small class="footer_copyright">
+        © 2026 David Holder.
+        Powered by <a href="https://github.com/hugo-sid/hugo-blog-awesome" target="_blank" rel="noopener">Hugo blog awesome</a>.
+    </small>
+</footer><a href="#" title="Go to top" id="totop">
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" stroke="currentColor" viewBox="0 96 960 960">
+    <path d="M283 704.739 234.261 656 480 410.261 725.739 656 677 704.739l-197-197-197 197Z"/>
+</svg>
+
+</a>
+
+
+    
+
+
+
+
+
+
+    
+    <script async src="http://localhost:1313/js/main.js" ></script>
+
+    
+
+</body>
+</html>

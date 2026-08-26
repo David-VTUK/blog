@@ -1,0 +1,58 @@
+baseURL = "https://www.virtualthoughts.co.uk"
+languageCode = "en-gb"
+title = "Virtualthoughts"
+theme = "hugo-blog-awesome"
+ignoreLogs = ["warning-goldmark-raw-html"]
+
+[permalinks]
+  posts = "/:year/:month/:day/:slug/"
+
+[menu]
+  [[menu.main]]
+    pageRef = "/"
+    name = "Home"
+    url = "/"
+    weight = 10
+  [[menu.main]]
+    pageRef = "posts"
+    name = "Posts"
+    url = "/posts/"
+    weight = 20
+  [[menu.main]]
+    pageRef = "about"
+    name = "About"
+    url = "/about/"
+    weight = 30
+
+[params]
+  sitename = "Virtualthoughts"
+  defaultColor = "dark" # set color mode: dark, light, auto
+  description = "Minimal Hugo blog theme with light and dark mode support"
+  mainSections = ["posts"]
+  tocOpen = false # set to true to open table of contents by default
+  goToTop = true # set to false to disable 'go to top' button
+
+[params.author]
+  avatar = "avatar.png" # put the file in assets folder; ensure image has same height and width
+  intro = "Virtualthoughts.co.uk"
+  name = "David Holder"
+  description = "A place of ramblings, fuelled by coffee and intrigue"
+
+[params.webmanifest]
+  name = "sitename"
+  short_name = "sitename"
+  start_url = "/"
+  theme_color = "#434648"
+  background_color = "#131418" # Adjusted to match your dark mode default
+  display = "standalone"
+
+[params.browserconfig]
+  TileColor = "#2d89ef" # default windows 10 blue tile color
+
+[[params.socialIcons]]
+  name = "github"
+  url = "https://github.com/David-VTUK"
+
+[[params.socialIcons]]
+  name = "Rss"
+  url = "/index.xml"

@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en-gb"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title itemprop="name">ArgoCD - Ordering with ApplicationSets | Virtualthoughts</title>
+<meta property="og:title" content="ArgoCD - Ordering with ApplicationSets | Virtualthoughts" />
+<meta name="twitter:title" content="ArgoCD - Ordering with ApplicationSets | Virtualthoughts" />
+<meta itemprop="name" content="ArgoCD - Ordering with ApplicationSets | Virtualthoughts" />
+<meta name="application-name" content="ArgoCD - Ordering with ApplicationSets | Virtualthoughts" />
+<meta property="og:site_name" content="Virtualthoughts" />
+
+<meta name="description" content="Minimal Hugo blog theme with light and dark mode support">
+<meta itemprop="description" content="Minimal Hugo blog theme with light and dark mode support" />
+<meta property="og:description" content="Minimal Hugo blog theme with light and dark mode support" />
+<meta name="twitter:description" content="Minimal Hugo blog theme with light and dark mode support" />
+
+<meta property="og:locale" content="en-gb" />
+<meta name="language" content="en-gb" />
+
+  <link rel="alternate" hreflang="en" href="http://localhost:1313/2025/11/16/argocd-ordering-with-applicationsets/" title="" />
+
+
+
+
+
+    
+    
+    
+
+    <meta property="og:type" content="article" />
+    <meta property="og:article:published_time" content=2025-11-16T00:00:00Z />
+    <meta property="article:published_time" content=2025-11-16T00:00:00Z />
+    <meta property="og:url" content="http://localhost:1313/2025/11/16/argocd-ordering-with-applicationsets/" />
+
+    
+    <meta property="og:article:author" content="David Holder" />
+    <meta property="article:author" content="David Holder" />
+    <meta name="author" content="David Holder" />
+    
+    
+
+    
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "ArgoCD - Ordering with ApplicationSets",
+        "author": {
+        "@type": "Person",
+        "name": "David Holder"
+        },
+        "datePublished": "2025-11-16",
+        "description": "",
+        "wordCount":  417 ,
+        "mainEntityOfPage": "http://localhost:1313/2025/11/16/argocd-ordering-with-applicationsets/",
+        "dateModified": "2025-11-16",
+        "image": {
+        "@type": "ImageObject",
+        "url": ""
+        },
+        "publisher": {
+        "@type": "Organization",
+        "name": "Virtualthoughts"
+        }
+    }
+    </script>
+
+
+<meta name="generator" content="Hugo 0.162.1">
+
+    
+    <meta property="og:url" content="http://localhost:1313/2025/11/16/argocd-ordering-with-applicationsets/">
+	<meta property="og:site_name" content="Virtualthoughts">
+	<meta property="og:title" content="ArgoCD - Ordering with ApplicationSets">
+	<meta property="og:description" content="In a previous post, I alluded to the use of ApplicationSets for my homelab deployments. I continue to leverage them, to the point I now have quite a number of applications managed by one:
+ArgoCD (Itself)
+Cert-Manager
+Cilium
+External-snapshotter
+Gateway API CRD’s
+Gateway API gateways
+Homepage
+Kanboard
+Kubevirt
+Longhorn
+OpenTelemetry Operator
+Sealed Secrets
+System Upgrade Controller
+The problem I had, was there was no ordering, dependency management or concurrency limits, so applications would simply update as and whenever changes were pushed.">
+	<meta property="og:locale" content="en_gb">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="posts">
+		<meta property="article:published_time" content="2025-11-16T00:00:00+00:00">
+		<meta property="article:modified_time" content="2025-11-16T00:00:00+00:00">
+
+
+    
+    
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="ArgoCD - Ordering with ApplicationSets">
+	<meta name="twitter:description" content="In a previous post, I alluded to the use of ApplicationSets for my homelab deployments. I continue to leverage them, to the point I now have quite a number of applications managed by one:
+ArgoCD (Itself)
+Cert-Manager
+Cilium
+External-snapshotter
+Gateway API CRD’s
+Gateway API gateways
+Homepage
+Kanboard
+Kubevirt
+Longhorn
+OpenTelemetry Operator
+Sealed Secrets
+System Upgrade Controller
+The problem I had, was there was no ordering, dependency management or concurrency limits, so applications would simply update as and whenever changes were pushed.">
+
+
+    
+
+    <link rel="canonical" href="http://localhost:1313/2025/11/16/argocd-ordering-with-applicationsets/">
+    <link href="/style.min.562556c74d7ca5d6d6aa72c6e342d478360cdb10904c9eacda75792f6e6a7eb0.css" rel="stylesheet">
+    <link href="/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+
+
+
+<link rel="manifest" href="http://localhost:1313/site.webmanifest">
+
+<meta name="msapplication-config" content="/browserconfig.xml">
+<meta name="msapplication-TileColor" content="#2d89ef">
+<meta name="theme-color" content="#434648">
+    <meta name="color-scheme" content="light dark">
+
+    
+    <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+    
+    
+</head>
+<body data-theme = "dark" class="notransition">
+
+<script src="/js/theme.js"></script>
+
+<div class="navbar" role="navigation">
+    <nav class="menu" aria-label="Main Navigation">
+        <a href="http://localhost:1313/" class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" 
+viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+stroke-linejoin="round" class="feather feather-home">
+<title>Home</title>
+<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+<polyline points="9 22 9 12 15 12 15 22"></polyline>
+</svg>
+        </a>
+        <input type="checkbox" id="menu-trigger" class="menu-trigger" />
+        <label for="menu-trigger">
+            <span class="menu-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" stroke="currentColor" fill="none" viewBox="0 0 14 14"><title>Menu</title><path stroke-linecap="round" stroke-linejoin="round" d="M10.595 7L3.40726 7"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 3.51488L3.49301 3.51488"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 10.4851H3.49301"></path><path stroke-linecap="round" stroke-linejoin="round" d="M0.5 12.5V1.5C0.5 0.947715 0.947715 0.5 1.5 0.5H12.5C13.0523 0.5 13.5 0.947715 13.5 1.5V12.5C13.5 13.0523 13.0523 13.5 12.5 13.5H1.5C0.947715 13.5 0.5 13.0523 0.5 12.5Z"></path></svg>
+            </span>
+        </label>
+
+        <div class="trigger">
+            <ul class="trigger-container">
+                
+                
+                <li>
+                    <a class="menu-link " href="/">
+                        Home
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link active" href="/posts/">
+                        Posts
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link " href="/about/">
+                        About
+                    </a>
+                    
+                </li>
+                
+                <li class="menu-separator">
+                    <span>|</span>
+                </li>
+                
+                
+            </ul>
+            <a id="mode" href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-sunny" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>LIGHT</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-moon" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>DARK</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+            </a>
+        </div>
+    </nav>
+</div>
+
+<div class="wrapper post">
+    <main class="page-content" aria-label="Content">
+        <article>
+            <header class="header">
+                <h1 class="header-title">ArgoCD - Ordering with ApplicationSets</h1>
+                
+                
+                
+                <div class="post-meta">
+                    <time datetime="2025-11-16T00:00:00&#43;00:00" itemprop="datePublished"> 16 Nov 2025 </time>
+                </div>
+                
+            </header>
+            
+            <div class="page-content">
+                <p><a href="https://www.virtualthoughts.co.uk/2025/02/21/customising-argocd-applicationsets-with-template-patches/">In a previous post</a>, I alluded to the use of ApplicationSets for my homelab deployments. I continue to leverage them, to the point I now have quite a number of applications managed by one:</p>
+<ul>
+<li>
+<p>ArgoCD (Itself)</p>
+</li>
+<li>
+<p>Cert-Manager</p>
+</li>
+<li>
+<p>Cilium</p>
+</li>
+<li>
+<p>External-snapshotter</p>
+</li>
+<li>
+<p>Gateway API CRD&rsquo;s</p>
+</li>
+<li>
+<p>Gateway API gateways</p>
+</li>
+<li>
+<p>Homepage</p>
+</li>
+<li>
+<p>Kanboard</p>
+</li>
+<li>
+<p>Kubevirt</p>
+</li>
+<li>
+<p>Longhorn</p>
+</li>
+<li>
+<p>OpenTelemetry Operator</p>
+</li>
+<li>
+<p>Sealed Secrets</p>
+</li>
+<li>
+<p>System Upgrade Controller</p>
+</li>
+</ul>
+<p>The problem I had, was there was no ordering, dependency management or concurrency limits, so applications would simply update as and whenever changes were pushed.</p>
+<p>This caused a number of issues, namely:</p>
+<ol>
+<li>
+<p>What if ArgoCD updates when another application is or vice-versa?</p>
+</li>
+<li>
+<p>What if Cilium updates when another application is or vice-versa?</p>
+</li>
+</ol>
+<p>This could cause some negative outcomes. To mitigate against this, I had a think about how I could group certain applications together, automatically.</p>
+<h2 id="re-arranging-the-git-repo">Re-arranging the <a href="https://github.com/David-VTUK/turing-pi-automation/tree/main/argocd-apps">Git Repo</a></h2>
+<p>I decided to group applications by directory, reflecting levels of importance:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>├── argocd-apps
+</span></span><span style="display:flex;"><span>│   ├── 00-core-infrastructure
+</span></span><span style="display:flex;"><span>│   ├── 01-core-services
+</span></span><span style="display:flex;"><span>│   ├── 02-platform-services
+</span></span><span style="display:flex;"><span>│   └── 03-user-workloads
+</span></span></code></pre></div><p>The directory prefix represents the order, which I reflect in the ApplicationSet:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">argoproj.io/v1alpha1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">ApplicationSet</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">addon-applications</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">argocd</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">strategy</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">type</span>: <span style="color:#ae81ff">RollingSync</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">rollingSync</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">steps</span>:
+</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">matchExpressions</span>:
+</span></span><span style="display:flex;"><span>            - <span style="color:#f92672">key</span>: <span style="color:#ae81ff">orderLabel</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#f92672">operator</span>: <span style="color:#ae81ff">In</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#f92672">values</span>: [<span style="color:#e6db74">&#34;00&#34;</span>]
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">maxUpdate</span>: <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">matchExpressions</span>:
+</span></span><span style="display:flex;"><span>            - <span style="color:#f92672">key</span>: <span style="color:#ae81ff">orderLabel</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#f92672">operator</span>: <span style="color:#ae81ff">In</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#f92672">values</span>: [<span style="color:#e6db74">&#34;01&#34;</span>]
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">maxUpdate</span>: <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">matchExpressions</span>:
+</span></span><span style="display:flex;"><span>            - <span style="color:#f92672">key</span>: <span style="color:#ae81ff">orderLabel</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#f92672">operator</span>: <span style="color:#ae81ff">In</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#f92672">values</span>: [<span style="color:#e6db74">&#34;02&#34;</span>]
+</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">matchExpressions</span>:
+</span></span><span style="display:flex;"><span>            - <span style="color:#f92672">key</span>: <span style="color:#ae81ff">orderLabel</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#f92672">operator</span>: <span style="color:#ae81ff">In</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#f92672">values</span>: [<span style="color:#e6db74">&#34;03&#34;</span>]
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">goTemplate</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">goTemplateOptions</span>: [<span style="color:#e6db74">&#34;missingkey=error&#34;</span>]
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">generators</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">git</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">repoURL</span>: <span style="color:#e6db74">&#39;https://github.com/David-VTUK/turing-pi-automation.git&#39;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">revision</span>: <span style="color:#ae81ff">HEAD</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">directories</span>:
+</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">path</span>: <span style="color:#e6db74">&#39;argocd-apps/00-core-infrastructure/*&#39;</span>
+</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">path</span>: <span style="color:#e6db74">&#39;argocd-apps/01-core-services/*&#39;</span>
+</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">path</span>: <span style="color:#e6db74">&#39;argocd-apps/02-platform-services/*&#39;</span>
+</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">path</span>: <span style="color:#e6db74">&#39;argocd-apps/03-user-workloads/*&#39;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">template</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">name</span>: <span style="color:#e6db74">&#39;{{ .path.basename }}&#39;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">labels</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">orderLabel</span>: <span style="color:#e6db74">&#39;{{ index (splitList &#34;-&#34; (index (splitList &#34;/&#34; .path.path) 1)) 0 }}&#39;</span>
+</span></span></code></pre></div><p>The end result being</p>
+<ul>
+<li>
+<p>Applications with the <code>orderLabel</code> <code>00</code> (folder prefix) will apply first</p>
+<ul>
+<li>Only 1 application can update at a time, preventing conflicting apps from trying to update at the same time (for example, <code>Cilium</code> and <code>ArgoCD</code></li>
+</ul>
+</li>
+<li>
+<p>Applications with the <code>orderLabel 01</code> (folder prefix) will then apply</p>
+<ul>
+<li>Only 1 application can update at a time</li>
+</ul>
+</li>
+<li>
+<p>Applications with the <code>orderLabel 02</code> (folder prefix) will then apply.</p>
+<ul>
+<li>No concurrency limit</li>
+</ul>
+</li>
+<li>
+<p>Applications with the <code>orderLabel 03</code> (folder prefix( will then apply.</p>
+<ul>
+<li>No concurrency limit</li>
+</ul>
+</li>
+</ul>
+<p>Whenever I add a new application I have to decide where it sits in my hierarchy:</p>
+<ol>
+<li>
+<p>Core Infrastructure (00)</p>
+<ul>
+<li>Examples: <code>Cilium</code>, <code>Longhorn</code></li>
+</ul>
+</li>
+<li>
+<p>Core Services (01)</p>
+<ul>
+<li>Examples: <code>ArgoCD, Cert-Manager</code></li>
+</ul>
+</li>
+<li>
+<p>Platform Services (02)</p>
+<ul>
+<li>Examples: <code>OpenTelemetry Operator</code>, <code>Sealed Secrets</code></li>
+</ul>
+</li>
+<li>
+<p>User Workloads (03)</p>
+<ul>
+<li>Examples: <code>Homepage</code>, <code>Kanboard</code></li>
+</ul>
+</li>
+</ol>
+<p>This also helps on the occasion I need to tear down and rebuild my homelab - dependencies are installed in the correct order.</p>
+
+            </div>
+        </article></main>
+</div>
+<footer class="footer">
+    <span class="footer_item"> </span>
+    &nbsp;
+
+    <div class="footer_social-icons">
+<a href="https://github.com/David-VTUK" target="_blank" rel="noopener noreferrer me"
+    title="Github">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path
+        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+    </path>
+</svg>
+</a>
+<a href="/index.xml" target="_blank" rel="noopener noreferrer me"
+    title="Rss">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 11a9 9 0 0 1 9 9" />
+    <path d="M4 4a16 16 0 0 1 16 16" />
+    <circle cx="5" cy="19" r="1" />
+</svg>
+</a>
+</div>
+    <small class="footer_copyright">
+        © 2026 David Holder.
+        Powered by <a href="https://github.com/hugo-sid/hugo-blog-awesome" target="_blank" rel="noopener">Hugo blog awesome</a>.
+    </small>
+</footer><a href="#" title="Go to top" id="totop">
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" stroke="currentColor" viewBox="0 96 960 960">
+    <path d="M283 704.739 234.261 656 480 410.261 725.739 656 677 704.739l-197-197-197 197Z"/>
+</svg>
+
+</a>
+
+
+    
+
+
+
+
+
+
+    
+    <script async src="http://localhost:1313/js/main.js" ></script>
+
+    
+
+</body>
+</html>

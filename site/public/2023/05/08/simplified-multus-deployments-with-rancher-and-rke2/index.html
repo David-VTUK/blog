@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en-gb"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title itemprop="name">Simplify Multus deployments with Rancher and RKE2 | Virtualthoughts</title>
+<meta property="og:title" content="Simplify Multus deployments with Rancher and RKE2 | Virtualthoughts" />
+<meta name="twitter:title" content="Simplify Multus deployments with Rancher and RKE2 | Virtualthoughts" />
+<meta itemprop="name" content="Simplify Multus deployments with Rancher and RKE2 | Virtualthoughts" />
+<meta name="application-name" content="Simplify Multus deployments with Rancher and RKE2 | Virtualthoughts" />
+<meta property="og:site_name" content="Virtualthoughts" />
+
+<meta name="description" content="Minimal Hugo blog theme with light and dark mode support">
+<meta itemprop="description" content="Minimal Hugo blog theme with light and dark mode support" />
+<meta property="og:description" content="Minimal Hugo blog theme with light and dark mode support" />
+<meta name="twitter:description" content="Minimal Hugo blog theme with light and dark mode support" />
+
+<meta property="og:locale" content="en-gb" />
+<meta name="language" content="en-gb" />
+
+  <link rel="alternate" hreflang="en" href="http://localhost:1313/2023/05/08/simplified-multus-deployments-with-rancher-and-rke2/" title="" />
+
+
+
+
+
+    
+    
+    
+
+    <meta property="og:type" content="article" />
+    <meta property="og:article:published_time" content=2023-05-08T00:00:00Z />
+    <meta property="article:published_time" content=2023-05-08T00:00:00Z />
+    <meta property="og:url" content="http://localhost:1313/2023/05/08/simplified-multus-deployments-with-rancher-and-rke2/" />
+
+    
+    <meta property="og:article:author" content="David Holder" />
+    <meta property="article:author" content="David Holder" />
+    <meta name="author" content="David Holder" />
+    
+    
+
+    
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "Simplify Multus deployments with Rancher and RKE2",
+        "author": {
+        "@type": "Person",
+        "name": "David Holder"
+        },
+        "datePublished": "2023-05-08",
+        "description": "",
+        "wordCount":  939 ,
+        "mainEntityOfPage": "http://localhost:1313/2023/05/08/simplified-multus-deployments-with-rancher-and-rke2/",
+        "dateModified": "2023-05-08",
+        "image": {
+        "@type": "ImageObject",
+        "url": ""
+        },
+        "publisher": {
+        "@type": "Organization",
+        "name": "Virtualthoughts"
+        }
+    }
+    </script>
+
+
+<meta name="generator" content="Hugo 0.162.1">
+
+    
+    <meta property="og:url" content="http://localhost:1313/2023/05/08/simplified-multus-deployments-with-rancher-and-rke2/">
+	<meta property="og:site_name" content="Virtualthoughts">
+	<meta property="og:title" content="Simplify Multus deployments with Rancher and RKE2">
+	<meta property="og:description" content="From my experience, some environments necessitate leveraging multiple NICs on Kubernetes worker nodes as well as the underlying Pods. Because of this, I wanted to create a test environment to experiment with this kind of setup. Although more common in bare metal environments, I’ll create a virtualised equivalent.
+Planning This is what I have in mind:
+In RKE2 vernacular, we refer to nodes that assume etcd and/or control plane roles as servers, and worker nodes as agents.">
+	<meta property="og:locale" content="en_gb">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="posts">
+		<meta property="article:published_time" content="2023-05-08T00:00:00+00:00">
+		<meta property="article:modified_time" content="2023-05-08T00:00:00+00:00">
+
+
+    
+    
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="Simplify Multus deployments with Rancher and RKE2">
+	<meta name="twitter:description" content="From my experience, some environments necessitate leveraging multiple NICs on Kubernetes worker nodes as well as the underlying Pods. Because of this, I wanted to create a test environment to experiment with this kind of setup. Although more common in bare metal environments, I’ll create a virtualised equivalent.
+Planning This is what I have in mind:
+In RKE2 vernacular, we refer to nodes that assume etcd and/or control plane roles as servers, and worker nodes as agents.">
+
+
+    
+
+    <link rel="canonical" href="http://localhost:1313/2023/05/08/simplified-multus-deployments-with-rancher-and-rke2/">
+    <link href="/style.min.562556c74d7ca5d6d6aa72c6e342d478360cdb10904c9eacda75792f6e6a7eb0.css" rel="stylesheet">
+    <link href="/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+
+
+
+<link rel="manifest" href="http://localhost:1313/site.webmanifest">
+
+<meta name="msapplication-config" content="/browserconfig.xml">
+<meta name="msapplication-TileColor" content="#2d89ef">
+<meta name="theme-color" content="#434648">
+    <meta name="color-scheme" content="light dark">
+
+    
+    <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+    
+    
+</head>
+<body data-theme = "dark" class="notransition">
+
+<script src="/js/theme.js"></script>
+
+<div class="navbar" role="navigation">
+    <nav class="menu" aria-label="Main Navigation">
+        <a href="http://localhost:1313/" class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" 
+viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+stroke-linejoin="round" class="feather feather-home">
+<title>Home</title>
+<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+<polyline points="9 22 9 12 15 12 15 22"></polyline>
+</svg>
+        </a>
+        <input type="checkbox" id="menu-trigger" class="menu-trigger" />
+        <label for="menu-trigger">
+            <span class="menu-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" stroke="currentColor" fill="none" viewBox="0 0 14 14"><title>Menu</title><path stroke-linecap="round" stroke-linejoin="round" d="M10.595 7L3.40726 7"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 3.51488L3.49301 3.51488"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 10.4851H3.49301"></path><path stroke-linecap="round" stroke-linejoin="round" d="M0.5 12.5V1.5C0.5 0.947715 0.947715 0.5 1.5 0.5H12.5C13.0523 0.5 13.5 0.947715 13.5 1.5V12.5C13.5 13.0523 13.0523 13.5 12.5 13.5H1.5C0.947715 13.5 0.5 13.0523 0.5 12.5Z"></path></svg>
+            </span>
+        </label>
+
+        <div class="trigger">
+            <ul class="trigger-container">
+                
+                
+                <li>
+                    <a class="menu-link " href="/">
+                        Home
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link active" href="/posts/">
+                        Posts
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link " href="/about/">
+                        About
+                    </a>
+                    
+                </li>
+                
+                <li class="menu-separator">
+                    <span>|</span>
+                </li>
+                
+                
+            </ul>
+            <a id="mode" href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-sunny" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>LIGHT</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-moon" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>DARK</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+            </a>
+        </div>
+    </nav>
+</div>
+
+<div class="wrapper post">
+    <main class="page-content" aria-label="Content">
+        <article>
+            <header class="header">
+                <h1 class="header-title">Simplify Multus deployments with Rancher and RKE2</h1>
+                
+                
+                
+                <div class="post-meta">
+                    <time datetime="2023-05-08T00:00:00&#43;00:00" itemprop="datePublished"> 8 May 2023 </time>
+                </div>
+                
+            </header>
+            
+            <div class="page-content">
+                <p>From my experience, some environments necessitate leveraging multiple NICs on Kubernetes worker nodes as well as the underlying Pods. Because of this, I wanted to create a test environment to experiment with this kind of setup. Although more common in bare metal environments, I&rsquo;ll create a virtualised equivalent.</p>
+<h2 id="planning">Planning</h2>
+<p>This is what I have in mind:</p>
+<p><img src="images/Untitled-2023-05-08-0734.png" alt=""></p>
+<p>In RKE2 vernacular, we refer to nodes that assume etcd and/or control plane roles as <code>servers</code>, and worker nodes as <code>agents</code>.</p>
+<h3 id="server-nodes">Server Nodes</h3>
+<p>Server nodes will not run any workloads. Therefore, they only require 1 NIC. This will reside on VLAN40 in my environment and will act as the overlay/management network for my cluster and will be used for <code>node &lt;-&gt; node</code> communication.</p>
+<h3 id="agent-nodes">Agent Nodes</h3>
+<p>Agent nodes will be connected to multiple networks:</p>
+<ul>
+<li><strong>VLAN40</strong> - Used for <code>node &lt;-&gt; node</code> communication.</li>
+<li><strong>VLAN50</strong> - Used exclusively by <a href="https://longhorn.io/">Longhorn</a> for replication traffic. Longhorn is a cloud-native distributed block storage solution for Kubernetes.</li>
+<li><strong>VLAN60</strong> - Provide access to ancillary services.</li>
+</ul>
+<h2 id="creating-nodes">Creating Nodes</h2>
+<p>For the purposes of experimenting, I will create my VMs first.</p>
+<p>Server VM config:</p>
+<p><img src="images/image.png" alt=""></p>
+<p>Agent VM Config:</p>
+<p><img src="images/image-6458acff247e8.png" alt=""></p>
+<h2 id="rancher-cluster-configuration">Rancher Cluster Configuration</h2>
+<p>Using Multus is as simple as selecting it from the dropdown list of CNI&rsquo;s. We have to have an existing CNI for cluster networking, which is Canal in this example</p>
+<p><img src="images/image-6458afe41001f.png" alt=""></p>
+<p>The section &ldquo;Add-On Config&rdquo; enables us to make changes to the various addons for our cluster:</p>
+<p><img src="images/image-6458b0ca7549a.png" alt=""></p>
+<p>This cluster has the following tweaks:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">calico</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">ipAutoDetectionMethod</span>: <span style="color:#ae81ff">interface=ens192</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">flannel</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">backend</span>: <span style="color:#ae81ff">host-gw</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">iface</span>: <span style="color:#ae81ff">ens192</span>
+</span></span></code></pre></div><p>The <code>Canal</code> CNI is a combination of both <code>Calico</code> and <code>Flannel</code>. Which is why the specific interface used is defined in both sections.</p>
+<p>With this set, we can extract the join command and run it on our servers:</p>
+<p><strong>Tip</strong> - Store the desired node-ip in a config file before launching the command on the nodes. Ie:</p>
+<pre tabindex="0"><code>packerbuilt@mullti-homed-wrk-1:/$ cat /etc/rancher/rke2/config.yaml
+node-ip: 172.16.40.47
+</code></pre><p><img src="images/image-6458b253e1f02.png" alt=""></p>
+<pre tabindex="0"><code>NAME                 STATUS   ROLES                       AGE   VERSION          INTERNAL-IP    EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION      CONTAINER-RUNTIME
+multi-homed-cpl-1   Ready    control-plane,etcd,master   42h   v1.25.9+rke2r1   172.16.40.46   &lt;none&gt;        Ubuntu 22.04.1 LTS   5.15.0-71-generic   containerd://1.6.19-k3s1
+multi-homed-cpl-2   Ready    control-plane,etcd,master   41h   v1.25.9+rke2r1   172.16.40.49   &lt;none&gt;        Ubuntu 22.04.1 LTS   5.15.0-71-generic   containerd://1.6.19-k3s1
+multi-homed-cpl-3   Ready    control-plane,etcd,master   41h   v1.25.9+rke2r1   172.16.40.50   &lt;none&gt;        Ubuntu 22.04.1 LTS   5.15.0-71-generic   containerd://1.6.19-k3s1
+multi-homed-wrk-1   Ready    worker                      42h   v1.25.9+rke2r1   172.16.40.47   &lt;none&gt;        Ubuntu 22.04.1 LTS   5.15.0-71-generic   containerd://1.6.19-k3s1
+multi-homed-wrk-2   Ready    worker                      42h   v1.25.9+rke2r1   172.16.40.48   &lt;none&gt;        Ubuntu 22.04.1 LTS   5.15.0-71-generic   containerd://1.6.19-k3s1
+multi-homed-wrk-3   Ready    worker                      25h   v1.25.9+rke2r1   172.16.40.51   &lt;none&gt;        Ubuntu 22.04.1 LTS   5.15.0-71-generic   containerd://1.6.19-k3s1
+</code></pre><h2 id="pod-networking">Pod Networking</h2>
+<p>Multus is not a CNI in itself, but a meta CNI plugin, enabling the use of multiple CNI&rsquo;s in a Kubernetes cluster. At this point we have a functioning cluster with an overlay network in place for cluster communication, and every Pod will have a interface on that network. So which other CNI&rsquo;s can we use?</p>
+<p>Out of the box, we can query the /opt/cni/bin directory for available plugins. You can also add additional CNI&rsquo;s if you wish.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>packerbuilt@mullti-homed-wrk-1:/$ ls /opt/cni/bin/
+</span></span><span style="display:flex;"><span>bandwidth  calico       dhcp      flannel      host-local  ipvlan    macvlan  portmap  sbr     tuning  vrf
+</span></span><span style="display:flex;"><span>bridge     calico-ipam  firewall  host-device  install     loopback  multus   ptp      static  vlan
+</span></span></code></pre></div><p>For this environment, <code>macvlan</code> will be used. It provides MAC addresses directly to Pod interfaces which makes it simple to integrate with network services like DHCP.</p>
+<p><img src="images/podanatomy-1024x868.png" alt=""></p>
+<h2 id="defining-the-networks">Defining the Networks</h2>
+<p>Through <code>NetworkAttachmentDefinition</code> objects, we can define the respective networks and bridge them to named, physical interfaces on the host:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Namespace</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">multus-network-attachments</span>
+</span></span><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#e6db74">&#34;k8s.cni.cncf.io/v1&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">NetworkAttachmentDefinition</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">macvlan-longhorn-dhcp</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">multus-network-attachments</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">config</span>: <span style="color:#e6db74">&#39;{
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">      &#34;cniVersion&#34;: &#34;0.3.0&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">      &#34;type&#34;: &#34;macvlan&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">      &#34;master&#34;: &#34;ens224&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">      &#34;mode&#34;: &#34;bridge&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">      &#34;ipam&#34;: {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        &#34;type&#34;: &#34;dhcp&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">      }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    }&#39;</span>
+</span></span><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#e6db74">&#34;k8s.cni.cncf.io/v1&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">NetworkAttachmentDefinition</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">macvlan-private-dhcp</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">multus-network-attachments</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">config</span>: <span style="color:#e6db74">&#39;{
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">      &#34;cniVersion&#34;: &#34;0.3.0&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">      &#34;type&#34;: &#34;macvlan&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">      &#34;master&#34;: &#34;ens256&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">      &#34;mode&#34;: &#34;bridge&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">      &#34;ipam&#34;: {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        &#34;type&#34;: &#34;dhcp&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">      }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    }&#39;</span>
+</span></span></code></pre></div><p>We use an annotation to attach a pod to additional networks</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Pod</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">net-tools</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">multus-network-attachments</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">annotations</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">k8s.v1.cni.cncf.io/networks</span>: <span style="color:#ae81ff">multus-network-attachments/macvlan-longhorn-dhcp,multus-network-attachments/macvlan-private-dhcp</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">containers</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">samplepod</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">command</span>: [<span style="color:#e6db74">&#34;/bin/bash&#34;</span>, <span style="color:#e6db74">&#34;-c&#34;</span>, <span style="color:#e6db74">&#34;sleep 2000000000000&#34;</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">image</span>: <span style="color:#ae81ff">ubuntu</span>
+</span></span></code></pre></div><p>Which we can validate within the pod:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>root@net-tools:/# ip addr show
+</span></span><span style="display:flex;"><span>3: eth0@if2: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu <span style="color:#ae81ff">1450</span> qdisc noqueue state UP group default 
+</span></span><span style="display:flex;"><span>    link/ether 1a:57:1a:c1:bf:f3 brd ff:ff:ff:ff:ff:ff link-netnsid <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    inet 10.42.5.27/32 scope global eth0
+</span></span><span style="display:flex;"><span>       valid_lft forever preferred_lft forever
+</span></span><span style="display:flex;"><span>    inet6 fe80::1857:1aff:fec1:bff3/64 scope link 
+</span></span><span style="display:flex;"><span>       valid_lft forever preferred_lft forever
+</span></span><span style="display:flex;"><span>4: net1@if4: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu <span style="color:#ae81ff">1500</span> qdisc noqueue state UP group default 
+</span></span><span style="display:flex;"><span>    link/ether aa:70:ab:b6:7a:86 brd ff:ff:ff:ff:ff:ff link-netnsid <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    inet 172.16.50.40/24 brd 172.16.50.255 scope global net1
+</span></span><span style="display:flex;"><span>       valid_lft forever preferred_lft forever
+</span></span><span style="display:flex;"><span>    inet6 fe80::a870:abff:feb6:7a86/64 scope link 
+</span></span><span style="display:flex;"><span>       valid_lft forever preferred_lft forever
+</span></span><span style="display:flex;"><span>5: net2@if5: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu <span style="color:#ae81ff">1500</span> qdisc noqueue state UP group default 
+</span></span><span style="display:flex;"><span>    link/ether 62:a6:51:84:a9:30 brd ff:ff:ff:ff:ff:ff link-netnsid <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    inet 172.16.60.30/24 brd 172.16.60.255 scope global net2
+</span></span><span style="display:flex;"><span>       valid_lft forever preferred_lft forever
+</span></span><span style="display:flex;"><span>    inet6 fe80::60a6:51ff:fe84:a930/64 scope link 
+</span></span><span style="display:flex;"><span>       valid_lft forever preferred_lft forever
+</span></span></code></pre></div><pre tabindex="0"><code>root@net-tools:/# ip route
+default via 169.254.1.1 dev eth0 
+169.254.1.1 dev eth0 scope link 
+172.16.50.0/24 dev net1 proto kernel scope link src 172.16.50.40 
+172.16.60.0/24 dev net2 proto kernel scope link src 172.16.60.30
+</code></pre><p>Testing access to a service on <code>net2</code>:</p>
+<pre tabindex="0"><code>root@net-tools:/# curl 172.16.60.31
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Welcome to nginx!&lt;/title&gt;
+</code></pre><h2 id="configuring-longhorn">Configuring Longhorn</h2>
+<p>Longhorn has a config setting to define the network used for storage operations:</p>
+<p><img src="images/image-6458c1919d040.png" alt=""></p>
+<p>If setting this post-install, the <code>instance-manager</code> pods will restart and attach a new interface:</p>
+<pre tabindex="0"><code>instance-manager-e-437ba600ca8a15720f049790071aac70:/ # ip addr show
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+3: eth0@if51: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1450 qdisc noqueue state UP group default 
+    link/ether fe:da:f1:04:81:67 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 10.42.1.58/32 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::fcda:f1ff:fe04:8167/64 scope link 
+       valid_lft forever preferred_lft forever
+4: lhnet1@if4: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default 
+    link/ether 12:90:50:15:04:c7 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 172.16.50.34/24 brd 172.16.50.255 scope global lhnet1
+       valid_lft forever preferred_lft forever
+    inet6 fe80::1090:50ff:fe15:4c7/64 scope link 
+       valid_lft forever preferred_lft forever
+</code></pre>
+            </div>
+        </article></main>
+</div>
+<footer class="footer">
+    <span class="footer_item"> </span>
+    &nbsp;
+
+    <div class="footer_social-icons">
+<a href="https://github.com/David-VTUK" target="_blank" rel="noopener noreferrer me"
+    title="Github">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path
+        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+    </path>
+</svg>
+</a>
+<a href="/index.xml" target="_blank" rel="noopener noreferrer me"
+    title="Rss">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 11a9 9 0 0 1 9 9" />
+    <path d="M4 4a16 16 0 0 1 16 16" />
+    <circle cx="5" cy="19" r="1" />
+</svg>
+</a>
+</div>
+    <small class="footer_copyright">
+        © 2026 David Holder.
+        Powered by <a href="https://github.com/hugo-sid/hugo-blog-awesome" target="_blank" rel="noopener">Hugo blog awesome</a>.
+    </small>
+</footer><a href="#" title="Go to top" id="totop">
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" stroke="currentColor" viewBox="0 96 960 960">
+    <path d="M283 704.739 234.261 656 480 410.261 725.739 656 677 704.739l-197-197-197 197Z"/>
+</svg>
+
+</a>
+
+
+    
+
+
+
+
+
+
+    
+    <script async src="http://localhost:1313/js/main.js" ></script>
+
+    
+
+</body>
+</html>

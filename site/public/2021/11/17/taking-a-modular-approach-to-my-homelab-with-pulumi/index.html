@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en-gb"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title itemprop="name">Taking a Modular Approach to my Homelab with Pulumi | Virtualthoughts</title>
+<meta property="og:title" content="Taking a Modular Approach to my Homelab with Pulumi | Virtualthoughts" />
+<meta name="twitter:title" content="Taking a Modular Approach to my Homelab with Pulumi | Virtualthoughts" />
+<meta itemprop="name" content="Taking a Modular Approach to my Homelab with Pulumi | Virtualthoughts" />
+<meta name="application-name" content="Taking a Modular Approach to my Homelab with Pulumi | Virtualthoughts" />
+<meta property="og:site_name" content="Virtualthoughts" />
+
+<meta name="description" content="Minimal Hugo blog theme with light and dark mode support">
+<meta itemprop="description" content="Minimal Hugo blog theme with light and dark mode support" />
+<meta property="og:description" content="Minimal Hugo blog theme with light and dark mode support" />
+<meta name="twitter:description" content="Minimal Hugo blog theme with light and dark mode support" />
+
+<meta property="og:locale" content="en-gb" />
+<meta name="language" content="en-gb" />
+
+  <link rel="alternate" hreflang="en" href="http://localhost:1313/2021/11/17/taking-a-modular-approach-to-my-homelab-with-pulumi/" title="" />
+
+
+
+
+
+    
+    
+    
+
+    <meta property="og:type" content="article" />
+    <meta property="og:article:published_time" content=2021-11-17T00:00:00Z />
+    <meta property="article:published_time" content=2021-11-17T00:00:00Z />
+    <meta property="og:url" content="http://localhost:1313/2021/11/17/taking-a-modular-approach-to-my-homelab-with-pulumi/" />
+
+    
+    <meta property="og:article:author" content="David Holder" />
+    <meta property="article:author" content="David Holder" />
+    <meta name="author" content="David Holder" />
+    
+    
+
+    
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "Taking a Modular Approach to my Homelab with Pulumi",
+        "author": {
+        "@type": "Person",
+        "name": "David Holder"
+        },
+        "datePublished": "2021-11-17",
+        "description": "",
+        "wordCount":  892 ,
+        "mainEntityOfPage": "http://localhost:1313/2021/11/17/taking-a-modular-approach-to-my-homelab-with-pulumi/",
+        "dateModified": "2021-11-17",
+        "image": {
+        "@type": "ImageObject",
+        "url": ""
+        },
+        "publisher": {
+        "@type": "Organization",
+        "name": "Virtualthoughts"
+        }
+    }
+    </script>
+
+
+<meta name="generator" content="Hugo 0.162.1">
+
+    
+    <meta property="og:url" content="http://localhost:1313/2021/11/17/taking-a-modular-approach-to-my-homelab-with-pulumi/">
+	<meta property="og:site_name" content="Virtualthoughts">
+	<meta property="og:title" content="Taking a Modular Approach to my Homelab with Pulumi">
+	<meta property="og:description" content="Architecture After reviewing the key components of my lab environment, I translated these into the Pulumi stacks as illustrated in the diagram below. Pulumi has a blog post about the benefits of adopting multiple stacks and I found organising my homelab this way enables greater flexibility and organisation. I can also use stacks as a “template” to further build out my lab environment, for example, repeating the “Tools-Cluster” stack to add additional clusters.">
+	<meta property="og:locale" content="en_gb">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="posts">
+		<meta property="article:published_time" content="2021-11-17T00:00:00+00:00">
+		<meta property="article:modified_time" content="2021-11-17T00:00:00+00:00">
+
+
+    
+    
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="Taking a Modular Approach to my Homelab with Pulumi">
+	<meta name="twitter:description" content="Architecture After reviewing the key components of my lab environment, I translated these into the Pulumi stacks as illustrated in the diagram below. Pulumi has a blog post about the benefits of adopting multiple stacks and I found organising my homelab this way enables greater flexibility and organisation. I can also use stacks as a “template” to further build out my lab environment, for example, repeating the “Tools-Cluster” stack to add additional clusters.">
+
+
+    
+
+    <link rel="canonical" href="http://localhost:1313/2021/11/17/taking-a-modular-approach-to-my-homelab-with-pulumi/">
+    <link href="/style.min.562556c74d7ca5d6d6aa72c6e342d478360cdb10904c9eacda75792f6e6a7eb0.css" rel="stylesheet">
+    <link href="/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+
+
+
+<link rel="manifest" href="http://localhost:1313/site.webmanifest">
+
+<meta name="msapplication-config" content="/browserconfig.xml">
+<meta name="msapplication-TileColor" content="#2d89ef">
+<meta name="theme-color" content="#434648">
+    <meta name="color-scheme" content="light dark">
+
+    
+    <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+    
+    
+</head>
+<body data-theme = "dark" class="notransition">
+
+<script src="/js/theme.js"></script>
+
+<div class="navbar" role="navigation">
+    <nav class="menu" aria-label="Main Navigation">
+        <a href="http://localhost:1313/" class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" 
+viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+stroke-linejoin="round" class="feather feather-home">
+<title>Home</title>
+<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+<polyline points="9 22 9 12 15 12 15 22"></polyline>
+</svg>
+        </a>
+        <input type="checkbox" id="menu-trigger" class="menu-trigger" />
+        <label for="menu-trigger">
+            <span class="menu-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" stroke="currentColor" fill="none" viewBox="0 0 14 14"><title>Menu</title><path stroke-linecap="round" stroke-linejoin="round" d="M10.595 7L3.40726 7"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 3.51488L3.49301 3.51488"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 10.4851H3.49301"></path><path stroke-linecap="round" stroke-linejoin="round" d="M0.5 12.5V1.5C0.5 0.947715 0.947715 0.5 1.5 0.5H12.5C13.0523 0.5 13.5 0.947715 13.5 1.5V12.5C13.5 13.0523 13.0523 13.5 12.5 13.5H1.5C0.947715 13.5 0.5 13.0523 0.5 12.5Z"></path></svg>
+            </span>
+        </label>
+
+        <div class="trigger">
+            <ul class="trigger-container">
+                
+                
+                <li>
+                    <a class="menu-link " href="/">
+                        Home
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link active" href="/posts/">
+                        Posts
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link " href="/about/">
+                        About
+                    </a>
+                    
+                </li>
+                
+                <li class="menu-separator">
+                    <span>|</span>
+                </li>
+                
+                
+            </ul>
+            <a id="mode" href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-sunny" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>LIGHT</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-moon" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>DARK</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+            </a>
+        </div>
+    </nav>
+</div>
+
+<div class="wrapper post">
+    <main class="page-content" aria-label="Content">
+        <article>
+            <header class="header">
+                <h1 class="header-title">Taking a Modular Approach to my Homelab with Pulumi</h1>
+                
+                
+                
+                <div class="post-meta">
+                    <time datetime="2021-11-17T00:00:00&#43;00:00" itemprop="datePublished"> 17 Nov 2021 </time>
+                </div>
+                
+            </header>
+            
+            <div class="page-content">
+                <h2 id="architecture">Architecture</h2>
+<p>After reviewing the key components of my lab environment, I translated these into the Pulumi stacks as illustrated in the diagram below. <a href="https://www.pulumi.com/docs/guides/organizing-projects-stacks/">Pulumi has a blog post about the benefits of adopting multiple stacks</a> and I found organising my homelab this way enables greater flexibility and organisation. I can also use stacks as a &ldquo;template&rdquo; to further build out my lab environment, for example, repeating the &ldquo;Tools-Cluster&rdquo; stack to add additional clusters.</p>
+<p><img src="images/pulumi-homelab.drawio-6195002c17cb8.png" alt=""></p>
+<p>The main objectives are:</p>
+<ul>
+<li>Create a 3 node, K3s cluster utilising vSphere VM&rsquo;s</li>
+<li>Install Metallb, Rancher and Cert-Manager into this cluster</li>
+<li>Using Rancher, create an RKE2 cluster to accommodate shared tooling services, ie:
+<ul>
+<li>Rancher Monitoring Stack (Prometheus, Grafana, Alertmanager, etc)</li>
+<li>Hashicorp Vault</li>
+<li>etc</li>
+</ul>
+</li>
+</ul>
+<h2 id="building">Building</h2>
+<p>Each stack contains the main Pulumi code, a YAML file to hold various variables to influence parameters such as VM names, Networking config, etc.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>├── rancher-application
+</span></span><span style="display:flex;"><span>│   ├── Assets
+</span></span><span style="display:flex;"><span>│   │   └── metallb
+</span></span><span style="display:flex;"><span>│   │       └── metallb-values.yaml
+</span></span><span style="display:flex;"><span>│   ├── go.mod
+</span></span><span style="display:flex;"><span>│   ├── go.sum
+</span></span><span style="display:flex;"><span>│   ├── main.go
+</span></span><span style="display:flex;"><span>│   ├── Pulumi.dev.yaml
+</span></span><span style="display:flex;"><span>│   └── Pulumi.yaml
+</span></span><span style="display:flex;"><span>├── rancher-management-cluster
+</span></span><span style="display:flex;"><span>│   ├── Assets
+</span></span><span style="display:flex;"><span>│   │   ├── metadata.yaml
+</span></span><span style="display:flex;"><span>│   │   └── userdata.yaml
+</span></span><span style="display:flex;"><span>│   ├── go.mod
+</span></span><span style="display:flex;"><span>│   ├── go.sum
+</span></span><span style="display:flex;"><span>│   ├── main.go
+</span></span><span style="display:flex;"><span>│   ├── Pulumi.dev.yaml
+</span></span><span style="display:flex;"><span>│   └── Pulumi.yaml
+</span></span><span style="display:flex;"><span>└── rancher-tools-cluster
+</span></span><span style="display:flex;"><span>    ├── Assets
+</span></span><span style="display:flex;"><span>    │   └── userdata.yaml
+</span></span><span style="display:flex;"><span>    ├── go.mod
+</span></span><span style="display:flex;"><span>    ├── go.sum
+</span></span><span style="display:flex;"><span>    ├── main.go
+</span></span><span style="display:flex;"><span>    ├── Pulumi.dev.yaml
+</span></span><span style="display:flex;"><span>    └── Pulumi.yaml
+</span></span></code></pre></div><p>Each stack has a corresponding <code>assets</code> directory which contains supporting content for a number of components:</p>
+<ul>
+<li><strong>Rancher Application</strong> - Values.yaml to influence the metallb L2 VIP addresses</li>
+<li><strong>Rancher</strong> <strong>Management Cluster</strong> - Userdata and Metadata to send to the created VM&rsquo;s, including bootstrapping K3s</li>
+<li><strong>Rancher Tools Cluster</strong> - Userdata to configure the local registry mirror</li>
+</ul>
+<h2 id="rancher-management-cluster-stack">Rancher Management Cluster Stack</h2>
+<p>This is the first stack that needs to be created and is relatively simple in terms of its purpose. The <code>metadata.yaml</code> contains a template for defining cloud-init metadata for the nodes:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">network</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">version</span>: <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">ethernets</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">ens192</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">dhcp4</span>: <span style="color:#66d9ef">false</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">addresses</span>:
+</span></span><span style="display:flex;"><span>        - <span style="color:#ae81ff">$node_ip</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">gateway4</span>: <span style="color:#ae81ff">$node_gateway</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">nameservers</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">addresses</span>:
+</span></span><span style="display:flex;"><span>          - <span style="color:#ae81ff">$node_dns</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">local-hostname</span>: <span style="color:#ae81ff">$node_hostname</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">instance-id</span>: <span style="color:#ae81ff">$node_instance</span>
+</span></span></code></pre></div><p><code>userdata.yaml</code> contains k3s-specific configuration pertaining to my local registry mirror as well a placeholder for the K3S bootstrapping process, <code>$runcmd.</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#75715e">#cloud-config</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">write_files</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">path</span>: <span style="color:#ae81ff">/etc/rancher/k3s/registries.yaml</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">content</span>: |<span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">      mirrors:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        docker.io:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          endpoint:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            - &#34;http://172.16.10.208:5050&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">runcmd</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">$runcmd</span>
+</span></span></code></pre></div><p>Creating the VM&rsquo;s leverages the existing vSphere Pulumi provider, seeding the nodes with cloud-init user/metadata which also instantiates K3s.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>userDataEncoded :<span style="color:#f92672">=</span> base64.StdEncoding.EncodeToString([]byte(strings.Replace(string(userData), <span style="color:#e6db74">&#34;$runcmd&#34;</span>, k3sRunCmdBootstrapNode, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>				vm, err :<span style="color:#f92672">=</span> vsphere.NewVirtualMachine(ctx, vmPrefixName<span style="color:#f92672">+</span>strconv.Itoa(i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>), <span style="color:#f92672">&amp;</span>vsphere.VirtualMachineArgs{
+</span></span><span style="display:flex;"><span>					Memory:         pulumi.Int(<span style="color:#ae81ff">6144</span>),
+</span></span><span style="display:flex;"><span>					NumCpus:        pulumi.Int(<span style="color:#ae81ff">4</span>),
+</span></span><span style="display:flex;"><span>					DatastoreId:    pulumi.String(datastore.Id),
+</span></span><span style="display:flex;"><span>					Name:           pulumi.String(vmPrefixName <span style="color:#f92672">+</span> strconv.Itoa(i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)),
+</span></span><span style="display:flex;"><span>					ResourcePoolId: pulumi.String(resourcePool.Id),
+</span></span><span style="display:flex;"><span>					GuestId:        pulumi.String(<span style="color:#66d9ef">template</span>.GuestId),
+</span></span><span style="display:flex;"><span>					Clone: vsphere.VirtualMachineCloneArgs{
+</span></span><span style="display:flex;"><span>						TemplateUuid: pulumi.String(<span style="color:#66d9ef">template</span>.Id),
+</span></span><span style="display:flex;"><span>					},
+</span></span><span style="display:flex;"><span>					Disks: vsphere.VirtualMachineDiskArray{vsphere.VirtualMachineDiskArgs{
+</span></span><span style="display:flex;"><span>						Label: pulumi.String(<span style="color:#e6db74">&#34;Disk0&#34;</span>),
+</span></span><span style="display:flex;"><span>						Size:  pulumi.Int(<span style="color:#ae81ff">50</span>),
+</span></span><span style="display:flex;"><span>					}},
+</span></span><span style="display:flex;"><span>					NetworkInterfaces: vsphere.VirtualMachineNetworkInterfaceArray{vsphere.VirtualMachineNetworkInterfaceArgs{
+</span></span><span style="display:flex;"><span>						NetworkId: pulumi.String(network.Id),
+</span></span><span style="display:flex;"><span>					},
+</span></span><span style="display:flex;"><span>					},
+</span></span><span style="display:flex;"><span>					ExtraConfig: pulumi.StringMap{
+</span></span><span style="display:flex;"><span>						<span style="color:#e6db74">&#34;guestinfo.metadata.encoding&#34;</span><span style="color:#f92672">:</span> pulumi.String(<span style="color:#e6db74">&#34;base64&#34;</span>),
+</span></span><span style="display:flex;"><span>						<span style="color:#e6db74">&#34;guestinfo.metadata&#34;</span><span style="color:#f92672">:</span>          pulumi.String(metaDataEncoded),
+</span></span><span style="display:flex;"><span>						<span style="color:#e6db74">&#34;guestinfo.userdata.encoding&#34;</span><span style="color:#f92672">:</span> pulumi.String(<span style="color:#e6db74">&#34;base64&#34;</span>),
+</span></span><span style="display:flex;"><span>						<span style="color:#e6db74">&#34;guestinfo.userdata&#34;</span><span style="color:#f92672">:</span>          pulumi.String(userDataEncoded),
+</span></span><span style="display:flex;"><span>					},
+</span></span><span style="display:flex;"><span>				},
+</span></span><span style="display:flex;"><span>				)
+</span></span><span style="display:flex;"><span>				<span style="color:#66d9ef">if</span> err <span style="color:#f92672">!=</span> nil {
+</span></span><span style="display:flex;"><span>					<span style="color:#66d9ef">return</span> err
+</span></span><span style="display:flex;"><span>				}
+</span></span></code></pre></div><p>The first node initiates the K3s cluster creation process. Subsequent nodes have their <code>$rucmd</code> manipulated by identifying the first node&rsquo;s IP address and using that to join the cluster:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>userDataEncoded :<span style="color:#f92672">=</span> vms[<span style="color:#ae81ff">0</span>].DefaultIpAddress.ApplyT(func(ipaddress string) string {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>					runcmd :<span style="color:#f92672">=</span> fmt.Sprintf(k3sRunCmdSubsequentNodes, ipaddress)
+</span></span><span style="display:flex;"><span>					<span style="color:#66d9ef">return</span> base64.StdEncoding.EncodeToString([]byte(strings.Replace(string(userData), <span style="color:#e6db74">&#34;$runcmd&#34;</span>, runcmd, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)))
+</span></span><span style="display:flex;"><span>				}).(pulumi.StringOutput)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>				vm, err :<span style="color:#f92672">=</span> vsphere.NewVirtualMachine(ctx, vmPrefixName<span style="color:#f92672">+</span>strconv.Itoa(i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>), <span style="color:#f92672">&amp;</span>vsphere.VirtualMachineArgs{
+</span></span><span style="display:flex;"><span>					Memory:         pulumi.Int(<span style="color:#ae81ff">6144</span>),
+</span></span></code></pre></div><h2 id="rancher-application-stack">Rancher Application Stack</h2>
+<p>This stack makes extensive use of the (currently experimental) <a href="https://www.pulumi.com/blog/full-access-to-helm-features-through-new-helm-release-resource-for-kubernetes/">Helm Release Resource</a> as well as the <a href="https://www.pulumi.com/registry/packages/kubernetes-cert-manager/">cert-manager package from the Pulumi Registry</a></p>
+<p>For example, creating the Metallb config map based on the aforementioned asset file:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>		metallbConfigmap, err :<span style="color:#f92672">=</span> corev1.NewConfigMap(ctx, <span style="color:#e6db74">&#34;metallb-config&#34;</span>, <span style="color:#f92672">&amp;</span>corev1.ConfigMapArgs{
+</span></span><span style="display:flex;"><span>			Metadata: <span style="color:#f92672">&amp;</span>metav1.ObjectMetaArgs{
+</span></span><span style="display:flex;"><span>				Namespace: metallbNamespace.Metadata.Name(),
+</span></span><span style="display:flex;"><span>			},
+</span></span><span style="display:flex;"><span>			Data: pulumi.StringMap{
+</span></span><span style="display:flex;"><span>				<span style="color:#e6db74">&#34;config&#34;</span><span style="color:#f92672">:</span> pulumi.String(metallbConfig),
+</span></span><span style="display:flex;"><span>			},
+</span></span><span style="display:flex;"><span>		})
+</span></span></code></pre></div><p>And the Helm release:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>		_, err <span style="color:#f92672">=</span> helm.NewRelease(ctx, <span style="color:#e6db74">&#34;metallb&#34;</span>, <span style="color:#f92672">&amp;</span>helm.ReleaseArgs{
+</span></span><span style="display:flex;"><span>			Chart:     pulumi.String(<span style="color:#e6db74">&#34;metallb&#34;</span>),
+</span></span><span style="display:flex;"><span>			Name:      pulumi.String(<span style="color:#e6db74">&#34;metallb&#34;</span>),
+</span></span><span style="display:flex;"><span>			Namespace: metallbNamespace.Metadata.Name(),
+</span></span><span style="display:flex;"><span>			RepositoryOpts: helm.RepositoryOptsArgs{
+</span></span><span style="display:flex;"><span>				Repo: pulumi.String(<span style="color:#e6db74">&#34;https://charts.bitnami.com/bitnami&#34;</span>),
+</span></span><span style="display:flex;"><span>			},
+</span></span><span style="display:flex;"><span>			Values: pulumi.Map{<span style="color:#e6db74">&#34;existingConfigMap&#34;</span><span style="color:#f92672">:</span> metallbConfigmap.Metadata.Name()},
+</span></span><span style="display:flex;"><span>		})
+</span></span></code></pre></div><p>And for Rancher:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>		_, err <span style="color:#f92672">=</span> helm.NewRelease(ctx, <span style="color:#e6db74">&#34;rancher&#34;</span>, <span style="color:#f92672">&amp;</span>helm.ReleaseArgs{
+</span></span><span style="display:flex;"><span>			Chart:     pulumi.String(<span style="color:#e6db74">&#34;rancher&#34;</span>),
+</span></span><span style="display:flex;"><span>			Name:      pulumi.String(<span style="color:#e6db74">&#34;rancher&#34;</span>),
+</span></span><span style="display:flex;"><span>			Namespace: rancherNamespace.Metadata.Name(),
+</span></span><span style="display:flex;"><span>			RepositoryOpts: helm.RepositoryOptsArgs{
+</span></span><span style="display:flex;"><span>				Repo: pulumi.String(<span style="color:#e6db74">&#34;https://releases.rancher.com/server-charts/latest&#34;</span>),
+</span></span><span style="display:flex;"><span>			},
+</span></span><span style="display:flex;"><span>			Values: pulumi.Map{
+</span></span><span style="display:flex;"><span>				<span style="color:#e6db74">&#34;hostname&#34;</span><span style="color:#f92672">:</span>           pulumi.String(rancherUrl),
+</span></span><span style="display:flex;"><span>				<span style="color:#e6db74">&#34;ingress.tls.source&#34;</span><span style="color:#f92672">:</span> pulumi.String(<span style="color:#e6db74">&#34;secret&#34;</span>),
+</span></span><span style="display:flex;"><span>			},
+</span></span><span style="display:flex;"><span>			Version: pulumi.String(rancherVersion),
+</span></span><span style="display:flex;"><span>		}, pulumi.DependsOn([]pulumi.Resource{certmanagerChart, rancherCertificate}))
+</span></span></code></pre></div><p>As I used an existing secret for my TLS certificate I had to create a cert-manager <code>cert</code> object, for which there are a number of options that I experimented with:</p>
+<h3 id="1-read-a-file">1. Read a file</h3>
+<p>Similarly to the metallb config, A file could be read that contained the YAML to create the Custom Resource type, although this was a feasible approach, I wanted something that was less error-prone.</p>
+<h3 id="2-use-the-api-extension-type">2. Use the API extension type</h3>
+<p>The Pulumi Kubernetes provider enables the provisioning of the type <code>NewCustomResource</code>. For my requirements, this is an improvement over simply reading a YAML file, however, anything beyond the resources <code>metadata</code> isn&rsquo;t strongly typed</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>rancherCertificate, err :<span style="color:#f92672">=</span> apiextensions.NewCustomResource(ctx, <span style="color:#e6db74">&#34;rancher-cert&#34;</span>, <span style="color:#f92672">&amp;</span>apiextensions.CustomResourceArgs{
+</span></span><span style="display:flex;"><span>			ApiVersion: pulumi.String(<span style="color:#e6db74">&#34;cert-manager.io/v1&#34;</span>),
+</span></span><span style="display:flex;"><span>			Kind:       pulumi.String(<span style="color:#e6db74">&#34;Certificate&#34;</span>),
+</span></span><span style="display:flex;"><span>			Metadata: <span style="color:#f92672">&amp;</span>metav1.ObjectMetaArgs{
+</span></span><span style="display:flex;"><span>				Name:      pulumi.String(<span style="color:#e6db74">&#34;tls-rancher-ingress&#34;</span>),
+</span></span><span style="display:flex;"><span>				Namespace: pulumi.String(rancherNamespaceName),
+</span></span><span style="display:flex;"><span>			},
+</span></span><span style="display:flex;"><span>			OtherFields: kubernetes.UntypedArgs{
+</span></span><span style="display:flex;"><span>				<span style="color:#e6db74">&#34;spec&#34;</span><span style="color:#f92672">:</span> map[string]interface{}{
+</span></span><span style="display:flex;"><span>					<span style="color:#e6db74">&#34;secretName&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;tls-rancher-ingress&#34;</span>,
+</span></span><span style="display:flex;"><span>					<span style="color:#e6db74">&#34;commonName&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;rancher.virtualthoughts.co.uk&#34;</span>,
+</span></span><span style="display:flex;"><span>					<span style="color:#e6db74">&#34;dnsNames&#34;</span><span style="color:#f92672">:</span>   []string{<span style="color:#e6db74">&#34;rancher.virtualthoughts.co.uk&#34;</span>},
+</span></span><span style="display:flex;"><span>					<span style="color:#e6db74">&#34;issuerRef&#34;</span><span style="color:#f92672">:</span> map[string]string{
+</span></span><span style="display:flex;"><span>						<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;letsencrypt-staging&#34;</span>,
+</span></span><span style="display:flex;"><span>						<span style="color:#e6db74">&#34;kind&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;ClusterIssuer&#34;</span>,
+</span></span><span style="display:flex;"><span>					},
+</span></span><span style="display:flex;"><span>				},
+</span></span><span style="display:flex;"><span>			},
+</span></span><span style="display:flex;"><span>		}, pulumi.DependsOn([]pulumi.Resource{certmanagerChart, certmanagerIssuers}))
+</span></span></code></pre></div><h3 id="3-use-crd2pulumi">3. Use crd2pulumi</h3>
+<p><code>[crd2pulumi](https://github.com/pulumi/crd2pulumi)</code> is used to generate typed CustomResources based on Kubernetes CustomResourceDefinitions, I took the cert-manager CRD&rsquo;s and ran it through this tool, uploaded to a repo and repeated the above process:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>import (
+</span></span><span style="display:flex;"><span>	certmanagerresource <span style="color:#e6db74">&#34;github.com/david-vtuk/cert-manager-crd-types/types/certmanager/certmanager/v1&#34;</span>
+</span></span><span style="display:flex;"><span>        ...
+</span></span><span style="display:flex;"><span>        ...
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>	rancherCertificate, err :<span style="color:#f92672">=</span> certmanagerresource.NewCertificate(ctx, <span style="color:#e6db74">&#34;tls-rancher-ingress&#34;</span>, <span style="color:#f92672">&amp;</span>certmanagerresource.CertificateArgs{
+</span></span><span style="display:flex;"><span>			ApiVersion: pulumi.String(<span style="color:#e6db74">&#34;cert-manager.io/v1&#34;</span>),
+</span></span><span style="display:flex;"><span>			Kind:       pulumi.String(<span style="color:#e6db74">&#34;Certificate&#34;</span>),
+</span></span><span style="display:flex;"><span>			Metadata: <span style="color:#f92672">&amp;</span>metav1.ObjectMetaArgs{
+</span></span><span style="display:flex;"><span>				Name:      pulumi.String(<span style="color:#e6db74">&#34;tls-rancher-ingress&#34;</span>),
+</span></span><span style="display:flex;"><span>				Namespace: pulumi.String(rancherNamespaceName),
+</span></span><span style="display:flex;"><span>			},
+</span></span><span style="display:flex;"><span>			Spec: <span style="color:#f92672">&amp;</span>certmanagerresource.CertificateSpecArgs{
+</span></span><span style="display:flex;"><span>				CommonName: pulumi.String(rancherUrl),
+</span></span><span style="display:flex;"><span>				DnsNames:   pulumi.StringArray{pulumi.String(rancherUrl)},
+</span></span><span style="display:flex;"><span>				IssuerRef: certmanagerresource.CertificateSpecIssuerRefArgs{
+</span></span><span style="display:flex;"><span>					Kind: leProductionIssuer.Kind,
+</span></span><span style="display:flex;"><span>					Name: leProductionIssuer.Metadata.Name().Elem(),
+</span></span><span style="display:flex;"><span>				},
+</span></span><span style="display:flex;"><span>				SecretName: pulumi.String(<span style="color:#e6db74">&#34;tls-rancher-ingress&#34;</span>),
+</span></span><span style="display:flex;"><span>			},
+</span></span><span style="display:flex;"><span>		})
+</span></span></code></pre></div><p>Much better!</p>
+<h2 id="tools-cluster-stack">Tools Cluster Stack</h2>
+<p>Comparatively, this is the simplest of all the Stacks. Using the <a href="https://www.pulumi.com/registry/packages/rancher2/">Rancher2 Pulumi Package</a> makes it pretty trivial to build out new clusters and install apps:</p>
+<pre tabindex="0"><code>_, err = rancher2.NewClusterV2(ctx, &#34;tools-cluster&#34;, &amp;rancher2.ClusterV2Args{
+			CloudCredentialSecretName: cloudcredential.ID(),
+			KubernetesVersion:         pulumi.String(&#34;v1.21.6+rke2r1&#34;),
+			Name:                      pulumi.String(&#34;tools-cluster&#34;),
+			//DefaultClusterRoleForProjectMembers: pulumi.String(&#34;user&#34;),
+			RkeConfig: &amp;rancher2.ClusterV2RkeConfigArgs{
+
+.........
+}
+
+				monitoring, err := rancher2.NewAppV2(ctx, &#34;monitoring&#34;, &amp;rancher2.AppV2Args{
+					ChartName: pulumi.String(&#34;rancher-monitoring&#34;),
+					ClusterId: cluster.ClusterV1Id,
+					Namespace: pulumi.String(&#34;cattle-monitoring-system&#34;),
+					RepoName:  pulumi.String(&#34;rancher-charts&#34;),
+				}, pulumi.DependsOn([]pulumi.Resource{clusterSync}))
+</code></pre>
+            </div>
+        </article></main>
+</div>
+<footer class="footer">
+    <span class="footer_item"> </span>
+    &nbsp;
+
+    <div class="footer_social-icons">
+<a href="https://github.com/David-VTUK" target="_blank" rel="noopener noreferrer me"
+    title="Github">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path
+        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+    </path>
+</svg>
+</a>
+<a href="/index.xml" target="_blank" rel="noopener noreferrer me"
+    title="Rss">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 11a9 9 0 0 1 9 9" />
+    <path d="M4 4a16 16 0 0 1 16 16" />
+    <circle cx="5" cy="19" r="1" />
+</svg>
+</a>
+</div>
+    <small class="footer_copyright">
+        © 2026 David Holder.
+        Powered by <a href="https://github.com/hugo-sid/hugo-blog-awesome" target="_blank" rel="noopener">Hugo blog awesome</a>.
+    </small>
+</footer><a href="#" title="Go to top" id="totop">
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" stroke="currentColor" viewBox="0 96 960 960">
+    <path d="M283 704.739 234.261 656 480 410.261 725.739 656 677 704.739l-197-197-197 197Z"/>
+</svg>
+
+</a>
+
+
+    
+
+
+
+
+
+
+    
+    <script async src="http://localhost:1313/js/main.js" ></script>
+
+    
+
+</body>
+</html>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ebpf on Virtualthoughts</title>
+    <link>http://localhost:1313/categories/ebpf/</link>
+    <description>Recent content in Ebpf on Virtualthoughts</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-gb</language>
+    <lastBuildDate>Fri, 30 Aug 2024 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/categories/ebpf/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Kubernetes on RK1 / Turing Pi 2: Automation with Ansible, Cilium and Cert-Manager</title>
+      <link>http://localhost:1313/2024/08/30/kubernetes-on-turing-pi-2-automation-with-ansible-cilium-and-cert-manager/</link>
+      <pubDate>Fri, 30 Aug 2024 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2024/08/30/kubernetes-on-turing-pi-2-automation-with-ansible-cilium-and-cert-manager/</guid>
+      
+      <description>&lt;p&gt;&lt;a href=&#34;https://github.com/David-VTUK/turing-pi-ansible&#34;&gt;TLDR: Take me to the Playbook&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Note - This is just a high-level overview, I&amp;rsquo;ll likely follow up with a post dedicated on the CIlium/BGP configuration.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;images/PXL_20240830_120436916-2048x1152.jpg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;ve had my Turing Pi 2 board for a while now, and during that time I&amp;rsquo;ve struggled to decide which automation tooling to use to bootstrap K3s to it. However, I reached a decision to use &lt;a href=&#34;https://www.ansible.com/&#34;&gt;Ansible&lt;/a&gt;. It&amp;rsquo;s not something I&amp;rsquo;m overly familiar with, but this would provide a good opportunity to learn by doing.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>eBPF &#43; Grafana Live for Metric Streaming</title>
+      <link>http://localhost:1313/2024/04/15/ebpf-grafana-live-for-metric-streaming/</link>
+      <pubDate>Mon, 15 Apr 2024 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2024/04/15/ebpf-grafana-live-for-metric-streaming/</guid>
+      
+      <description>&lt;p&gt;Code Repo for this post can be found &lt;a href=&#34;https://github.com/David-VTUK/ebpf-grafana-stream&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://grafana.com/docs/grafana/latest/setup-grafana/set-up-grafana-live/&#34;&gt;Grafana Live&lt;/a&gt; is a real-time messaging engine built into Grafana v8 and onwards, designed to support real-time data streaming and updates. It allows data to be pushed to objects such as dashboard panels directly from the source. One of the benefits being near instant updates and no need to perform periodic refreshes.&lt;/p&gt;
+&lt;p&gt;Having experimented with eBPF recently, I thought this would be a neat thing to pair up - High performance packet analysis provided by Express Data Path (XDP), with instant visualisation provided by Grafana&lt;/p&gt;</description>
+      
+    </item>
+    
+  </channel>
+</rss>

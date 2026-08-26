@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en-gb"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title itemprop="name">Using the NSX-T CNI with RKE2 | Virtualthoughts</title>
+<meta property="og:title" content="Using the NSX-T CNI with RKE2 | Virtualthoughts" />
+<meta name="twitter:title" content="Using the NSX-T CNI with RKE2 | Virtualthoughts" />
+<meta itemprop="name" content="Using the NSX-T CNI with RKE2 | Virtualthoughts" />
+<meta name="application-name" content="Using the NSX-T CNI with RKE2 | Virtualthoughts" />
+<meta property="og:site_name" content="Virtualthoughts" />
+
+<meta name="description" content="Minimal Hugo blog theme with light and dark mode support">
+<meta itemprop="description" content="Minimal Hugo blog theme with light and dark mode support" />
+<meta property="og:description" content="Minimal Hugo blog theme with light and dark mode support" />
+<meta name="twitter:description" content="Minimal Hugo blog theme with light and dark mode support" />
+
+<meta property="og:locale" content="en-gb" />
+<meta name="language" content="en-gb" />
+
+  <link rel="alternate" hreflang="en" href="http://localhost:1313/2022/07/04/using-the-nsx-t-cni-with-rke2/" title="" />
+
+
+
+
+
+    
+    
+    
+
+    <meta property="og:type" content="article" />
+    <meta property="og:article:published_time" content=2022-07-04T00:00:00Z />
+    <meta property="article:published_time" content=2022-07-04T00:00:00Z />
+    <meta property="og:url" content="http://localhost:1313/2022/07/04/using-the-nsx-t-cni-with-rke2/" />
+
+    
+    <meta property="og:article:author" content="David Holder" />
+    <meta property="article:author" content="David Holder" />
+    <meta name="author" content="David Holder" />
+    
+    
+
+    
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "Using the NSX-T CNI with RKE2",
+        "author": {
+        "@type": "Person",
+        "name": "David Holder"
+        },
+        "datePublished": "2022-07-04",
+        "description": "",
+        "wordCount":  1250 ,
+        "mainEntityOfPage": "http://localhost:1313/2022/07/04/using-the-nsx-t-cni-with-rke2/",
+        "dateModified": "2022-07-04",
+        "image": {
+        "@type": "ImageObject",
+        "url": ""
+        },
+        "publisher": {
+        "@type": "Organization",
+        "name": "Virtualthoughts"
+        }
+    }
+    </script>
+
+
+<meta name="generator" content="Hugo 0.162.1">
+
+    
+    <meta property="og:url" content="http://localhost:1313/2022/07/04/using-the-nsx-t-cni-with-rke2/">
+	<meta property="og:site_name" content="Virtualthoughts">
+	<meta property="og:title" content="Using the NSX-T CNI with RKE2">
+	<meta property="og:description" content="This post outlines the necessary steps to leverage the VMware NSX-T CNI with RKE2
+1. Planning The following illustrates my Lab environment with a single node cluster:
+General Considerations If you have a new NSX-T environment, ensure you have (as a minimum) the following:
+T0 Router T1 Router Edge Cluster VLAN Transport Zone Overlay Transport Zone Route advertisement (BGP/OSPF) to the physical network NSX Specific Considerations A network segment (or vds port) for management traffic (NS-K8S-MGMT in this example) A network segment for overlay traffic (NS-K8S-OVERLAY) Management traffic should be put on a routed network
+Overlay traffic does not have to be on a routed network">
+	<meta property="og:locale" content="en_gb">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="posts">
+		<meta property="article:published_time" content="2022-07-04T00:00:00+00:00">
+		<meta property="article:modified_time" content="2022-07-04T00:00:00+00:00">
+
+
+    
+    
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="Using the NSX-T CNI with RKE2">
+	<meta name="twitter:description" content="This post outlines the necessary steps to leverage the VMware NSX-T CNI with RKE2
+1. Planning The following illustrates my Lab environment with a single node cluster:
+General Considerations If you have a new NSX-T environment, ensure you have (as a minimum) the following:
+T0 Router T1 Router Edge Cluster VLAN Transport Zone Overlay Transport Zone Route advertisement (BGP/OSPF) to the physical network NSX Specific Considerations A network segment (or vds port) for management traffic (NS-K8S-MGMT in this example) A network segment for overlay traffic (NS-K8S-OVERLAY) Management traffic should be put on a routed network
+Overlay traffic does not have to be on a routed network">
+
+
+    
+
+    <link rel="canonical" href="http://localhost:1313/2022/07/04/using-the-nsx-t-cni-with-rke2/">
+    <link href="/style.min.562556c74d7ca5d6d6aa72c6e342d478360cdb10904c9eacda75792f6e6a7eb0.css" rel="stylesheet">
+    <link href="/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+
+
+
+<link rel="manifest" href="http://localhost:1313/site.webmanifest">
+
+<meta name="msapplication-config" content="/browserconfig.xml">
+<meta name="msapplication-TileColor" content="#2d89ef">
+<meta name="theme-color" content="#434648">
+    <meta name="color-scheme" content="light dark">
+
+    
+    <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+    
+    
+</head>
+<body data-theme = "dark" class="notransition">
+
+<script src="/js/theme.js"></script>
+
+<div class="navbar" role="navigation">
+    <nav class="menu" aria-label="Main Navigation">
+        <a href="http://localhost:1313/" class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" 
+viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+stroke-linejoin="round" class="feather feather-home">
+<title>Home</title>
+<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+<polyline points="9 22 9 12 15 12 15 22"></polyline>
+</svg>
+        </a>
+        <input type="checkbox" id="menu-trigger" class="menu-trigger" />
+        <label for="menu-trigger">
+            <span class="menu-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" stroke="currentColor" fill="none" viewBox="0 0 14 14"><title>Menu</title><path stroke-linecap="round" stroke-linejoin="round" d="M10.595 7L3.40726 7"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 3.51488L3.49301 3.51488"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 10.4851H3.49301"></path><path stroke-linecap="round" stroke-linejoin="round" d="M0.5 12.5V1.5C0.5 0.947715 0.947715 0.5 1.5 0.5H12.5C13.0523 0.5 13.5 0.947715 13.5 1.5V12.5C13.5 13.0523 13.0523 13.5 12.5 13.5H1.5C0.947715 13.5 0.5 13.0523 0.5 12.5Z"></path></svg>
+            </span>
+        </label>
+
+        <div class="trigger">
+            <ul class="trigger-container">
+                
+                
+                <li>
+                    <a class="menu-link " href="/">
+                        Home
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link active" href="/posts/">
+                        Posts
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link " href="/about/">
+                        About
+                    </a>
+                    
+                </li>
+                
+                <li class="menu-separator">
+                    <span>|</span>
+                </li>
+                
+                
+            </ul>
+            <a id="mode" href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-sunny" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>LIGHT</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-moon" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>DARK</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+            </a>
+        </div>
+    </nav>
+</div>
+
+<div class="wrapper post">
+    <main class="page-content" aria-label="Content">
+        <article>
+            <header class="header">
+                <h1 class="header-title">Using the NSX-T CNI with RKE2</h1>
+                
+                
+                
+                <div class="post-meta">
+                    <time datetime="2022-07-04T00:00:00&#43;00:00" itemprop="datePublished"> 4 Jul 2022 </time>
+                </div>
+                
+            </header>
+            
+            <div class="page-content">
+                <p>This post outlines the necessary steps to leverage the VMware NSX-T CNI with RKE2</p>
+<h2 id="1-planning">1. Planning</h2>
+<p>The following illustrates my Lab environment with a single node cluster:</p>
+<p><img src="images/diagram-62c2f715cebb9.png" alt=""></p>
+<h3 id="general-considerations">General Considerations</h3>
+<p>If you have a new NSX-T environment, ensure you have (as a minimum) the following:</p>
+<ul>
+<li>T0 Router</li>
+<li>T1 Router</li>
+<li>Edge Cluster</li>
+<li>VLAN Transport Zone</li>
+<li>Overlay Transport Zone</li>
+<li>Route advertisement (BGP/OSPF) to the physical network</li>
+</ul>
+<h2 id="nsx-specific-considerations">NSX Specific Considerations</h2>
+<ul>
+<li>A network segment (or vds port) for management traffic (NS-K8S-MGMT in this example)</li>
+<li>A network segment for overlay traffic (NS-K8S-OVERLAY)</li>
+</ul>
+<p>Management traffic should be put on a routed network<br>
+Overlay traffic does not have to be on a routed network</p>
+<p>You will need to acquire and upload the ncp container image to a private repo:</p>
+<p><img src="images/img_4-62c2f724c15b9-1024x588.png" alt=""></p>
+<p>This will contain the NCP image</p>
+<h1 id="2-prepare-nsx-objects">2. Prepare NSX Objects</h1>
+<ul>
+<li>Create and retrieve the object ID&rsquo;s for:</li>
+<li>An IP Block for the Pods (this /16 will be divided into /24&rsquo;s in our cluster)</li>
+</ul>
+<p><a href="https://github.com/David-VTUK/rke2-nsxt/blob/master/images/img_5.png"><img src="images/img_5-62c2f74f33797-1024x232.png" alt=""></a></p>
+<ul>
+<li>An IP Pool for <code>loadBalancer</code> service types</li>
+</ul>
+<p><a href="https://github.com/David-VTUK/rke2-nsxt/blob/master/images/img_6.png"><img src="images/img_6-62c2f75700631-1024x68.png" alt=""></a></p>
+<h1><a href="https://github.com/David-VTUK/rke2-nsxt/blob/master/readme.md#3-create-vm"></a></h1>
+<h1 id="3-create-vm">3. Create VM</h1>
+<ul>
+<li>Create a VM with one nic attached to the Management network, and one attached to the Overlay network. Note, for ease you can configure NSX-T to provide DHCP services to both</li>
+</ul>
+<p><a href="https://github.com/David-VTUK/rke2-nsxt/blob/master/images/vmconfig.png"><img src="images/vmconfig.png" alt=""></a></p>
+<ul>
+<li>Ensure <code>Python</code> is Installed (aka Python2)</li>
+</ul>
+<h1><a href="https://github.com/David-VTUK/rke2-nsxt#4-install-rke2"></a></h1>
+<h1 id="4-install-rke2">4. Install RKE2</h1>
+<ul>
+<li>Create the following configuration file to instruct RKE2 not to auto-apply a CNI:</li>
+</ul>
+<pre tabindex="0"><code>packerbuilt@k8s-test-node:~$ cat /etc/rancher/rke2/config.yaml 
+cni:
+  - none
+</code></pre><ul>
+<li>Install RKE2</li>
+</ul>
+<pre tabindex="0"><code>curl -sfL https://get.rke2.io | sh -
+systemctl enable rke2-server.service
+systemctl start rke2-server.service
+# Wait a bit
+export KUBECONFIG=/etc/rancher/rke2/rke2.yaml PATH=$PATH:/var/lib/rancher/rke2/bin
+kubectl get nodes
+</code></pre><ul>
+<li>You will notice some pods are in <code>pending</code> state - this is normal as these reside outside of the host networking namespace and we have yet to install a CNI</li>
+</ul>
+<h1><a href="https://github.com/David-VTUK/rke2-nsxt#5-install-additional-cni-binaries"></a></h1>
+<h1 id="5-install-additional-cni-binaries">5. Install additional CNI binaries</h1>
+<ul>
+<li>NSX-T also requires access to the <code>portmap</code> CNI binary. this can be acquired by:</li>
+</ul>
+<pre tabindex="0"><code>wget https://github.com/containernetworking/plugins/releases/download/v1.1.1/cni-plugins-linux-amd64-v1.1.1.tgz
+</code></pre><ul>
+<li>Extract the contents to <code>/opt/cni/bin/</code></li>
+</ul>
+<h1><a href="https://github.com/David-VTUK/rke2-nsxt#6-tag-the-overlay-network-port-on-the-vm"></a></h1>
+<h1 id="6-tag-the-overlay-network-port-on-the-vm">6. Tag the overlay network port on the VM</h1>
+<p>The NSX-T container plugin needs to identify the port used for container traffic. In the example above, this is the interface connection to our Overlay switch</p>
+<p><a href="https://github.com/David-VTUK/rke2-nsxt/blob/master/images/img_1.png"><img src="images/img_1.png" alt="img_1.png"></a></p>
+<ul>
+<li>In NSX-T navigate to <code>Inventory -&gt; Virtual Machines -&gt; Select the VM</code></li>
+<li>Select the port that&rsquo;s connected to the overlay switch</li>
+</ul>
+<p><a href="https://github.com/David-VTUK/rke2-nsxt/blob/master/images/img_2.png"><img src="images/img_2-62c2f774201a2-1024x342.png" alt=""></a></p>
+<ul>
+<li>Add the tags as appropriate</li>
+</ul>
+<p><a href="https://github.com/David-VTUK/rke2-nsxt/blob/master/images/img_3.png"><img src="images/img_3-62c2f77c56fb7-1024x662.png" alt=""></a></p>
+<h1><a href="https://github.com/David-VTUK/rke2-nsxt#7-download-the-ncp-operator-files"></a></h1>
+<h1 id="7-download-the-ncp-operator-files">7. Download the NCP operator files</h1>
+<ul>
+<li><code>git clone https://github.com/vmware/nsx-container-plugin-operator</code></li>
+<li>Change directory - <code>cd /deploy/kubernetes/</code></li>
+</ul>
+<h1><a href="https://github.com/David-VTUK/rke2-nsxt#8-change-the-operator-yaml"></a></h1>
+<h1 id="8-change-the-operator-yaml">8. Change the Operator yaml</h1>
+<ul>
+<li><code>Operator.yaml</code> - replace where the image resides in your environment. Example:</li>
+</ul>
+<pre tabindex="0"><code>            - name: NCP_IMAGE
+              value: &#34;core.harbor.virtualthoughts.co.uk/library/nsx-ncp-ubuntu:latest&#34;
+</code></pre><h1><a href="https://github.com/David-VTUK/rke2-nsxt#9-change-the-configmap-yaml-file"></a></h1>
+<h1 id="9-change-the-configmap-yaml-file">9. Change the Configmap yaml file</h1>
+<p>Which values to change will depend on your deployment topology, but as an example:</p>
+<pre tabindex="0"><code>@@ -11,7 +11,7 @@ data:
+ 
+     # If set to true, the logging level will be set to DEBUG instead of the
+     # default INFO level.
+- #debug = False
++    debug = True
+ 
+ 
+ 
+@@ -52,10 +52,10 @@ data:
+     [coe]
+ 
+     # Container orchestrator adaptor to plug in.
+- #adaptor = kubernetes
++    adaptor = kubernetes
+ 
+     # Specify cluster for adaptor.
+- #cluster = k8scluster
++    cluster = k8scluster-lspfd2
+ 
+     # Log level for NCP modules (controllers, services, etc.). Ignored if debug
+     # is True
+@@ -111,10 +111,10 @@ data:
+     [k8s]
+ 
+     # Kubernetes API server IP address.
+- #apiserver_host_ip = &lt;None&gt;
++    apiserver_host_ip = 172.16.100.13
+ 
+     # Kubernetes API server port.
+- #apiserver_host_port = &lt;None&gt;
++    apiserver_host_port = 6443
+ 
+     # Full path of the Token file to use for authenticating with the k8s API
+     # server.
+@@ -129,7 +129,7 @@ data:
+     # Specify whether ingress controllers are expected to be deployed in
+     # hostnework mode or as regular pods externally accessed via NAT
+     # Choices: hostnetwork nat
+- #ingress_mode = hostnetwork
++    ingress_mode = nat
+ 
+     # Log level for the kubernetes adaptor. Ignored if debug is True
+     # Choices: NOTSET DEBUG INFO WARNING ERROR CRITICAL
+@@ -254,7 +254,7 @@ data:
+ 
+ 
+     # The OVS uplink OpenFlow port where to apply the NAT rules to.
+- #ovs_uplink_port = &lt;None&gt;
++    ovs_uplink_port = ens224
+ 
+     # Set this to True if you want to install and use the NSX-OVS kernel
+     # module. If the host OS is supported, it will be installed by nsx-ncp-
+@@ -318,8 +318,11 @@ data:
+     # [&lt;scheme&gt;://]&lt;ip_adress&gt;[:&lt;port&gt;]
+     # If scheme is not provided https is used. If port is not provided port 80
+     # is used for http and port 443 for https.
+- #nsx_api_managers = []
+-
++    nsx_api_managers = 172.16.10.43
++    nsx_api_user = admin
++    nsx_api_password = SuperSecretPassword123!
++    insecure = true
++    
+     # If True, skip fatal errors when no endpoint in the NSX management cluster
+     # is available to serve a request, and retry the request instead
+     #cluster_unavailable_retry = False
+@@ -438,7 +441,7 @@ data:
+     # support automatically creating the IP blocks. The definition is a comma
+     # separated list: CIDR,CIDR,... Mixing different formats (e.g. UUID,CIDR)
+     # is not supported.
+- #container_ip_blocks = []
++    container_ip_blocks = IB-K8S-PODS 
+ 
+     # Resource ID of the container ip blocks that will be used for creating
+     # subnets for no-SNAT projects. If specified, no-SNAT projects will use
+@@ -451,7 +454,7 @@ data:
+     # creating the ip pools. The definition is a comma separated list:
+     # CIDR,IP_1-IP_2,... Mixing different formats (e.g. UUID, CIDR&amp;IP_Range) is
+     # not supported.
+- #external_ip_pools = []
++    external_ip_pools = IP-K8S-LB
+ 
+ 
+ 
+@@ -461,7 +464,7 @@ data:
+     # Name or ID of the top-tier router for the container cluster network,
+     # which could be either tier0 or tier1. If policy_nsxapi is enabled, should
+     # be ID of a tier0/tier1 gateway.
+- #top_tier_router = &lt;None&gt;
++    top_tier_router = T0
+ 
+     # Option to use single-tier router for the container cluster network
+     #single_tier_topology = False
+@@ -472,13 +475,13 @@ data:
+     # policy_nsxapi is enabled, it also supports automatically creating the ip
+     # pools. The definition is a comma separated list: CIDR,IP_1-IP_2,...
+     # Mixing different formats (e.g. UUID, CIDR&amp;IP_Range) is not supported.
+- #external_ip_pools_lb = []
++    #external_ip_pools_lb = IP-K8S-LB
+ 
+     # Name or ID of the NSX overlay transport zone that will be used for
+     # creating logical switches for container networking. It must refer to an
+     # already existing resource on NSX and every transport node where VMs
+     # hosting containers are deployed must be enabled on this transport zone
+- #overlay_tz = &lt;None&gt;
++    overlay_tz = nsx-overlay-transportzone
+ 
+ 
+     # Resource ID of the lb service that can be attached by virtual servers
+@@ -500,11 +503,11 @@ data:
+ 
+     # Resource ID of the firewall section that will be used to create firewall
+     # sections below this mark section
+- #top_firewall_section_marker = &lt;None&gt;
++    top_firewall_section_marker = 0eee3920-1584-4c54-9724-4dd8e1245378
+ 
+     # Resource ID of the firewall section that will be used to create firewall
+     # sections above this mark section
+- #bottom_firewall_section_marker = &lt;None&gt;
++    bottom_firewall_section_marker = 3d67b13c-294e-4470-95db-7376cc0ee079
+ 
+ 
+ 
+@@ -523,7 +526,7 @@ data:
+ 
+     # Edge cluster ID needed when creating Tier1 router for loadbalancer
+     # service. Information could be retrieved from Tier0 router
+- #edge_cluster = &lt;None&gt;
++    edge_cluster = 726530a3-a488-44d5-aea6-7ee21d178fbc
+</code></pre><h1 id="10-apply-the-manifest-files">10. Apply the manifest files</h1>
+<pre tabindex="0"><code>kubectl apply -f /nsx-container-plugin-operator/deploy/kubernetes/*
+</code></pre><p>You should see both the operator and NCP workloads manifest</p>
+<pre tabindex="0"><code>root@k8s-test-node:/home/packerbuilt/nsx-container-plugin-operator/deploy/kubernetes# kubectl get po -n nsx-system
+NAME                       READY   STATUS    RESTARTS   AGE
+nsx-ncp-5666788456-r4nzb   1/1     Running   0          4h31m
+nsx-ncp-bootstrap-6rncw    1/1     Running   0          4h31m
+nsx-node-agent-6rstw       3/3     Running   0          4h31m
+root@k8s-test-node:/home/packerbuilt/nsx-container-plugin-operator/deploy/kubernetes# kubectl get po -n nsx-system-operator
+NAME                               READY   STATUS    RESTARTS   AGE
+nsx-ncp-operator-cbcd844d4-tn4pm   1/1     Running   0          4h31m
+</code></pre><p>Pods should be transitioning to <code>running</code> state, and loadbalancer services will be facilitated by NSX</p>
+<pre tabindex="0"><code>root@k8s-test-node:/home/packerbuilt/nsx-container-plugin-operator/deploy/kubernetes# kubectl get svc
+NAME            TYPE           CLUSTER-IP     EXTERNAL-IP     PORT(S)        AGE
+kubernetes      ClusterIP      10.43.0.1      &lt;none&gt;          443/TCP        4h34m
+nginx-service   LoadBalancer   10.43.234.41   172.16.102.24   80:31848/TCP   107m
+root@k8s-test-node:/home/packerbuilt/nsx-container-plugin-operator/deploy/kubernetes# curl 172.16.102.24
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Welcome to nginx!&lt;/title&gt;
+&lt;style&gt;
+    body {
+      ......
+    }
+</code></pre><p>The end result is a topology where every namespace has its own T1 router, advertised to T0:</p>
+<p><a href="https://github.com/David-VTUK/rke2-nsxt/blob/master/images/network-topology.png"><img src="images/network-topology-62c2f78a66a83-1024x314.png" alt=""></a></p>
+
+            </div>
+        </article></main>
+</div>
+<footer class="footer">
+    <span class="footer_item"> </span>
+    &nbsp;
+
+    <div class="footer_social-icons">
+<a href="https://github.com/David-VTUK" target="_blank" rel="noopener noreferrer me"
+    title="Github">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path
+        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+    </path>
+</svg>
+</a>
+<a href="/index.xml" target="_blank" rel="noopener noreferrer me"
+    title="Rss">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 11a9 9 0 0 1 9 9" />
+    <path d="M4 4a16 16 0 0 1 16 16" />
+    <circle cx="5" cy="19" r="1" />
+</svg>
+</a>
+</div>
+    <small class="footer_copyright">
+        © 2026 David Holder.
+        Powered by <a href="https://github.com/hugo-sid/hugo-blog-awesome" target="_blank" rel="noopener">Hugo blog awesome</a>.
+    </small>
+</footer><a href="#" title="Go to top" id="totop">
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" stroke="currentColor" viewBox="0 96 960 960">
+    <path d="M283 704.739 234.261 656 480 410.261 725.739 656 677 704.739l-197-197-197 197Z"/>
+</svg>
+
+</a>
+
+
+    
+
+
+
+
+
+
+    
+    <script async src="http://localhost:1313/js/main.js" ></script>
+
+    
+
+</body>
+</html>

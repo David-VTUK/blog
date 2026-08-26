@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en-gb"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title itemprop="name">Facilitating multi-SAN Environments | Virtualthoughts</title>
+<meta property="og:title" content="Facilitating multi-SAN Environments | Virtualthoughts" />
+<meta name="twitter:title" content="Facilitating multi-SAN Environments | Virtualthoughts" />
+<meta itemprop="name" content="Facilitating multi-SAN Environments | Virtualthoughts" />
+<meta name="application-name" content="Facilitating multi-SAN Environments | Virtualthoughts" />
+<meta property="og:site_name" content="Virtualthoughts" />
+
+<meta name="description" content="Minimal Hugo blog theme with light and dark mode support">
+<meta itemprop="description" content="Minimal Hugo blog theme with light and dark mode support" />
+<meta property="og:description" content="Minimal Hugo blog theme with light and dark mode support" />
+<meta name="twitter:description" content="Minimal Hugo blog theme with light and dark mode support" />
+
+<meta property="og:locale" content="en-gb" />
+<meta name="language" content="en-gb" />
+
+  <link rel="alternate" hreflang="en" href="http://localhost:1313/2016/05/23/facilitating-multi-san-environments/" title="" />
+
+
+
+
+
+    
+    
+    
+
+    <meta property="og:type" content="article" />
+    <meta property="og:article:published_time" content=2016-05-23T00:00:00Z />
+    <meta property="article:published_time" content=2016-05-23T00:00:00Z />
+    <meta property="og:url" content="http://localhost:1313/2016/05/23/facilitating-multi-san-environments/" />
+
+    
+    <meta property="og:article:author" content="David Holder" />
+    <meta property="article:author" content="David Holder" />
+    <meta name="author" content="David Holder" />
+    
+    
+
+    
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "Facilitating multi-SAN Environments",
+        "author": {
+        "@type": "Person",
+        "name": "David Holder"
+        },
+        "datePublished": "2016-05-23",
+        "description": "",
+        "wordCount":  1007 ,
+        "mainEntityOfPage": "http://localhost:1313/2016/05/23/facilitating-multi-san-environments/",
+        "dateModified": "2016-05-23",
+        "image": {
+        "@type": "ImageObject",
+        "url": ""
+        },
+        "publisher": {
+        "@type": "Organization",
+        "name": "Virtualthoughts"
+        }
+    }
+    </script>
+
+
+<meta name="generator" content="Hugo 0.162.1">
+
+    
+    <meta property="og:url" content="http://localhost:1313/2016/05/23/facilitating-multi-san-environments/">
+	<meta property="og:site_name" content="Virtualthoughts">
+	<meta property="og:title" content="Facilitating multi-SAN Environments">
+	<meta property="og:description" content="The what, where and why At the moment I’m involved in a fair amount of project work involving data (VM) migrations between different storage platforms, sometimes even from the same vendor. What seems to be quite a simple process can get complicated depending on the design considerations for both storage platforms and the migration criteria - particularly if both storage platforms need to co-exist for either the short or long term and migrated VM’s must be performed live.">
+	<meta property="og:locale" content="en_gb">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="posts">
+		<meta property="article:published_time" content="2016-05-23T00:00:00+00:00">
+		<meta property="article:modified_time" content="2016-05-23T00:00:00+00:00">
+
+
+    
+    
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="Facilitating multi-SAN Environments">
+	<meta name="twitter:description" content="The what, where and why At the moment I’m involved in a fair amount of project work involving data (VM) migrations between different storage platforms, sometimes even from the same vendor. What seems to be quite a simple process can get complicated depending on the design considerations for both storage platforms and the migration criteria - particularly if both storage platforms need to co-exist for either the short or long term and migrated VM’s must be performed live.">
+
+
+    
+
+    <link rel="canonical" href="http://localhost:1313/2016/05/23/facilitating-multi-san-environments/">
+    <link href="/style.min.562556c74d7ca5d6d6aa72c6e342d478360cdb10904c9eacda75792f6e6a7eb0.css" rel="stylesheet">
+    <link href="/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+
+
+
+<link rel="manifest" href="http://localhost:1313/site.webmanifest">
+
+<meta name="msapplication-config" content="/browserconfig.xml">
+<meta name="msapplication-TileColor" content="#2d89ef">
+<meta name="theme-color" content="#434648">
+    <meta name="color-scheme" content="light dark">
+
+    
+    <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+    
+    
+</head>
+<body data-theme = "dark" class="notransition">
+
+<script src="/js/theme.js"></script>
+
+<div class="navbar" role="navigation">
+    <nav class="menu" aria-label="Main Navigation">
+        <a href="http://localhost:1313/" class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" 
+viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+stroke-linejoin="round" class="feather feather-home">
+<title>Home</title>
+<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+<polyline points="9 22 9 12 15 12 15 22"></polyline>
+</svg>
+        </a>
+        <input type="checkbox" id="menu-trigger" class="menu-trigger" />
+        <label for="menu-trigger">
+            <span class="menu-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" stroke="currentColor" fill="none" viewBox="0 0 14 14"><title>Menu</title><path stroke-linecap="round" stroke-linejoin="round" d="M10.595 7L3.40726 7"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 3.51488L3.49301 3.51488"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 10.4851H3.49301"></path><path stroke-linecap="round" stroke-linejoin="round" d="M0.5 12.5V1.5C0.5 0.947715 0.947715 0.5 1.5 0.5H12.5C13.0523 0.5 13.5 0.947715 13.5 1.5V12.5C13.5 13.0523 13.0523 13.5 12.5 13.5H1.5C0.947715 13.5 0.5 13.0523 0.5 12.5Z"></path></svg>
+            </span>
+        </label>
+
+        <div class="trigger">
+            <ul class="trigger-container">
+                
+                
+                <li>
+                    <a class="menu-link " href="/">
+                        Home
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link active" href="/posts/">
+                        Posts
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link " href="/about/">
+                        About
+                    </a>
+                    
+                </li>
+                
+                <li class="menu-separator">
+                    <span>|</span>
+                </li>
+                
+                
+            </ul>
+            <a id="mode" href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-sunny" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>LIGHT</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-moon" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>DARK</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+            </a>
+        </div>
+    </nav>
+</div>
+
+<div class="wrapper post">
+    <main class="page-content" aria-label="Content">
+        <article>
+            <header class="header">
+                <h1 class="header-title">Facilitating multi-SAN Environments</h1>
+                
+                
+                
+                <div class="post-meta">
+                    <time datetime="2016-05-23T00:00:00&#43;00:00" itemprop="datePublished"> 23 May 2016 </time>
+                </div>
+                
+            </header>
+            
+            <div class="page-content">
+                <h1 id="the-what-where-and-why">The what, where and why</h1>
+<p>At the moment I&rsquo;m involved in a fair amount of project work involving data (VM) migrations between different storage platforms, sometimes even from the same vendor. What seems to be quite a simple process can get complicated depending on the design considerations for both storage platforms and the migration criteria - particularly if both storage platforms need to co-exist for either the short or long term and migrated VM&rsquo;s must be performed live.</p>
+<p> </p>
+<h1 id="but-we-have-shared-nothing-vmotion-for-this-right">But we have shared nothing vMotion for this, right?</h1>
+<p>Yes and No. A lot of administrators don&rsquo;t like to work with multiple SAN environments - and with good reason. Conflicting design considerations (which I will touch on later) can cause some incompatibility depending on your host configuration (think iSCSI port bindings as an example). For some migrations it&rsquo;s perfectly acceptable to (for example) logically segment ESXi hosts that belong to different SAN environments and simply vMotion across. Once you&rsquo;ve migrated everything across reconfigure all hosts to see the new, shiny storage platform only.</p>
+<p>However, requirements I&rsquo;ve received recently from various customers stipulate that both SAN environments must co-exist on all hosts in a supported fashion. Some for sort term migrations, others for mid term (maybe to keep the old storage environment for test/dev). These clients have a small number of densely populated hosts, and therefore do not want segmentation of hosts (ie cluster A = SANA, cluster B = SANB).</p>
+<p>So how can we facilitate this?</p>
+<h1 id="assess-design-considerations-for-the-existing-san">Assess design considerations for the existing SAN</h1>
+<p>All storage vendors will (or should) have existing documentation pertaining to best practice for implementing their flavor of storage array. As an example I&rsquo;ll pick the Dell EqualLogic as I&rsquo;m quite familiar with it.</p>
+<p>The EqualLogic is an active/passive storage device, commonly implemented in VMware environments by leveraging the Software iSCSI initiator. We then create either one vSwitch with two VMKernel port groups for iSCSI, each having their own dedicated NIC and the rest being unused, or two vSwitches with 1 VMKernel port group each, with their own dedicated NIC and the rest being unused. IP addresses for all initiators and the target reside on the same VLAN/Subenet Range, so iSCSI port binding is used.</p>
+<h1 id="assess-design-considerations-for-the-new-san">Assess design considerations for the new SAN</h1>
+<p>Commonplace at the moment are new 10Gb iSCSI SANs being implemented, including new NICs/HBA&rsquo;s into hosts, switches and obviously the storage device itself. As an example I was asked to co-exist a EqualLogic (1Gb) with another storage device (10Gb) that had different design considerations:</p>
+<p>The new storage device is an active/active device, with best practice dictating that each storage controller reside on <strong>its own</strong> VLAN/Subnet range.</p>
+<h1 id="assessing-how-to-configure-hosts-to-support-both-san-environments">Assessing how to configure hosts to support both SAN environments</h1>
+<p>In the example previously described we have a particular issue:</p>
+<ul>
+<li>Existing configuration involves iSCSI port binding with all participating initiators and targets in the same VLAN.</li>
+</ul>
+<p>This is perfectly common and acceptable with the EqualLogic. But this cannot support the new storage device. Although we technically <strong>*could*</strong> modify the existing binding to accommodate the new SAN, this will cause issues and is by in large not supported. <a href="https://kb.vmware.com/selfservice/microsites/search.do?language=en_US&amp;cmd=displayKC&amp;externalId=2038869">https://kb.vmware.com/selfservice/microsites/search.do?language=en_US&amp;cmd=displayKC&amp;externalId=2038869</a>. Even if we put the new storage device on the same VLAN as the EqualLogic, it still isn&rsquo;t a good idea. Single targets should really be used and including mixed, speed nics in iSCSI port binding is a very bad idea.</p>
+<p>Simply put, we can not, and should not modify the existing iSCSI port bindings. We can only have 1 software iSCSI initiator, and when we use port binding it will not leverage other VMKernel port groups.</p>
+<p>This leaves us with two options:</p>
+<h1 id="option-1-iscsi-independent-hbas">Option #1 iSCSI-Independent HBA&rsquo;s</h1>
+<p>Independent HBA&rsquo;s do not rely upon ESXi for configuration parameters. They&rsquo;re configured outside of the operating system. This is probably the better way of achieving segmentation between multiple SAN environments. This way we have independent HBA&rsquo;s facilitating traffic to the new storage array, and existing NICs in the existing iSCSI port binding facilitating traffic to the existing storage array.</p>
+<h1 id="option-2-iscsi-dependent-hbas">Option #2 iSCSI-Dependent HBA&rsquo;s</h1>
+<p>I&rsquo;m honestly not sure if it&rsquo;s just a demand thing, or if people are finding acceptable levels of performance from software iSCSI implementations (I know I am) but I don&rsquo;t really come across dedicated iSCSI Independent HBA&rsquo;s anymore. I&rsquo;d imagine they represent a bit of a false economy with the limited number of PCI-Express slots of small servers these days.</p>
+<p>Converged network adapters on the other hand I find very common. For those that are not aware, CNA&rsquo;s are like multi-personality NICs. They&rsquo;re presented in ESXi as both regular NIC&rsquo;s and iSCSI (and/or FCoE) storage adapters with the same MAC. They are usually considered iSCSI-Dependent NIC&rsquo;s though.</p>
+<p><img src="images/iSCSI.png" alt="iSCSI"></p>
+<p>What we&rsquo;re able to do here is create our vmkernel ports for the new storage array (one for each uplink for our active/active array) on different VLAN&rsquo;s, IP address ranges etc. Then assign one to each of our iSCSI uplinks and off we go. We still achieve separation of traffic because the software iSCSI initiator remains untouched, and traffic to the new SAN is facilitated by different nics, VMK&rsquo;s, etc.</p>
+<p>It&rsquo;s important to identify there that <strong>VMware does support using mixed software AND hardware iSCSI initiators but not to the same target.</strong></p>
+<h1 id="option-3---swing-host">Option #3 - Swing Host</h1>
+<p>I&rsquo;ve heard people using these before. They&rsquo;re essentially a designated host that&rsquo;s configured with perhaps not a supported or best practice configuration, but is homed to both SAN environments and is just used for migration purposes. You essentially VMotion a VM onto this host, do what you need to do with it, and vMotion it off again to a supported host.</p>
+<p>It often works, but is considered a &ldquo;quick and dirty&rdquo; solution to this problem, and unlikely to receive any official support from both VMware and your storage vendor.</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>Hopefully this might help others who may be tasked with a similar requirement. It&rsquo;s not ideal, and as I mentioned before we try and not implement multi SAN-environments where possible. But sometimes we have to. What&rsquo;s important is to implement something that is supported and stable.</p>
+
+            </div>
+        </article></main>
+</div>
+<footer class="footer">
+    <span class="footer_item"> </span>
+    &nbsp;
+
+    <div class="footer_social-icons">
+<a href="https://github.com/David-VTUK" target="_blank" rel="noopener noreferrer me"
+    title="Github">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path
+        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+    </path>
+</svg>
+</a>
+<a href="/index.xml" target="_blank" rel="noopener noreferrer me"
+    title="Rss">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 11a9 9 0 0 1 9 9" />
+    <path d="M4 4a16 16 0 0 1 16 16" />
+    <circle cx="5" cy="19" r="1" />
+</svg>
+</a>
+</div>
+    <small class="footer_copyright">
+        © 2026 David Holder.
+        Powered by <a href="https://github.com/hugo-sid/hugo-blog-awesome" target="_blank" rel="noopener">Hugo blog awesome</a>.
+    </small>
+</footer><a href="#" title="Go to top" id="totop">
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" stroke="currentColor" viewBox="0 96 960 960">
+    <path d="M283 704.739 234.261 656 480 410.261 725.739 656 677 704.739l-197-197-197 197Z"/>
+</svg>
+
+</a>
+
+
+    
+
+
+
+
+
+
+    
+    <script async src="http://localhost:1313/js/main.js" ></script>
+
+    
+
+</body>
+</html>
