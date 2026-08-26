@@ -1,5 +1,5 @@
 baseURL = "https://www.virtualthoughts.co.uk"
-languageCode = "en-gb"
+locale = "en-gb"
 title = "Virtualthoughts"
 theme = "hugo-blog-awesome"
 ignoreLogs = ["warning-goldmark-raw-html"]
@@ -56,3 +56,7 @@ ignoreLogs = ["warning-goldmark-raw-html"]
 [[params.socialIcons]]
   name = "Rss"
   url = "/index.xml"
+
+[caches]
+  [caches.images]
+    dir = ':cacheDir/images'
