@@ -49,8 +49,8 @@ $bold-weight: 700;
 // $black-weight: 900; // uncomment if necessary
 
 //////////////// 4.Responsive design (media queries) /////////////////
-$wide-size: 1200px;
-$narrow-size: 1000px;
+$wide-size: 1500px;
+$narrow-size: 1400px;
 
 // Padding unit
 $spacing-full: 30px;
@@ -127,4 +127,10 @@ h1.header-title {
 .markdown-alert-title {
   color: #206be6;
   margin-bottom: 0.25rem;
+}
+
+pre > code {
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
 }

@@ -1,6 +1,7 @@
 ---
 title: "Home & Lab Network Refresh MikroTik Style Part 1 - Switching"
 date: 2026-09-01
+toc: true
 categories: 
   - "homelab"
 ---
@@ -41,7 +42,7 @@ This yields two main benefits:
 * **Makes Firewall rules easier to manage** - Ie I can leverage MikroTik's `interface lists` to isolate subnets.
 * **Enables the use of PPSK** - A single SSID can be leveraged that, depending on the passphrase used, will land clients on a specific VLAN.
 
-## CRS326 Config
+To fully utilise this, the `bridge` needs to be configured with vlan filtering enabled:
 
 ```bash
 /interface bridge
@@ -58,8 +59,15 @@ add frame-types=admit-only-vlan-tagged name=bridge1 vlan-filtering=yes
 
 `frame-types=admit-only-untagged-and-priority-tagged` enforces access port behavior by dropping any incoming traffic that doesn't have a 802.1Q VLAN tag. This is typically used for `access` ports.
 
+`frame-types` can be applied at both the `birdge` (CPU) and `port` level
 
-## Access Ports
+At the Bridge level : For traffic passing from the bridge switch fabric into the RouterOS CPU.
+
+At a Port Level: For traffic entering physical/member interfaces (`ether1`, etc.) from external devices.
+
+## CRS326 Config
+
+### Access Ports
 
 An access port is a switch port configured to carry traffic for only a single VLAN. It is designed to connect end-user devices that do not process or are aware of 802.1Q VLAN tags, but we want them the traffic to reside within a specific VLAN.
 
@@ -76,7 +84,7 @@ add bridge=bridge1 comment="Turing Pi #1" frame-types=admit-only-untagged-and-pr
 add bridge=bridge1 comment="Turing Pi #2" frame-types=admit-only-untagged-and-priority-tagged interface=ether20 pvid=50
 ```
 
-## Hybrid Ports
+### Hybrid Ports
 
 A hybrid port is a switch port configured to carry both untagged traffic for one specific VLAN and tagged traffic for one or more other VLANs over the same physical cable.
 
@@ -93,7 +101,7 @@ add bridge=bridge1 interface=ether2 pvid=99
 add bridge=bridge1 interface=ether7 pvid=99
 ```
 
-## Trunk Ports
+### Trunk Ports
 
 My CRS does not do any L3 or higher level services, this will be handled by the RB5009. Therefore, the trunk port is configured to retain the VLAN tags:
 
@@ -125,7 +133,7 @@ To reflect this configuring on the other side of the trunk:
 add frame-types=admit-only-vlan-tagged name=bridge1 vlan-filtering=yes
 ```
 
-## Access Ports:
+### Access Ports:
 
 ```bash
 /interface bridge port
@@ -138,7 +146,7 @@ add bridge=bridge1 frame-types=admit-only-untagged-and-priority-tagged interface
 add bridge=bridge1 frame-types=admit-only-vlan-tagged interface=sfp-sfpplus1
 ```
 
-## Hybrid Ports
+### Hybrid Ports
 
 `ether2` is where my cAP AX is plugged into, and therefore acts as a hybrid port, untagged traffic will be tagged with VLAN 99:
 
@@ -146,7 +154,7 @@ add bridge=bridge1 frame-types=admit-only-vlan-tagged interface=sfp-sfpplus1
 add bridge=bridge1 interface=ether2 pvid=99
 ```
 
-## Trunk Ports
+### Trunk Ports
 
 ```bash
 /interface bridge vlan
@@ -174,7 +182,6 @@ To summarise:
 ![alt text](images/lld.png)
 
 ## Summarised Configs
-
 
 Below are config excerpts from both devices capturing the L2 config: 
 
