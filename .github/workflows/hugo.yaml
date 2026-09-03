@@ -117,6 +117,7 @@ jobs:
         run: |
           echo "Building the project..."
           hugo build \
+            --cleanDestinationDir \
             --gc \
             --minify \
             --baseURL "${{ steps.pages.outputs.base_url }}/" \
