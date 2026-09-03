@@ -142,6 +142,21 @@ add name=WAN
 `LAN` - VLAN's that have internal and external access, typically for "trusted" networks.
 `WAN` - A container for my WAN interface, I only have one, but putting it in its own Interface List makes firewall rules easier to read.
 
+
+To populate these lists, add the VLAN interface accordingly:
+
+```bash
+/interface list member
+add interface=ether1 list=WAN
+add interface=vlan99-mgmt list=LAN
+add interface=vlan10-trusted list=LAN
+add interface=vlan20-iot list=LAN_ISOLATED
+add interface=vlan40-kids-wifi list=LAN_ISOLATED
+add interface=vlan30-guest-wifi list=LAN_ISOLATED
+add interface=vlan50-lab-1 list=LAN
+add interface=vlan60-xbox list=LAN_ISOLATED
+```
+
 To enforce this behavior, I added to my forward chain:
 
 ```bash
