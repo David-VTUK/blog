@@ -59,7 +59,7 @@ add frame-types=admit-only-vlan-tagged name=bridge1 vlan-filtering=yes
 
 `frame-types=admit-only-untagged-and-priority-tagged` enforces access port behavior by dropping any incoming traffic that doesn't have a 802.1Q VLAN tag. This is typically used for `access` ports.
 
-`frame-types` can be applied at both the `birdge` (CPU) and `port` level
+`frame-types` can be applied at both the `bridge` (CPU) and `port` level
 
 At the Bridge level : For traffic passing from the bridge switch fabric into the RouterOS CPU.
 
