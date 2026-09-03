@@ -115,3 +115,16 @@ h1.header-title {
 {{ with .Site.Params.goToTop }}
 @import "goToTop";
 {{ end }}
+
+
+.markdown-alert {
+  border-left: 4px solid #206be6;
+  background-color: rgba(32, 107, 230, 0.08);
+  padding: 0.75rem 1rem;
+  margin: 1rem 0;
+  border-radius: 4px;
+}
+.markdown-alert-title {
+  color: #206be6;
+  margin-bottom: 0.25rem;
+}

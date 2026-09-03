@@ -1,0 +1,10 @@
+{{ if eq .Type "alert" }}
+  <div class="markdown-alert markdown-alert-{{ .AlertType }}">
+    <p class="markdown-alert-title"><strong>{{ .AlertTitle | default (title .AlertType) }}</strong></p>
+    {{ .Text }}
+  </div>
+{{ else }}
+  <blockquote>
+    {{ .Text }}
+  </blockquote>
+{{ end }}
