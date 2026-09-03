@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Homelab on Virtualthoughts</title>
+    <link>http://localhost:1313/categories/homelab/</link>
+    <description>Recent content in Homelab on Virtualthoughts</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-gb</language>
+    <lastBuildDate>Tue, 01 Sep 2026 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/categories/homelab/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Home &amp; Lab Network Refresh Mikrotik Style Part 1 - Switching</title>
+      <link>http://localhost:1313/2026/09/01/home-lab-network-refresh-mikrotik-style-part-1-switching/</link>
+      <pubDate>Tue, 01 Sep 2026 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2026/09/01/home-lab-network-refresh-mikrotik-style-part-1-switching/</guid>
+      
+      <description>&lt;p&gt;Having built an extension and lined the walls with as much Cat6a as I could get my hands on, together with anticipating future needs for kids devices I&amp;rsquo;ve decided to revisit my networking setup.&lt;/p&gt;
+&lt;h2 id=&#34;existing-setup&#34;&gt;Existing Setup&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;images/homelab-previous.png&#34; alt=&#34;alt text&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The existing setup is pretty straightforward - a RB5009 providing Routing, Firewalling, DHCP and DNS services with some devices directly attached. A trunk port carries default and Lab (VLAN 10) traffic to a CRS where I have devices connected to either the default VLAN or my Lab VLAN.&lt;/p&gt;</description>
+      
+    </item>
+    
+  </channel>
+</rss>

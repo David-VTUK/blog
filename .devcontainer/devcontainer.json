@@ -8,7 +8,8 @@
                 "yzhang.markdown-all-in-one",
                 "rusnasonov.vscode-hugo",
                 "budparr.language-hugo-vscode",
-				"tamasfe.even-better-toml"
+				"tamasfe.even-better-toml",
+				"streetsidesoftware.code-spell-checker"
 			]
 		}
 	},

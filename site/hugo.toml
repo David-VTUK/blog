@@ -60,3 +60,4 @@ ignoreLogs = ["warning-goldmark-raw-html"]
 [caches]
   [caches.images]
     dir = ':cacheDir/images'
+

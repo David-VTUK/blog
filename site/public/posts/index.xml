@@ -6,7 +6,21 @@
     <description>Recent content in Posts on Virtualthoughts</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-gb</language>
-    <lastBuildDate>Tue, 18 Nov 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 01 Sep 2026 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Home &amp; Lab Network Refresh Mikrotik Style Part 1 - Switching</title>
+      <link>http://localhost:1313/2026/09/01/home-lab-network-refresh-mikrotik-style-part-1-switching/</link>
+      <pubDate>Tue, 01 Sep 2026 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2026/09/01/home-lab-network-refresh-mikrotik-style-part-1-switching/</guid>
+      
+      <description>&lt;p&gt;Having built an extension and lined the walls with as much Cat6a as I could get my hands on, together with anticipating future needs for kids devices I&amp;rsquo;ve decided to revisit my networking setup.&lt;/p&gt;
+&lt;h2 id=&#34;existing-setup&#34;&gt;Existing Setup&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;images/homelab-previous.png&#34; alt=&#34;alt text&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The existing setup is pretty straightforward - a RB5009 providing Routing, Firewalling, DHCP and DNS services with some devices directly attached. A trunk port carries default and Lab (VLAN 10) traffic to a CRS where I have devices connected to either the default VLAN or my Lab VLAN.&lt;/p&gt;</description>
+      
+    </item>
+    
     <item>
       <title>Gen AI tools are making me lose my fondness for programming</title>
       <link>http://localhost:1313/2025/11/18/gen-ai-tools-are-making-me-lose-my-fondness-for-programming/</link>
@@ -1344,6 +1358,17 @@ Overlay traffic does not have to be on a routed network&lt;/p&gt;</description>
 &lt;p&gt; &lt;/p&gt;
 &lt;h1 id=&#34;experience&#34;&gt;Experience&lt;/h1&gt;
 &lt;p&gt;This was a particularly tough exam. As I would describe myself as somewhat inexperienced in NSX compared to vSphere, I found the exam challenging. I&amp;rsquo;ve noticed that VMware have recently revised the exam reducing the number of questions down to 77 from 85, which is nice.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title></title>
+      <link>http://localhost:1313/1/01/01/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/1/01/01/</guid>
+      
+      <description></description>
       
     </item>
     
