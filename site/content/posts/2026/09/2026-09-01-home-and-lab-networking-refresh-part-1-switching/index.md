@@ -97,6 +97,9 @@ add bridge=bridge1 interface=ether7 pvid=99
 
 My CRS does not do any L3 or higher level services, this will be handled by the RB5009. Therefore, the trunk port is configured to retain the VLAN tags:
 
+> [!NOTE]
+> On the CRS326 the 4x SFP+ ports and the final 4 2.5GbE ports act as combo ports, hence the naming convention. You can use either, but not both.
+
 ```bash {hl_lines=[2]}
 /interface bridge vlan
 add bridge=bridge1 tagged=bridge1,combo1 vlan-ids=99
@@ -169,3 +172,120 @@ To summarise:
 ## Low Level Diagram
 
 ![alt text](images/lld.png)
+
+## Summarised Configs
+
+
+Below are config excerpts from both devices capturing the L2 config: 
+
+## CRS326
+```bash
+# model = CRS326-4C+20G+2Q+
+/interface bridge
+add frame-types=admit-only-vlan-tagged name=bridge1 vlan-filtering=yes
+/interface ethernet
+set [ find default-name=combo1 ] advertise="10M-baseT-half,10M-baseT-full,100M\
+    -baseT-half,100M-baseT-full,1G-baseT-full,1G-baseX,2.5G-baseT,2.5G-baseX,1\
+    0G-baseSR-LR,10G-baseCR"
+set [ find default-name=combo2 ] advertise="10M-baseT-half,10M-baseT-full,100M\
+    -baseT-half,100M-baseT-full,1G-baseT-full,1G-baseX,2.5G-baseT,2.5G-baseX,1\
+    0G-baseSR-LR,10G-baseCR"
+set [ find default-name=combo3 ] advertise="10M-baseT-half,10M-baseT-full,100M\
+    -baseT-half,100M-baseT-full,1G-baseT-full,1G-baseX,2.5G-baseT,2.5G-baseX,1\
+    0G-baseSR-LR,10G-baseCR"
+set [ find default-name=combo4 ] advertise="10M-baseT-half,10M-baseT-full,100M\
+    -baseT-half,100M-baseT-full,1G-baseT-full,1G-baseX,2.5G-baseT,2.5G-baseX,1\
+    0G-baseSR-LR,10G-baseCR"
+set [ find default-name=ether21 ] name=mgmt
+/interface vlan
+add interface=bridge1 name=vlan99-mgmt vlan-id=99
+/interface bridge port
+add bridge=bridge1 frame-types=admit-only-untagged-and-priority-tagged \
+    interface=ether1
+add bridge=bridge1 interface=ether2 pvid=99
+add bridge=bridge1 frame-types=admit-only-untagged-and-priority-tagged \
+    interface=ether3 pvid=99
+add bridge=bridge1 frame-types=admit-only-untagged-and-priority-tagged \
+    interface=ether4
+add bridge=bridge1 frame-types=admit-only-untagged-and-priority-tagged \
+    interface=ether5
+add bridge=bridge1 frame-types=admit-only-untagged-and-priority-tagged \
+    interface=ether6
+add bridge=bridge1 interface=ether7 pvid=99
+add bridge=bridge1 frame-types=admit-only-untagged-and-priority-tagged \
+    interface=ether8
+add bridge=bridge1 frame-types=admit-only-untagged-and-priority-tagged \
+    interface=ether9
+add bridge=bridge1 frame-types=admit-only-untagged-and-priority-tagged \
+    interface=ether10
+add bridge=bridge1 frame-types=admit-only-untagged-and-priority-tagged \
+    interface=ether11
+add bridge=bridge1 frame-types=admit-only-untagged-and-priority-tagged \
+    interface=ether12
+add bridge=bridge1 frame-types=admit-only-untagged-and-priority-tagged \
+    interface=ether13
+add bridge=bridge1 frame-types=admit-only-untagged-and-priority-tagged \
+    interface=ether14 pvid=10
+add bridge=bridge1 frame-types=admit-only-untagged-and-priority-tagged \
+    interface=ether15
+add bridge=bridge1 frame-types=admit-only-untagged-and-priority-tagged \
+    interface=ether16
+add bridge=bridge1 comment="Reolink Camera" frame-types=\
+    admit-only-untagged-and-priority-tagged interface=ether17 pvid=20
+add bridge=bridge1 comment=NAS frame-types=\
+    admit-only-untagged-and-priority-tagged interface=ether18 pvid=10
+add bridge=bridge1 comment="Turing Pi #1" frame-types=\
+    admit-only-untagged-and-priority-tagged interface=ether19 pvid=50
+add bridge=bridge1 comment="Turing Pi #2" frame-types=\
+    admit-only-untagged-and-priority-tagged interface=ether20 pvid=50
+add bridge=bridge1 frame-types=admit-only-vlan-tagged interface=combo1
+/interface bridge vlan
+add bridge=bridge1 tagged=bridge1,combo1 vlan-ids=99
+add bridge=bridge1 tagged=combo1,ether2,ether7 vlan-ids=10
+add bridge=bridge1 tagged=combo1,ether2,ether7 vlan-ids=20
+add bridge=bridge1 tagged=combo1,ether2,ether7 vlan-ids=30
+add bridge=bridge1 tagged=combo1,ether2,ether7 vlan-ids=40
+add bridge=bridge1 tagged=combo1,ether2,ether7 vlan-ids=50
+add bridge=bridge1 tagged=combo1,ether2,ether7 vlan-ids=60
+/ip address
+add address=172.25.99.2/24 interface=vlan99-mgmt network=172.25.99.0
+```
+
+## RB5009
+
+```bash
+# model = RB5009UG+S+
+/interface bridge
+add frame-types=admit-only-vlan-tagged name=bridge1 vlan-filtering=yes
+/interface vlan
+add interface=bridge1 name=vlan10-trusted vlan-id=10
+add interface=bridge1 mvrp=yes name=vlan20-iot vlan-id=20
+add interface=bridge1 name=vlan30-guest-wifi vlan-id=30
+add interface=bridge1 name=vlan40-kids-wifi vlan-id=40
+add interface=bridge1 name=vlan50-lab-1 vlan-id=50
+add interface=bridge1 name=vlan60-xbox vlan-id=60
+add interface=bridge1 name=vlan99-mgmt vlan-id=99
+/interface bridge port
+add bridge=bridge1 interface=ether2 pvid=99
+add bridge=bridge1 frame-types=admit-only-untagged-and-priority-tagged \
+    interface=ether3 pvid=60
+add bridge=bridge1 frame-types=admit-only-untagged-and-priority-tagged \
+    interface=ether4 pvid=20
+add bridge=bridge1 frame-types=admit-only-untagged-and-priority-tagged \
+    interface=ether5 pvid=10
+add bridge=bridge1 frame-types=admit-only-untagged-and-priority-tagged \
+    interface=ether6 pvid=10
+add bridge=bridge1 frame-types=admit-only-untagged-and-priority-tagged \
+    interface=ether7 pvid=10
+add bridge=bridge1 frame-types=admit-only-untagged-and-priority-tagged \
+    interface=ether8 pvid=99
+add bridge=bridge1 frame-types=admit-only-vlan-tagged interface=sfp-sfpplus1
+/interface bridge vlan
+add bridge=bridge1 tagged=bridge1,sfp-sfpplus1,ether2 vlan-ids=10
+add bridge=bridge1 tagged=bridge1,ether2,sfp-sfpplus1 vlan-ids=20
+add bridge=bridge1 tagged=bridge1,ether2,sfp-sfpplus1 vlan-ids=30
+add bridge=bridge1 tagged=bridge1,ether2,sfp-sfpplus1 vlan-ids=40
+add bridge=bridge1 tagged=bridge1,ether2,sfp-sfpplus1 vlan-ids=50
+add bridge=bridge1 tagged=bridge1,sfp-sfpplus1 vlan-ids=99
+add bridge=bridge1 tagged=bridge1,sfp-sfpplus1 vlan-ids=60
+```

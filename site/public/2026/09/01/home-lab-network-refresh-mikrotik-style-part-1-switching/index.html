@@ -53,7 +53,7 @@
         },
         "datePublished": "2026-09-01",
         "description": "",
-        "wordCount":  1006 ,
+        "wordCount":  1382 ,
         "mainEntityOfPage": "http://localhost:1313/2026/09/01/home-lab-network-refresh-mikrotik-style-part-1-switching/",
         "dateModified": "2026-09-01",
         "image": {
@@ -260,6 +260,11 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 interface<span style="color:#f92672">=</span>ether7 pvid<span style="color:#f92672">=</span><span style="color:#ae81ff">99</span>
 </span></span></code></pre></div><h2 id="trunk-ports">Trunk Ports</h2>
 <p>My CRS does not do any L3 or higher level services, this will be handled by the RB5009. Therefore, the trunk port is configured to retain the VLAN tags:</p>
+
+  <div class="markdown-alert markdown-alert-note">
+    <p class="markdown-alert-title"><strong>Note</strong></p>
+    <p>On the CRS326 the 4x SFP+ ports and the final 4 2.5GbE ports act as combo ports, hence the naming convention. You can use either, but not both.</p>
+  </div>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;display:grid;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>/interface bridge vlan
 </span></span><span style="display:flex; background-color:#3c3d38"><span>add bridge<span style="color:#f92672">=</span>bridge1 tagged<span style="color:#f92672">=</span>bridge1,combo1 vlan-ids<span style="color:#f92672">=</span><span style="color:#ae81ff">99</span>
 </span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 tagged<span style="color:#f92672">=</span>combo1,ether2,ether7 vlan-ids<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>
@@ -312,7 +317,114 @@ stroke-linejoin="round" class="feather feather-home">
 </ul>
 <h2 id="low-level-diagram">Low Level Diagram</h2>
 <p><img src="images/lld.png" alt="alt text"></p>
-
+<h2 id="summarised-configs">Summarised Configs</h2>
+<p>Below are config excerpts from both devices capturing the L2 config:</p>
+<h2 id="crs326">CRS326</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># model = CRS326-4C+20G+2Q+</span>
+</span></span><span style="display:flex;"><span>/interface bridge
+</span></span><span style="display:flex;"><span>add frame-types<span style="color:#f92672">=</span>admit-only-vlan-tagged name<span style="color:#f92672">=</span>bridge1 vlan-filtering<span style="color:#f92672">=</span>yes
+</span></span><span style="display:flex;"><span>/interface ethernet
+</span></span><span style="display:flex;"><span>set <span style="color:#f92672">[</span> find default-name<span style="color:#f92672">=</span>combo1 <span style="color:#f92672">]</span> advertise<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;10M-baseT-half,10M-baseT-full,100M\
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    -baseT-half,100M-baseT-full,1G-baseT-full,1G-baseX,2.5G-baseT,2.5G-baseX,1\
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    0G-baseSR-LR,10G-baseCR&#34;</span>
+</span></span><span style="display:flex;"><span>set <span style="color:#f92672">[</span> find default-name<span style="color:#f92672">=</span>combo2 <span style="color:#f92672">]</span> advertise<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;10M-baseT-half,10M-baseT-full,100M\
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    -baseT-half,100M-baseT-full,1G-baseT-full,1G-baseX,2.5G-baseT,2.5G-baseX,1\
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    0G-baseSR-LR,10G-baseCR&#34;</span>
+</span></span><span style="display:flex;"><span>set <span style="color:#f92672">[</span> find default-name<span style="color:#f92672">=</span>combo3 <span style="color:#f92672">]</span> advertise<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;10M-baseT-half,10M-baseT-full,100M\
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    -baseT-half,100M-baseT-full,1G-baseT-full,1G-baseX,2.5G-baseT,2.5G-baseX,1\
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    0G-baseSR-LR,10G-baseCR&#34;</span>
+</span></span><span style="display:flex;"><span>set <span style="color:#f92672">[</span> find default-name<span style="color:#f92672">=</span>combo4 <span style="color:#f92672">]</span> advertise<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;10M-baseT-half,10M-baseT-full,100M\
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    -baseT-half,100M-baseT-full,1G-baseT-full,1G-baseX,2.5G-baseT,2.5G-baseX,1\
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    0G-baseSR-LR,10G-baseCR&#34;</span>
+</span></span><span style="display:flex;"><span>set <span style="color:#f92672">[</span> find default-name<span style="color:#f92672">=</span>ether21 <span style="color:#f92672">]</span> name<span style="color:#f92672">=</span>mgmt
+</span></span><span style="display:flex;"><span>/interface vlan
+</span></span><span style="display:flex;"><span>add interface<span style="color:#f92672">=</span>bridge1 name<span style="color:#f92672">=</span>vlan99-mgmt vlan-id<span style="color:#f92672">=</span><span style="color:#ae81ff">99</span>
+</span></span><span style="display:flex;"><span>/interface bridge port
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 frame-types<span style="color:#f92672">=</span>admit-only-untagged-and-priority-tagged <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>    interface<span style="color:#f92672">=</span>ether1
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 interface<span style="color:#f92672">=</span>ether2 pvid<span style="color:#f92672">=</span><span style="color:#ae81ff">99</span>
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 frame-types<span style="color:#f92672">=</span>admit-only-untagged-and-priority-tagged <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>    interface<span style="color:#f92672">=</span>ether3 pvid<span style="color:#f92672">=</span><span style="color:#ae81ff">99</span>
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 frame-types<span style="color:#f92672">=</span>admit-only-untagged-and-priority-tagged <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>    interface<span style="color:#f92672">=</span>ether4
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 frame-types<span style="color:#f92672">=</span>admit-only-untagged-and-priority-tagged <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>    interface<span style="color:#f92672">=</span>ether5
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 frame-types<span style="color:#f92672">=</span>admit-only-untagged-and-priority-tagged <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>    interface<span style="color:#f92672">=</span>ether6
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 interface<span style="color:#f92672">=</span>ether7 pvid<span style="color:#f92672">=</span><span style="color:#ae81ff">99</span>
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 frame-types<span style="color:#f92672">=</span>admit-only-untagged-and-priority-tagged <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>    interface<span style="color:#f92672">=</span>ether8
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 frame-types<span style="color:#f92672">=</span>admit-only-untagged-and-priority-tagged <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>    interface<span style="color:#f92672">=</span>ether9
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 frame-types<span style="color:#f92672">=</span>admit-only-untagged-and-priority-tagged <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>    interface<span style="color:#f92672">=</span>ether10
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 frame-types<span style="color:#f92672">=</span>admit-only-untagged-and-priority-tagged <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>    interface<span style="color:#f92672">=</span>ether11
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 frame-types<span style="color:#f92672">=</span>admit-only-untagged-and-priority-tagged <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>    interface<span style="color:#f92672">=</span>ether12
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 frame-types<span style="color:#f92672">=</span>admit-only-untagged-and-priority-tagged <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>    interface<span style="color:#f92672">=</span>ether13
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 frame-types<span style="color:#f92672">=</span>admit-only-untagged-and-priority-tagged <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>    interface<span style="color:#f92672">=</span>ether14 pvid<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 frame-types<span style="color:#f92672">=</span>admit-only-untagged-and-priority-tagged <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>    interface<span style="color:#f92672">=</span>ether15
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 frame-types<span style="color:#f92672">=</span>admit-only-untagged-and-priority-tagged <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>    interface<span style="color:#f92672">=</span>ether16
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Reolink Camera&#34;</span> frame-types<span style="color:#f92672">=</span><span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>    admit-only-untagged-and-priority-tagged interface<span style="color:#f92672">=</span>ether17 pvid<span style="color:#f92672">=</span><span style="color:#ae81ff">20</span>
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 comment<span style="color:#f92672">=</span>NAS frame-types<span style="color:#f92672">=</span><span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>    admit-only-untagged-and-priority-tagged interface<span style="color:#f92672">=</span>ether18 pvid<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Turing Pi #1&#34;</span> frame-types<span style="color:#f92672">=</span><span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>    admit-only-untagged-and-priority-tagged interface<span style="color:#f92672">=</span>ether19 pvid<span style="color:#f92672">=</span><span style="color:#ae81ff">50</span>
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 comment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Turing Pi #2&#34;</span> frame-types<span style="color:#f92672">=</span><span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>    admit-only-untagged-and-priority-tagged interface<span style="color:#f92672">=</span>ether20 pvid<span style="color:#f92672">=</span><span style="color:#ae81ff">50</span>
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 frame-types<span style="color:#f92672">=</span>admit-only-vlan-tagged interface<span style="color:#f92672">=</span>combo1
+</span></span><span style="display:flex;"><span>/interface bridge vlan
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 tagged<span style="color:#f92672">=</span>bridge1,combo1 vlan-ids<span style="color:#f92672">=</span><span style="color:#ae81ff">99</span>
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 tagged<span style="color:#f92672">=</span>combo1,ether2,ether7 vlan-ids<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 tagged<span style="color:#f92672">=</span>combo1,ether2,ether7 vlan-ids<span style="color:#f92672">=</span><span style="color:#ae81ff">20</span>
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 tagged<span style="color:#f92672">=</span>combo1,ether2,ether7 vlan-ids<span style="color:#f92672">=</span><span style="color:#ae81ff">30</span>
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 tagged<span style="color:#f92672">=</span>combo1,ether2,ether7 vlan-ids<span style="color:#f92672">=</span><span style="color:#ae81ff">40</span>
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 tagged<span style="color:#f92672">=</span>combo1,ether2,ether7 vlan-ids<span style="color:#f92672">=</span><span style="color:#ae81ff">50</span>
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 tagged<span style="color:#f92672">=</span>combo1,ether2,ether7 vlan-ids<span style="color:#f92672">=</span><span style="color:#ae81ff">60</span>
+</span></span><span style="display:flex;"><span>/ip address
+</span></span><span style="display:flex;"><span>add address<span style="color:#f92672">=</span>172.25.99.2/24 interface<span style="color:#f92672">=</span>vlan99-mgmt network<span style="color:#f92672">=</span>172.25.99.0
+</span></span></code></pre></div><h2 id="rb5009">RB5009</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># model = RB5009UG+S+</span>
+</span></span><span style="display:flex;"><span>/interface bridge
+</span></span><span style="display:flex;"><span>add frame-types<span style="color:#f92672">=</span>admit-only-vlan-tagged name<span style="color:#f92672">=</span>bridge1 vlan-filtering<span style="color:#f92672">=</span>yes
+</span></span><span style="display:flex;"><span>/interface vlan
+</span></span><span style="display:flex;"><span>add interface<span style="color:#f92672">=</span>bridge1 name<span style="color:#f92672">=</span>vlan10-trusted vlan-id<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>add interface<span style="color:#f92672">=</span>bridge1 mvrp<span style="color:#f92672">=</span>yes name<span style="color:#f92672">=</span>vlan20-iot vlan-id<span style="color:#f92672">=</span><span style="color:#ae81ff">20</span>
+</span></span><span style="display:flex;"><span>add interface<span style="color:#f92672">=</span>bridge1 name<span style="color:#f92672">=</span>vlan30-guest-wifi vlan-id<span style="color:#f92672">=</span><span style="color:#ae81ff">30</span>
+</span></span><span style="display:flex;"><span>add interface<span style="color:#f92672">=</span>bridge1 name<span style="color:#f92672">=</span>vlan40-kids-wifi vlan-id<span style="color:#f92672">=</span><span style="color:#ae81ff">40</span>
+</span></span><span style="display:flex;"><span>add interface<span style="color:#f92672">=</span>bridge1 name<span style="color:#f92672">=</span>vlan50-lab-1 vlan-id<span style="color:#f92672">=</span><span style="color:#ae81ff">50</span>
+</span></span><span style="display:flex;"><span>add interface<span style="color:#f92672">=</span>bridge1 name<span style="color:#f92672">=</span>vlan60-xbox vlan-id<span style="color:#f92672">=</span><span style="color:#ae81ff">60</span>
+</span></span><span style="display:flex;"><span>add interface<span style="color:#f92672">=</span>bridge1 name<span style="color:#f92672">=</span>vlan99-mgmt vlan-id<span style="color:#f92672">=</span><span style="color:#ae81ff">99</span>
+</span></span><span style="display:flex;"><span>/interface bridge port
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 interface<span style="color:#f92672">=</span>ether2 pvid<span style="color:#f92672">=</span><span style="color:#ae81ff">99</span>
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 frame-types<span style="color:#f92672">=</span>admit-only-untagged-and-priority-tagged <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>    interface<span style="color:#f92672">=</span>ether3 pvid<span style="color:#f92672">=</span><span style="color:#ae81ff">60</span>
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 frame-types<span style="color:#f92672">=</span>admit-only-untagged-and-priority-tagged <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>    interface<span style="color:#f92672">=</span>ether4 pvid<span style="color:#f92672">=</span><span style="color:#ae81ff">20</span>
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 frame-types<span style="color:#f92672">=</span>admit-only-untagged-and-priority-tagged <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>    interface<span style="color:#f92672">=</span>ether5 pvid<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 frame-types<span style="color:#f92672">=</span>admit-only-untagged-and-priority-tagged <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>    interface<span style="color:#f92672">=</span>ether6 pvid<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 frame-types<span style="color:#f92672">=</span>admit-only-untagged-and-priority-tagged <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>    interface<span style="color:#f92672">=</span>ether7 pvid<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 frame-types<span style="color:#f92672">=</span>admit-only-untagged-and-priority-tagged <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>    interface<span style="color:#f92672">=</span>ether8 pvid<span style="color:#f92672">=</span><span style="color:#ae81ff">99</span>
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 frame-types<span style="color:#f92672">=</span>admit-only-vlan-tagged interface<span style="color:#f92672">=</span>sfp-sfpplus1
+</span></span><span style="display:flex;"><span>/interface bridge vlan
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 tagged<span style="color:#f92672">=</span>bridge1,sfp-sfpplus1,ether2 vlan-ids<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 tagged<span style="color:#f92672">=</span>bridge1,ether2,sfp-sfpplus1 vlan-ids<span style="color:#f92672">=</span><span style="color:#ae81ff">20</span>
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 tagged<span style="color:#f92672">=</span>bridge1,ether2,sfp-sfpplus1 vlan-ids<span style="color:#f92672">=</span><span style="color:#ae81ff">30</span>
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 tagged<span style="color:#f92672">=</span>bridge1,ether2,sfp-sfpplus1 vlan-ids<span style="color:#f92672">=</span><span style="color:#ae81ff">40</span>
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 tagged<span style="color:#f92672">=</span>bridge1,ether2,sfp-sfpplus1 vlan-ids<span style="color:#f92672">=</span><span style="color:#ae81ff">50</span>
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 tagged<span style="color:#f92672">=</span>bridge1,sfp-sfpplus1 vlan-ids<span style="color:#f92672">=</span><span style="color:#ae81ff">99</span>
+</span></span><span style="display:flex;"><span>add bridge<span style="color:#f92672">=</span>bridge1 tagged<span style="color:#f92672">=</span>bridge1,sfp-sfpplus1 vlan-ids<span style="color:#f92672">=</span><span style="color:#ae81ff">60</span>
+</span></span></code></pre></div>
             </div>
         </article></main>
 </div>
