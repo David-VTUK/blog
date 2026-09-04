@@ -27,7 +27,7 @@ ignoreLogs = ["warning-goldmark-raw-html"]
 [params]
   sitename = "Virtualthoughts"
   defaultColor = "dark" # set color mode: dark, light, auto
-  description = "Minimal Hugo blog theme with light and dark mode support"
+  description = "Personal blog of David Holder - Specialist Adoption Architect at Red Hat"
   mainSections = ["posts"]
   tocOpen = false # set to true to open table of contents by default
   goToTop = true # set to false to disable 'go to top' button
